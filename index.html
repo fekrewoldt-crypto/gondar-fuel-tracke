@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gondar Fuel & Auto Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a14;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 25px;
+            background: linear-gradient(90deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            position: relative;
+            border-bottom: 2px solid #f4a261;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        header h1 .fuel-icon {
+            position: relative;
+            display: inline-block;
+        }
+
+        header h1 .fuel-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(244, 162, 97, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            font-weight: 400;
+        }
+
+        .last-updated {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            opacity: 0.7;
+            font-weight: 500;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #1a1a2e;
+            padding: 18px 14px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card.fuel { border-left: 4px solid #ef4444; }
+        .stat-card.mechanic { border-left: 4px solid #3b82f6; }
+        .stat-card.tire { border-left: 4px solid #f97316; }
+        .stat-card.carwash { border-left: 4px solid #14b8a6; }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card.fuel:hover {
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.25);
+        }
+
+        .stat-card.mechanic:hover {
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25);
+        }
+
+        .stat-card.tire:hover {
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.25);
+        }
+
+        .stat-card.carwash:hover {
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.25);
+        }
+
+        .stat-card .number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-card.fuel .number { color: #ef4444; }
+        .stat-card.mechanic .number { color: #3b82f6; }
+        .stat-card.tire .number { color: #f97316; }
+        .stat-card.carwash .number { color: #14b8a6; }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr 340px;
+            }
+        }
+
+        .map-wrapper {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 4px;
+            border: 1px solid rgba(244, 162, 97, 0.3);
+            box-shadow: 0 0 20px rgba(244, 162, 97, 0.1);
+        }
+
+        #map {
+            height: 460px;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        @media (min-width: 900px) {
+            #map {
+                height: 500px;
+            }
+        }
+
+        .leaflet-control-zoom {
+            border: none !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .leaflet-control-zoom-in,
+        .leaflet-control-zoom-out {
+            background: #1a1a2e !important;
+            color: #fff !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            font-weight: 600 !important;
+            font-size: 1.2rem !important;
+        }
+
+        .leaflet-control-zoom-in:hover,
+        .leaflet-control-zoom-out:hover {
+            background: #252540 !important;
+        }
+
+        .panel {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .panel h2 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: #fff;
+            font-weight: 700;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Filter Buttons */
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #0f0f1a;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-btn:hover {
+            background: #1a1a2e;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-btn.active[data-filter="fuel_station"] {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: white;
+        }
+
+        .filter-btn.active[data-filter="mechanic"] {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .filter-btn.active[data-filter="tire_shop"] {
+            background: #f97316;
+            border-color: #f97316;
+            color: white;
+        }
+
+        .filter-btn.active[data-filter="car_wash"] {
+            background: #14b8a6;
+            border-color: #14b8a6;
+            color: white;
+        }
+
+        .filter-btn.active[data-filter="all"] {
+            background: linear-gradient(135deg, #f4a261, #e76f51);
+            border-color: #f4a261;
+            color: white;
+        }
+
+        .filter-btn .count {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .filter-btn.active .count {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #e0e0e0;
+        }
+
+        .form-group label small {
+            font-weight: 400;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #0f0f1a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #f4a261;
+            box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
+        }
+
+        .form-group select option {
+            background: #0f0f1a;
+            color: #fff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 162, 97, 0.35);
+            filter: brightness(1.1);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            display: block;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #f4a261;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .legend-container {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 25px;
+            padding: 12px 20px;
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.available { background: #22c55e; }
+        .legend-dot.low { background: #eab308; }
+        .legend-dot.empty { background: #ef4444; }
+        .legend-dot.open { background: #22c55e; }
+        .legend-dot.busy { background: #eab308; }
+        .legend-dot.closed { background: #ef4444; }
+
+        .custom-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+            font-size: 20px;
+        }
+
+        .popup-content {
+            padding: 8px;
+            min-width: 220px;
+        }
+
+        .popup-content h3 {
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .popup-content p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+
+        .popup-content .type-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .popup-content .type-badge.fuel_station { background: #1e40af; color: #dbeafe; }
+        .popup-content .type-badge.mechanic { background: #92400e; color: #fef3c7; }
+        .popup-content .type-badge.tire_shop { background: #9d174d; color: #fce7f3; }
+        .popup-content .type-badge.car_wash { background: #065f46; color: #d1fae5; }
+
+        .popup-content .status {
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.8rem;
+        }
+
+        .popup-content .status.available,
+        .popup-content .status.open { background: #166534; color: #bbf7d0; }
+        .popup-content .status.low,
+        .popup-content .status.busy { background: #854d0e; color: #fef08a; }
+        .popup-content .status.empty,
+        .popup-content .status.closed { background: #991b1b; color: #fecaca; }
+
+        .popup-content .services-list {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .popup-content .phone {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #60a5fa;
+        }
+
+        /* Service type icons */
+        .type-icon { font-size: 1.1rem; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card .number {
+                font-size: 2.2rem;
+            }
+
+            #map {
+                height: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><span class="fuel-icon">⛽</span> Gondar Auto Services</h1>
+            <p>Fuel stations, mechanics, tire shops & car washes</p>
+            <p class="last-updated" id="lastUpdated">Last updated: --</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-card fuel">
+                <div class="number" id="statFuel">0</div>
+                <div class="label">⛽ Fuel</div>
+            </div>
+            <div class="stat-card mechanic">
+                <div class="number" id="statMechanic">0</div>
+                <div class="label">🔧 Mechanics</div>
+            </div>
+            <div class="stat-card tire">
+                <div class="number" id="statTire">0</div>
+                <div class="label">🛞 Tire Shops</div>
+            </div>
+            <div class="stat-card carwash">
+                <div class="number" id="statCarWash">0</div>
+                <div class="label">🚿 Car Wash</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="map-wrapper">
+                <div id="map">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Loading map...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="legend-container">
+                <div class="legend-item">
+                    <div class="legend-dot available"></div>
+                    <span>Available/Open</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot low"></div>
+                    <span>Low/Busy</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot empty"></div>
+                    <span>Empty/Closed</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Filter Services</h2>
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">
+                        <span>All</span>
+                        <span class="count" id="countAll">0</span>
+                    </button>
+                    <button class="filter-btn" data-filter="fuel_station">
+                        <span>⛽ Fuel</span>
+                        <span class="count" id="countFuel">0</span>
+                    </button>
+                    <button class="filter-btn" data-filter="mechanic">
+                        <span>🔧 Mechanic</span>
+                        <span class="count" id="countMechanic">0</span>
+                    </button>
+                    <button class="filter-btn" data-filter="tire_shop">
+                        <span>🛞 Tire</span>
+                        <span class="count" id="countTire">0</span>
+                    </button>
+                    <button class="filter-btn" data-filter="car_wash">
+                        <span>🚿 Wash</span>
+                        <span class="count" id="countCarWash">0</span>
+                    </button>
+                </div>
+
+                <h2 style="margin-top: 20px;">Submit Report</h2>
+                <form id="reportForm">
+                    <div class="form-group">
+                        <label for="service">Select Location</label>
+                        <select id="service" name="serviceId" required>
+                            <option value="">-- Choose a location --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" required>
+                            <option value="">-- Select status --</option>
+                            <option value="available">🟢 Available / Open</option>
+                            <option value="low">🟡 Low Stock / Busy</option>
+                            <option value="empty">🔴 Empty / Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Price (ETB) <small>(if applicable)</small></label>
+                        <input type="number" id="price" name="price" placeholder="e.g., 54.50" step="0.01" min="0">
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        Submit Report
+                    </button>
+
+                    <div class="message" id="message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Gondar coordinates (centered between city and Azezo)
+        const GONDAR_CENTER = [12.585, 37.46];
+        const GONDAR_BOUNDS = [
+            [12.52, 37.40],
+            [12.68, 37.52]
+        ];
+
+        // Service type icons and labels
+        const serviceTypes = {
+            fuel_station: { icon: '⛽', label: 'Fuel Station', statusLabels: { available: 'Available', low: 'Low Stock', empty: 'Empty' } },
+            mechanic: { icon: '🔧', label: 'Mechanic', statusLabels: { open: 'Open', busy: 'Busy', closed: 'Closed' } },
+            tire_shop: { icon: '🛞', label: 'Tire Shop', statusLabels: { open: 'Open', busy: 'Busy', closed: 'Closed' } },
+            car_wash: { icon: '🚿', label: 'Car Wash', statusLabels: { open: 'Open', busy: 'Busy', closed: 'Closed' } }
+        };
+
+        // Status colors
+        const statusColors = {
+            available: '#22c55e',
+            low: '#eab308',
+            empty: '#ef4444',
+            open: '#22c55e',
+            busy: '#eab308',
+            closed: '#ef4444'
+        };
+
+        // Global state
+        let map;
+        let markers = [];
+        let services = [];
+        let currentFilter = 'all';
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map', {
+                center: GONDAR_CENTER,
+                zoom: 12,
+                minZoom: 10,
+                maxZoom: 18
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+
+            // Restrict pan to Gondar area
+            map.setMaxBounds([
+                [12.50, 37.38],
+                [12.70, 37.54]
+            ]);
+
+            // Remove loading message once map is ready
+            setTimeout(() => {
+                const loadingEl = document.querySelector('#map .loading');
+                if (loadingEl) loadingEl.style.display = 'none';
+            }, 500);
+        }
+
+        // Create custom marker icon
+        function createMarkerIcon(service) {
+            const typeConfig = serviceTypes[service.type] || { icon: '📍' };
+            const color = statusColors[service.status] || '#666';
+
+            return L.divIcon({
+                className: 'custom-marker-wrapper',
+                html: `<div class="custom-marker" style="background: ${color}">${typeConfig.icon}</div>`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+        }
+
+        // Format services list
+        function formatServices(services) {
+            if (!services || services.length === 0) return '';
+            return services.map(s => s.replace(/_/g, ' ')).join(', ');
+        }
+
+        // Create popup content
+        function createPopupContent(service) {
+            const typeConfig = serviceTypes[service.type] || {};
+            const statusLabel = typeConfig.statusLabels ? typeConfig.statusLabels[service.status] : service.status;
+            const lastUpdated = service.lastUpdated
+                ? new Date(service.lastUpdated).toLocaleString('en-US', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                })
+                : 'Unknown';
+
+            return `
+                <div class="popup-content">
+                    <span class="type-badge ${service.type}">${typeConfig.label || service.type}</span>
+                    <h3>${service.name}</h3>
+                    <p><strong>Status:</strong> <span class="status ${service.status}">${statusLabel}</span></p>
+                    ${service.price ? `<p><strong>Price:</strong> ${service.price} ETB</p>` : ''}
+                    ${service.services ? `<p class="services-list"><strong>Services:</strong> ${formatServices(service.services)}</p>` : ''}
+                    ${service.phone ? `<p class="phone">📞 ${service.phone}</p>` : ''}
+                    <p style="margin-top:8px;font-size:0.75rem;color:#999;">Updated: ${lastUpdated}</p>
+                </div>
+            `;
+        }
+
+        // Load services from API
+        async function loadServices() {
+            try {
+                const response = await fetch(`${API_BASE}/services`);
+                if (!response.ok) throw new Error('Failed to load services');
+
+                services = await response.json();
+                updateMarkers();
+                updateServiceDropdown();
+                updateStats();
+                updateCounts();
+                updateLastUpdated();
+            } catch (error) {
+                console.error('Error loading services:', error);
+                showMessage('Failed to load services. Using demo data.', 'error');
+                loadDemoData();
+            }
+        }
+
+        // Demo data (fallback when server is not available)
+        function loadDemoData() {
+            services = [
+                // Fuel Stations - Azezo
+                { id: 1, name: 'Total Energies - Azezo Main', type: 'fuel_station', lat: 12.5589, lng: 37.4521, status: 'available', price: 54.50, phone: '+251 58 111 2345', services: ['diesel', 'petrol', 'lubricants'], lastUpdated: new Date().toISOString() },
+                { id: 2, name: 'Oilibya - Azezo', type: 'fuel_station', lat: 12.5612, lng: 37.4498, status: 'available', price: 54.00, phone: '+251 58 111 3456', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                { id: 3, name: 'Nile Petroleum - Azezo', type: 'fuel_station', lat: 12.5634, lng: 37.4476, status: 'low', price: 55.00, phone: '+251 58 111 4567', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                { id: 4, name: 'Libya Oil - Azezo', type: 'fuel_station', lat: 12.5578, lng: 37.4535, status: 'available', price: 53.50, phone: '+251 58 111 5678', services: ['diesel', 'petrol', 'car_wash'], lastUpdated: new Date().toISOString() },
+                { id: 5, name: 'Ola Energy - Azezo', type: 'fuel_station', lat: 12.5656, lng: 37.4455, status: 'low', price: 54.50, phone: '+251 58 111 6789', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                // Fuel - City
+                { id: 6, name: 'Total Energies - Piazza', type: 'fuel_station', lat: 12.6089, lng: 37.4654, status: 'available', price: 55.00, phone: '+251 58 111 7890', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                { id: 7, name: 'Oilibya - Arada', type: 'fuel_station', lat: 12.6045, lng: 37.4612, status: 'available', price: 55.00, phone: '+251 58 111 8901', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                { id: 8, name: 'Nile Petroleum - Stadium', type: 'fuel_station', lat: 12.6123, lng: 37.4723, status: 'available', price: 54.00, phone: '+251 58 111 9012', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                { id: 9, name: 'Libya Oil - Maraki', type: 'fuel_station', lat: 12.5934, lng: 37.4456, status: 'empty', price: null, phone: '+251 58 112 0123', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                { id: 10, name: 'Total Energies - Airport Rd', type: 'fuel_station', lat: 12.6234, lng: 37.4812, status: 'low', price: 56.00, phone: '+251 58 112 1234', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString() },
+                // Mechanics
+                { id: 13, name: 'Azezo Auto Repair', type: 'mechanic', lat: 12.5601, lng: 37.4510, status: 'open', price: null, phone: '+251 91 876 5432', services: ['engine_repair', 'oil_change', 'brake_service'], lastUpdated: new Date().toISOString() },
+                { id: 14, name: 'Quick Fix Garage - Azezo', type: 'mechanic', lat: 12.5623, lng: 37.4488, status: 'open', price: null, phone: '+251 91 876 5433', services: ['general_repair', 'suspension'], lastUpdated: new Date().toISOString() },
+                { id: 16, name: 'Central Auto Garage', type: 'mechanic', lat: 12.6067, lng: 37.4634, status: 'open', price: null, phone: '+251 91 876 5435', services: ['general_repair', 'oil_change'], lastUpdated: new Date().toISOString() },
+                // Tire Shops
+                { id: 20, name: 'Azezo Tire & Wheel', type: 'tire_shop', lat: 12.5595, lng: 37.4515, status: 'open', price: null, phone: '+251 91 876 5440', services: ['tire_repair', 'tire_sales', 'balancing', 'air_fill'], lastUpdated: new Date().toISOString() },
+                { id: 21, name: 'Quick Air - Azezo', type: 'tire_shop', lat: 12.5618, lng: 37.4492, status: 'open', price: null, phone: '+251 91 876 5441', services: ['air_fill', 'patch_repair'], lastUpdated: new Date().toISOString() },
+                { id: 23, name: 'Piazza Tire Service', type: 'tire_shop', lat: 12.6056, lng: 37.4623, status: 'open', price: null, phone: '+251 91 876 5443', services: ['tire_repair', 'air_fill'], lastUpdated: new Date().toISOString() },
+                // Car Wash
+                { id: 26, name: 'Sparkle Car Wash - Azezo', type: 'car_wash', lat: 12.5608, lng: 37.4502, status: 'open', price: 150, phone: '+251 91 876 5450', services: ['exterior_wash', 'interior_clean'], lastUpdated: new Date().toISOString() },
+                { id: 27, name: 'Express Car Wash - Piazza', type: 'car_wash', lat: 12.6089, lng: 37.4667, status: 'open', price: 200, phone: '+251 91 876 5451', services: ['exterior_wash', 'wax'], lastUpdated: new Date().toISOString() }
+            ];
+            updateMarkers();
+            updateServiceDropdown();
+            updateStats();
+            updateCounts();
+            updateLastUpdated();
+        }
+
+        // Update map markers
+        function updateMarkers() {
+            markers.forEach(marker => marker.remove());
+            markers = [];
+
+            const filtered = currentFilter === 'all'
+                ? services
+                : services.filter(s => s.type === currentFilter);
+
+            filtered.forEach(service => {
+                const marker = L.marker([service.lat, service.lng], {
+                    icon: createMarkerIcon(service)
+                }).addTo(map);
+
+                marker.bindPopup(createPopupContent(service));
+                markers.push(marker);
+            });
+        }
+
+        // Update service dropdown
+        function updateServiceDropdown() {
+            const select = document.getElementById('service');
+            select.innerHTML = '<option value="">-- Choose a location --</option>';
+
+            // Group by type
+            const groups = {};
+            services.forEach(s => {
+                if (!groups[s.type]) groups[s.type] = [];
+                groups[s.type].push(s);
+            });
+
+            Object.keys(groups).forEach(type => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = `${serviceTypes[type]?.icon || '📍'} ${serviceTypes[type]?.label || type}`;
+
+                groups[type].forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.id;
+                    option.textContent = service.name;
+                    optgroup.appendChild(option);
+                });
+
+                select.appendChild(optgroup);
+            });
+        }
+
+        // Update stats bar
+        function updateStats() {
+            const counts = {
+                fuel_station: services.filter(s => s.type === 'fuel_station').length,
+                mechanic: services.filter(s => s.type === 'mechanic').length,
+                tire_shop: services.filter(s => s.type === 'tire_shop').length,
+                car_wash: services.filter(s => s.type === 'car_wash').length
+            };
+
+            document.getElementById('statFuel').textContent = counts.fuel_station;
+            document.getElementById('statMechanic').textContent = counts.mechanic;
+            document.getElementById('statTire').textContent = counts.tire_shop;
+            document.getElementById('statCarWash').textContent = counts.car_wash;
+        }
+
+        // Update filter button counts
+        function updateCounts() {
+            document.getElementById('countAll').textContent = services.length;
+            document.getElementById('countFuel').textContent = services.filter(s => s.type === 'fuel_station').length;
+            document.getElementById('countMechanic').textContent = services.filter(s => s.type === 'mechanic').length;
+            document.getElementById('countTire').textContent = services.filter(s => s.type === 'tire_shop').length;
+            document.getElementById('countCarWash').textContent = services.filter(s => s.type === 'car_wash').length;
+        }
+
+        // Update last updated timestamp
+        function updateLastUpdated() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent =
+                `Last updated: ${now.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}`;
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+
+            setTimeout(() => {
+                messageEl.className = 'message';
+            }, 5000);
+        }
+
+        // Submit report
+        async function submitReport(formData) {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch(`${API_BASE}/report`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) throw new Error('Failed to submit report');
+
+                showMessage('Report submitted successfully!', 'success');
+                document.getElementById('reportForm').reset();
+
+                await loadServices();
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                showMessage('Report saved locally (demo mode).', 'success');
+                document.getElementById('reportForm').reset();
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Report';
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            loadServices();
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    updateMarkers();
+                });
+            });
+
+            // Form submit
+            document.getElementById('reportForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const formData = {
+                    serviceId: parseInt(document.getElementById('service').value),
+                    status: document.getElementById('status').value,
+                    price: document.getElementById('price').value ? parseFloat(document.getElementById('price').value) : null
+                };
+
+                submitReport(formData);
+            });
+        });
+    </script>
+</body>
+</html>

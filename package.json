@@ -1,0 +1,19 @@
+{
+  "name": "gondar-fuel-tracker",
+  "version": "1.0.0",
+  "description": "Gondar Fuel Management System - Real-time fuel availability tracking",
+  "main": "server.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "start": "vercel start"
+  },
+  "keywords": [
+    "fuel",
+    "gondar",
+    "ethiopia",
+    "tracking"
+  ],
+  "author": "",
+  "license": "MIT"
+}
