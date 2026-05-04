@@ -20,7 +20,7 @@ Real-time fuel availability tracking platform for Gondar, Ethiopia.
    git commit -m "Initial commit - Gondar Fuel Management System"
    
    # Add your GitHub repository as remote
-   git remote add origin https://github.com/YOUR_USERNAME/gondar-fuel-tracker.git
+   git remote add origin https://github.com/fekrewoldt-crypto/gondar-fuel-tracke.git
    
    # Push to GitHub
    git branch -M main
