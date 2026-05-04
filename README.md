@@ -125,3 +125,4 @@ This is a demo project. For full production features, see ARCHITECTURE.md.
 ## 📄 License
 
 MIT License - Feel free to use and modify as needed.
+# Deployment fix
