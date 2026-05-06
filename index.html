@@ -502,6 +502,700 @@
             color: #60a5fa;
         }
 
+        /* Trust Score Styles */
+        .trust-score {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .trust-score .stars {
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+
+        .trust-score .score {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .trust-score .count {
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn.call {
+            background: #22c55e;
+            color: white;
+        }
+
+        .action-btn.call:hover {
+            background: #16a34a;
+        }
+
+        .action-btn.book {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .action-btn.book:hover {
+            background: #2563eb;
+        }
+
+        .action-btn.tow {
+            background: #f97316;
+            color: white;
+        }
+
+        .action-btn.tow:hover {
+            background: #ea580c;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .modal-header {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .slot-btn {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #0f0f1a;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .slot-btn:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .slot-btn.selected {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .review-star {
+            font-size: 2rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .review-star:hover,
+        .review-star.active {
+            color: #fbbf24;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            background: #0f0f1a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 16px;
+        }
+
+        .review-form textarea:focus {
+            outline: none;
+            border-color: #f4a261;
+            box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
+        }
+
+        .review-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            background: #0f0f1a;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .review-form input:focus {
+            outline: none;
+            border-color: #f4a261;
+            box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
+        }
+
+        .photo-upload {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+        }
+
+        .photo-upload:hover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .photo-upload p {
+            color: #9ca3af;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .photo-upload input {
+            display: none;
+        }
+
+        /* Vehicle Selector */
+        .vehicle-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: #1a1a2e;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 16px;
+        }
+
+        .vehicle-selector select {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+        }
+
+        .vehicle-selector select option {
+            background: #1a1a2e;
+        }
+
+        .vehicle-selector .add-btn {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .vehicle-selector .add-btn:hover {
+            background: #2563eb;
+        }
+
+        /* Advanced Filter Panel */
+        .filter-panel {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .filter-panel-header h3 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .filter-toggle {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .filter-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .filter-content {
+            display: none;
+        }
+
+        .filter-content.active {
+            display: block;
+        }
+
+        .filter-section {
+            margin-bottom: 16px;
+        }
+
+        .filter-section h4 {
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .filter-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #0f0f1a;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-checkbox:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-checkbox input {
+            display: none;
+        }
+
+        .filter-checkbox.checked {
+            background: rgba(244, 162, 97, 0.2);
+            border-color: #f4a261;
+        }
+
+        .filter-checkbox span {
+            font-size: 0.8rem;
+            color: #e0e0e0;
+        }
+
+        .filter-range {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .filter-range input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #2d2d4a;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .filter-range input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #f4a261;
+            cursor: pointer;
+        }
+
+        .filter-range-value {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            background: #0f0f1a;
+            color: #fff;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .filter-select option {
+            background: #0f0f1a;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .filter-btn-action {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn-action.apply {
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            color: white;
+        }
+
+        .filter-btn-action.apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(244, 162, 97, 0.3);
+        }
+
+        .filter-btn-action.reset {
+            background: #2d2d4a;
+            color: #9ca3af;
+        }
+
+        .filter-btn-action.reset:hover {
+            background: #3d3d5a;
+            color: #fff;
+        }
+
+        /* Vehicle Profile Card */
+        .vehicle-card {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .vehicle-card h3 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vehicle-card .add-vehicle-btn {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .vehicle-card .add-vehicle-btn:hover {
+            background: #2563eb;
+        }
+
+        .vehicle-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .vehicle-item {
+            background: #0f0f1a;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .vehicle-item:hover {
+            border-color: rgba(244, 162, 97, 0.3);
+            transform: translateX(4px);
+        }
+
+        .vehicle-item.active {
+            border-color: #f4a261;
+            background: rgba(244, 162, 97, 0.1);
+        }
+
+        .vehicle-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .vehicle-item-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .vehicle-item-fuel {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .vehicle-item-details {
+            display: flex;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .vehicle-item-details span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Cost Tracker Card */
+        .cost-card {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .cost-card h3 {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cost-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .cost-summary-item {
+            background: #0f0f1a;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .cost-summary-item.fuel {
+            border-left: 3px solid #ef4444;
+        }
+
+        .cost-summary-item.repair {
+            border-left: 3px solid #3b82f6;
+        }
+
+        .cost-summary-item .value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .cost-summary-item.fuel .value {
+            color: #ef4444;
+        }
+
+        .cost-summary-item.repair .value {
+            color: #3b82f6;
+        }
+
+        .cost-summary-item .label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .cost-chart {
+            background: #0f0f1a;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .cost-chart h4 {
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .cost-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .cost-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cost-bar-label {
+            width: 80px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .cost-bar-track {
+            flex: 1;
+            height: 20px;
+            background: #2d2d4a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .cost-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .cost-bar-fill.fuel {
+            background: linear-gradient(90deg, #ef4444, #f97316);
+        }
+
+        .cost-bar-fill.repair {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        }
+
+        .cost-bar-value {
+            width: 60px;
+            font-size: 0.75rem;
+            color: #fff;
+            text-align: right;
+            font-weight: 600;
+        }
+
         /* Service type icons */
         .type-icon { font-size: 1.1rem; }
 
@@ -580,6 +1274,77 @@
                 </div>
             </div>
 
+            <!-- Vehicle Profile Card -->
+            <div class="vehicle-card">
+                <h3>
+                    <span>🚗 My Vehicles</span>
+                    <button class="add-vehicle-btn" onclick="openAddVehicleModal()">+ Add</button>
+                </h3>
+                <div class="vehicle-list" id="vehicleList">
+                    <div class="vehicle-item active" data-vehicle-id="1">
+                        <div class="vehicle-item-header">
+                            <span class="vehicle-item-name">My Toyota Corolla</span>
+                            <span class="vehicle-item-fuel">Petrol</span>
+                        </div>
+                        <div class="vehicle-item-details">
+                            <span>⛽ 450km range</span>
+                            <span>🔧 Preferred: Azezo Auto Repair</span>
+                        </div>
+                    </div>
+                    <div class="vehicle-item" data-vehicle-id="2">
+                        <div class="vehicle-item-header">
+                            <span class="vehicle-item-name">Work Truck</span>
+                            <span class="vehicle-item-fuel">Diesel</span>
+                        </div>
+                        <div class="vehicle-item-details">
+                            <span>⛽ 600km range</span>
+                            <span>🔧 Preferred: Diesel Specialist</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Tracker Card -->
+            <div class="cost-card">
+                <h3>💰 Cost Tracker</h3>
+                <div class="cost-summary">
+                    <div class="cost-summary-item fuel">
+                        <div class="value" id="totalFuelCost">6,000</div>
+                        <div class="label">Total Fuel (ETB)</div>
+                    </div>
+                    <div class="cost-summary-item repair">
+                        <div class="value" id="totalRepairCost">3,500</div>
+                        <div class="label">Total Repairs (ETB)</div>
+                    </div>
+                </div>
+                <div class="cost-chart">
+                    <h4>Monthly Spending</h4>
+                    <div class="cost-bars" id="costBars">
+                        <div class="cost-bar">
+                            <span class="cost-bar-label">Apr</span>
+                            <div class="cost-bar-track">
+                                <div class="cost-bar-fill fuel" style="width: 70%"></div>
+                            </div>
+                            <span class="cost-bar-value">2,500</span>
+                        </div>
+                        <div class="cost-bar">
+                            <span class="cost-bar-label">Mar</span>
+                            <div class="cost-bar-track">
+                                <div class="cost-bar-fill repair" style="width: 50%"></div>
+                            </div>
+                            <span class="cost-bar-value">3,500</span>
+                        </div>
+                        <div class="cost-bar">
+                            <span class="cost-bar-label">Feb</span>
+                            <div class="cost-bar-track">
+                                <div class="cost-bar-fill fuel" style="width: 45%"></div>
+                            </div>
+                            <span class="cost-bar-value">1,500</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="panel">
                 <h2>Filter Services</h2>
                 <div class="filter-group">
@@ -603,6 +1368,92 @@
                         <span>🚿 Wash</span>
                         <span class="count" id="countCarWash">0</span>
                     </button>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="filter-panel">
+                    <div class="filter-panel-header">
+                        <h3>🔍 Advanced Filters</h3>
+                        <button class="filter-toggle" onclick="toggleFilterPanel()">Show</button>
+                    </div>
+                    <div class="filter-content" id="filterContent">
+                        <div class="filter-section">
+                            <h4>Fuel Type</h4>
+                            <div class="filter-checkboxes" id="fuelTypeFilters">
+                                <label class="filter-checkbox" data-filter="fuelType" data-value="diesel">
+                                    <input type="checkbox" value="diesel">
+                                    <span>Diesel</span>
+                                </label>
+                                <label class="filter-checkbox" data-filter="fuelType" data-value="petrol">
+                                    <input type="checkbox" value="petrol">
+                                    <span>Petrol</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h4>Amenities</h4>
+                            <div class="filter-checkboxes" id="amenityFilters">
+                                <label class="filter-checkbox" data-filter="amenities" data-value="convenience_store">
+                                    <input type="checkbox" value="convenience_store">
+                                    <span>Store</span>
+                                </label>
+                                <label class="filter-checkbox" data-filter="amenities" data-value="restroom">
+                                    <input type="checkbox" value="restroom">
+                                    <span>Restroom</span>
+                                </label>
+                                <label class="filter-checkbox" data-filter="amenities" data-value="atm">
+                                    <input type="checkbox" value="atm">
+                                    <span>ATM</span>
+                                </label>
+                                <label class="filter-checkbox" data-filter="amenities" data-value="car_wash">
+                                    <input type="checkbox" value="car_wash">
+                                    <span>Car Wash</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h4>Availability</h4>
+                            <div class="filter-checkboxes">
+                                <label class="filter-checkbox" id="hours24Filter">
+                                    <input type="checkbox" id="is24Hours">
+                                    <span>24/7 Open</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h4>Max Price (ETB)</h4>
+                            <div class="filter-range">
+                                <input type="range" id="maxPrice" min="50" max="60" value="60" step="0.5">
+                                <div class="filter-range-value">
+                                    <span>50 ETB</span>
+                                    <span id="maxPriceValue">60 ETB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h4>Garage Service Type</h4>
+                            <select class="filter-select" id="garageServiceType">
+                                <option value="">All Services</option>
+                                <option value="engine_repair">Engine Repair</option>
+                                <option value="oil_change">Oil Change</option>
+                                <option value="brake_service">Brake Service</option>
+                                <option value="suspension">Suspension</option>
+                                <option value="transmission">Transmission</option>
+                                <option value="electrical">Electrical</option>
+                                <option value="ac_repair">AC Repair</option>
+                                <option value="wheel_alignment">Wheel Alignment</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button class="filter-btn-action reset" onclick="resetFilters()">Reset</button>
+                            <button class="filter-btn-action apply" onclick="applyFilters()">Apply Filters</button>
+                        </div>
+                    </div>
                 </div>
 
                 <h2 style="margin-top: 20px;">Submit Report</h2>
@@ -636,6 +1487,101 @@
                     <div class="message" id="message"></div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="bookingModalTitle">Book Service</h3>
+                <button class="modal-close" onclick="closeModal('bookingModal')">&times;</button>
+            </div>
+            <div class="vehicle-selector">
+                <select id="bookingVehicle">
+                    <option value="">Select Vehicle</option>
+                </select>
+                <button class="add-btn" onclick="openAddVehicleModal()">+ Add</button>
+            </div>
+            <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 12px;">Select a time slot:</p>
+            <div class="slot-grid" id="bookingSlots"></div>
+            <button class="btn-submit" onclick="submitBooking()">Confirm Booking</button>
+        </div>
+    </div>
+
+    <!-- Tow Request Modal -->
+    <div class="modal-overlay" id="towModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Request Tow Service</h3>
+                <button class="modal-close" onclick="closeModal('towModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Pickup Location</label>
+                <input type="text" id="towLocation" placeholder="Enter your location">
+            </div>
+            <div class="form-group">
+                <label>Issue Description</label>
+                <textarea id="towIssue" placeholder="Describe the problem" style="width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; background: #0f0f1a; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.9rem; resize: vertical; min-height: 80px;"></textarea>
+            </div>
+            <button class="btn-submit" onclick="submitTowRequest()">Request Tow</button>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="reviewModalTitle">Write a Review</h3>
+                <button class="modal-close" onclick="closeModal('reviewModal')">&times;</button>
+            </div>
+            <div class="review-form">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="reviewName" placeholder="Enter your name">
+                </div>
+                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 8px;">Rate this service:</p>
+                <div class="review-stars" id="reviewStars">
+                    <span class="review-star" data-rating="1">★</span>
+                    <span class="review-star" data-rating="2">★</span>
+                    <span class="review-star" data-rating="3">★</span>
+                    <span class="review-star" data-rating="4">★</span>
+                    <span class="review-star" data-rating="5">★</span>
+                </div>
+                <textarea id="reviewComment" placeholder="Share your experience..."></textarea>
+                <div class="photo-upload" onclick="document.getElementById('reviewPhoto').click()">
+                    <p>📷 Add photo (optional)</p>
+                    <input type="file" id="reviewPhoto" accept="image/*">
+                </div>
+                <button class="btn-submit" onclick="submitReview()">Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Vehicle Modal -->
+    <div class="modal-overlay" id="vehicleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Vehicle</h3>
+                <button class="modal-close" onclick="closeModal('vehicleModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Vehicle Name</label>
+                <input type="text" id="vehicleName" placeholder="e.g., My Toyota Corolla">
+            </div>
+            <div class="form-group">
+                <label>Fuel Type</label>
+                <select id="vehicleFuelType">
+                    <option value="petrol">Petrol</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="electric">Electric</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Range (km)</label>
+                <input type="number" id="vehicleRange" placeholder="e.g., 450">
+            </div>
+            <button class="btn-submit" onclick="addVehicle()">Add Vehicle</button>
         </div>
     </div>
 
@@ -675,6 +1621,17 @@
         let markers = [];
         let services = [];
         let currentFilter = 'all';
+        let currentServiceId = null;
+        let selectedRating = 0;
+        let selectedSlot = null;
+        let vehicles = [];
+        let activeFilters = {
+            fuelTypes: [],
+            amenities: [],
+            is24Hours: false,
+            maxPrice: 60,
+            garageServiceType: ''
+        };
 
         // Initialize map
         function initMap() {
@@ -733,15 +1690,43 @@
                 })
                 : 'Unknown';
 
+            // Trust score display
+            const trustScoreHtml = service.trustScore ? `
+                <div class="trust-score">
+                    <span class="stars">${'★'.repeat(Math.floor(service.trustScore))}${'☆'.repeat(5 - Math.floor(service.trustScore))}</span>
+                    <span class="score">${service.trustScore}</span>
+                    <span class="count">(${service.reviewCount || 0} reviews)</span>
+                </div>
+            ` : '';
+
+            // Verified badge
+            const verifiedBadge = service.isVerified ? `<div class="verified-badge">✓ Verified</div>` : '';
+
+            // Action buttons based on service type
+            let actionButtons = '';
+            if (service.phone) {
+                actionButtons += `<button class="action-btn call" onclick="window.location.href='tel:${service.phone.replace(/ /g, '')}'">📞 Call</button>`;
+            }
+            if (service.bookingSlots && service.bookingSlots.length > 0) {
+                actionButtons += `<button class="action-btn book" onclick="openBookingModal(${service.id})">📅 Book</button>`;
+            }
+            if (service.type === 'mechanic') {
+                actionButtons += `<button class="action-btn tow" onclick="openTowModal(${service.id})">🚗 Tow</button>`;
+            }
+
             return `
                 <div class="popup-content">
                     <span class="type-badge ${service.type}">${typeConfig.label || service.type}</span>
+                    ${verifiedBadge}
                     <h3>${service.name}</h3>
+                    ${trustScoreHtml}
                     <p><strong>Status:</strong> <span class="status ${service.status}">${statusLabel}</span></p>
                     ${service.price ? `<p><strong>Price:</strong> ${service.price} ETB</p>` : ''}
                     ${service.services ? `<p class="services-list"><strong>Services:</strong> ${formatServices(service.services)}</p>` : ''}
                     ${service.phone ? `<p class="phone">📞 ${service.phone}</p>` : ''}
+                    ${actionButtons ? `<div class="action-buttons">${actionButtons}</div>` : ''}
                     <p style="margin-top:8px;font-size:0.75rem;color:#999;">Updated: ${lastUpdated}</p>
+                    <button style="margin-top:8px;padding:6px 12px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#9ca3af;font-size:0.75rem;cursor:pointer;width:100%;" onclick="openReviewModal(${service.id})">Write a Review</button>
                 </div>
             `;
         }
@@ -943,7 +1928,451 @@
 
                 submitReport(formData);
             });
+
+            // Review star rating
+            document.querySelectorAll('.review-star').forEach(star => {
+                star.addEventListener('click', () => {
+                    selectedRating = parseInt(star.dataset.rating);
+                    updateReviewStars();
+                });
+                star.addEventListener('mouseenter', () => {
+                    const rating = parseInt(star.dataset.rating);
+                    highlightStars(rating);
+                });
+            });
+
+            document.getElementById('reviewStars').addEventListener('mouseleave', () => {
+                updateReviewStars();
+            });
+
+            // Load vehicles
+            loadVehicles();
         });
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Booking functions
+        function openBookingModal(serviceId) {
+            currentServiceId = serviceId;
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+
+            document.getElementById('bookingModalTitle').textContent = `Book: ${service.name}`;
+
+            // Populate time slots
+            const slotsContainer = document.getElementById('bookingSlots');
+            slotsContainer.innerHTML = '';
+            const slots = service.bookingSlots || ['09:00', '10:00', '11:00', '14:00', '15:00'];
+            slots.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.className = 'slot-btn';
+                btn.textContent = slot;
+                btn.onclick = () => {
+                    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedSlot = slot;
+                };
+                slotsContainer.appendChild(btn);
+            });
+
+            selectedSlot = null;
+            openModal('bookingModal');
+        }
+
+        async function submitBooking() {
+            const vehicleId = document.getElementById('bookingVehicle').value;
+            if (!vehicleId) {
+                alert('Please select a vehicle');
+                return;
+            }
+            if (!selectedSlot) {
+                alert('Please select a time slot');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/book`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        serviceId: currentServiceId,
+                        vehicleId: parseInt(vehicleId),
+                        timeSlot: selectedSlot,
+                        type: 'garage'
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Booking confirmed! Your slot: ' + selectedSlot);
+                    closeModal('bookingModal');
+                } else {
+                    alert('Booking saved (demo mode)');
+                    closeModal('bookingModal');
+                }
+            } catch (error) {
+                alert('Booking saved (demo mode)');
+                closeModal('bookingModal');
+            }
+        }
+
+        // Tow request functions
+        function openTowModal(serviceId) {
+            currentServiceId = serviceId;
+            document.getElementById('towLocation').value = '';
+            document.getElementById('towIssue').value = '';
+            openModal('towModal');
+        }
+
+        function submitTowRequest() {
+            const location = document.getElementById('towLocation').value;
+            const issue = document.getElementById('towIssue').value;
+
+            if (!location || !issue) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            alert('Tow request sent! Help is on the way to: ' + location);
+            closeModal('towModal');
+        }
+
+        // Review functions
+        function openReviewModal(serviceId) {
+            currentServiceId = serviceId;
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+
+            document.getElementById('reviewModalTitle').textContent = `Review: ${service.name}`;
+            document.getElementById('reviewName').value = '';
+            document.getElementById('reviewComment').value = '';
+            selectedRating = 0;
+            updateReviewStars();
+            openModal('reviewModal');
+        }
+
+        function highlightStars(rating) {
+            document.querySelectorAll('.review-star').forEach(star => {
+                const starRating = parseInt(star.dataset.rating);
+                star.classList.toggle('active', starRating <= rating);
+            });
+        }
+
+        function updateReviewStars() {
+            highlightStars(selectedRating);
+        }
+
+        async function submitReview() {
+            const name = document.getElementById('reviewName').value || 'Anonymous';
+            const comment = document.getElementById('reviewComment').value;
+
+            if (selectedRating === 0) {
+                alert('Please select a rating');
+                return;
+            }
+            if (!comment) {
+                alert('Please write a comment');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/reviews`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        serviceId: currentServiceId,
+                        user: name,
+                        rating: selectedRating,
+                        comment: comment
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Review submitted! Thank you.');
+                    closeModal('reviewModal');
+                    loadServices(); // Refresh to show updated trust score
+                } else {
+                    alert('Review saved (demo mode)');
+                    closeModal('reviewModal');
+                }
+            } catch (error) {
+                alert('Review saved (demo mode)');
+                closeModal('reviewModal');
+            }
+        }
+
+        // Vehicle functions
+        async function loadVehicles() {
+            try {
+                const response = await fetch(`${API_BASE}/vehicles`);
+                if (response.ok) {
+                    vehicles = await response.json();
+                    updateVehicleDropdown();
+                }
+            } catch (error) {
+                // Use demo vehicles
+                vehicles = [
+                    { id: 1, name: 'My Toyota Corolla', fuelType: 'petrol', range: 450 },
+                    { id: 2, name: 'Work Truck', fuelType: 'diesel', range: 600 }
+                ];
+                updateVehicleDropdown();
+            }
+        }
+
+        function updateVehicleDropdown() {
+            const select = document.getElementById('bookingVehicle');
+            select.innerHTML = '<option value="">Select Vehicle</option>';
+            vehicles.forEach(v => {
+                const option = document.createElement('option');
+                option.value = v.id;
+                option.textContent = `${v.name} (${v.fuelType})`;
+                select.appendChild(option);
+            });
+        }
+
+        function openAddVehicleModal() {
+            document.getElementById('vehicleName').value = '';
+            document.getElementById('vehicleFuelType').value = 'petrol';
+            document.getElementById('vehicleRange').value = '';
+            openModal('vehicleModal');
+        }
+
+        async function addVehicle() {
+            const name = document.getElementById('vehicleName').value;
+            const fuelType = document.getElementById('vehicleFuelType').value;
+            const range = document.getElementById('vehicleRange').value;
+
+            if (!name || !range) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/vehicles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        fuelType,
+                        range: parseInt(range)
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    vehicles.push(result.vehicle);
+                    updateVehicleDropdown();
+                    alert('Vehicle added!');
+                    closeModal('vehicleModal');
+                } else {
+                    alert('Vehicle added (demo mode)');
+                    closeModal('vehicleModal');
+                }
+            } catch (error) {
+                // Add locally for demo
+                const newVehicle = {
+                    id: vehicles.length + 1,
+                    name,
+                    fuelType,
+                    range: parseInt(range)
+                };
+                vehicles.push(newVehicle);
+                updateVehicleDropdown();
+                alert('Vehicle added!');
+                closeModal('vehicleModal');
+            }
+        }
+
+        // Filter panel functions
+        function toggleFilterPanel() {
+            const content = document.getElementById('filterContent');
+            const toggle = document.querySelector('.filter-toggle');
+            content.classList.toggle('active');
+            toggle.textContent = content.classList.contains('active') ? 'Hide' : 'Show';
+        }
+
+        function resetFilters() {
+            activeFilters = {
+                fuelTypes: [],
+                amenities: [],
+                is24Hours: false,
+                maxPrice: 60,
+                garageServiceType: ''
+            };
+
+            // Reset UI
+            document.querySelectorAll('.filter-checkbox input').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.filter-checkbox').forEach(cb => cb.classList.remove('checked'));
+            document.getElementById('is24Hours').checked = false;
+            document.getElementById('hours24Filter').classList.remove('checked');
+            document.getElementById('maxPrice').value = 60;
+            document.getElementById('maxPriceValue').textContent = '60 ETB';
+            document.getElementById('garageServiceType').value = '';
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            // Build query params
+            const params = new URLSearchParams();
+            if (activeFilters.fuelTypes.length > 0) {
+                params.append('fuelType', activeFilters.fuelTypes[0]);
+            }
+            if (activeFilters.is24Hours) {
+                params.append('is24Hours', 'true');
+            }
+            if (activeFilters.maxPrice < 60) {
+                params.append('maxPrice', activeFilters.maxPrice);
+            }
+
+            // Fetch filtered services
+            fetch(`${API_BASE}/services?${params.toString()}`)
+                .then(res => res.json())
+                .then(filteredServices => {
+                    // Apply client-side filters for amenities and garage service type
+                    let result = filteredServices;
+
+                    if (activeFilters.amenities.length > 0) {
+                        result = result.filter(s =>
+                            s.amenities && activeFilters.amenities.some(a => s.amenities.includes(a))
+                        );
+                    }
+
+                    if (activeFilters.garageServiceType) {
+                        result = result.filter(s =>
+                            s.garageServiceTypes && s.garageServiceTypes.includes(activeFilters.garageServiceType)
+                        );
+                    }
+
+                    // Update markers with filtered results
+                    updateMarkersWithServices(result);
+                })
+                .catch(err => {
+                    console.error('Error applying filters:', err);
+                });
+        }
+
+        function updateMarkersWithServices(serviceList) {
+            markers.forEach(marker => marker.remove());
+            markers = [];
+
+            const filtered = currentFilter === 'all'
+                ? serviceList
+                : serviceList.filter(s => s.type === currentFilter);
+
+            filtered.forEach(service => {
+                const marker = L.marker([service.lat, service.lng], {
+                    icon: createMarkerIcon(service)
+                }).addTo(map);
+
+                marker.bindPopup(createPopupContent(service));
+                markers.push(marker);
+            });
+        }
+
+        // Event listeners for filter checkboxes
+        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+
+                const input = checkbox.querySelector('input');
+                input.checked = !input.checked;
+                checkbox.classList.toggle('checked', input.checked);
+
+                const filterType = checkbox.dataset.filter;
+                const value = checkbox.dataset.value;
+
+                if (filterType === 'fuelType') {
+                    if (input.checked) {
+                        activeFilters.fuelTypes.push(value);
+                    } else {
+                        activeFilters.fuelTypes = activeFilters.fuelTypes.filter(v => v !== value);
+                    }
+                } else if (filterType === 'amenities') {
+                    if (input.checked) {
+                        activeFilters.amenities.push(value);
+                    } else {
+                        activeFilters.amenities = activeFilters.amenities.filter(v => v !== value);
+                    }
+                }
+            });
+        });
+
+        // 24/7 filter
+        document.getElementById('is24Hours').addEventListener('change', (e) => {
+            activeFilters.is24Hours = e.target.checked;
+            document.getElementById('hours24Filter').classList.toggle('checked', e.target.checked);
+        });
+
+        // Max price slider
+        document.getElementById('maxPrice').addEventListener('input', (e) => {
+            activeFilters.maxPrice = parseFloat(e.target.value);
+            document.getElementById('maxPriceValue').textContent = e.target.value + ' ETB';
+        });
+
+        // Garage service type dropdown
+        document.getElementById('garageServiceType').addEventListener('change', (e) => {
+            activeFilters.garageServiceType = e.target.value;
+        });
+
+        // Vehicle selection
+        document.querySelectorAll('.vehicle-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.vehicle-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                const vehicleId = item.dataset.vehicleId;
+                loadVehicleCosts(vehicleId);
+            });
+        });
+
+        // Load vehicle costs
+        async function loadVehicleCosts(vehicleId) {
+            try {
+                const response = await fetch(`${API_BASE}/vehicles/${vehicleId}/costs`);
+                if (response.ok) {
+                    const costs = await response.json();
+                    updateCostChart(costs);
+                }
+            } catch (error) {
+                console.error('Error loading costs:', error);
+            }
+        }
+
+        function updateCostChart(costs) {
+            const fuelCosts = costs.filter(c => c.type === 'fuel').reduce((sum, c) => sum + c.amount, 0);
+            const repairCosts = costs.filter(c => c.type === 'repair').reduce((sum, c) => sum + c.amount, 0);
+
+            document.getElementById('totalFuelCost').textContent = fuelCosts.toLocaleString();
+            document.getElementById('totalRepairCost').textContent = repairCosts.toLocaleString();
+
+            // Update bars
+            const barsContainer = document.getElementById('costBars');
+            barsContainer.innerHTML = '';
+
+            costs.forEach(cost => {
+                const bar = document.createElement('div');
+                bar.className = 'cost-bar';
+                const maxAmount = Math.max(...costs.map(c => c.amount));
+                const width = (cost.amount / maxAmount) * 100;
+                const typeClass = cost.type === 'fuel' ? 'fuel' : 'repair';
+
+                bar.innerHTML = `
+                    <span class="cost-bar-label">${new Date(cost.date).toLocaleString('default', { month: 'short' })}</span>
+                    <div class="cost-bar-track">
+                        <div class="cost-bar-fill ${typeClass}" style="width: ${width}%"></div>
+                    </div>
+                    <span class="cost-bar-value">${cost.amount.toLocaleString()}</span>
+                `;
+                barsContainer.appendChild(bar);
+            });
+        }
     </script>
 </body>
 </html>

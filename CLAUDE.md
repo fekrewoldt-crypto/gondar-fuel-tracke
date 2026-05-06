@@ -37,7 +37,7 @@ Multi-service architecture documented in separate files:
 | File | Purpose |
 |------|---------|
 | `server.js` | Demo backend with 28 locations (12 fuel, 7 mechanic, 6 tire, 3 car wash) |
-| `index.html` | Demo frontend - Leaflet map, filter buttons, report form, dark theme dashboard |
+| `index.html` | Demo frontend - Leaflet map, filters, booking, reviews, vehicle profiles |
 | `START-DEMO.command` | Mac launcher script |
 | `LOCATIONS.md` | All 28 service locations with coordinates and details |
 
@@ -45,9 +45,15 @@ Multi-service architecture documented in separate files:
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/services` | GET | Get all services (optionally filter by `?type=`) |
+| `/api/services` | GET | Get all services (filter by `?type=`, `?fuelType=`, `?maxPrice=`, `?is24Hours=true`) |
 | `/api/services/:id` | GET | Get single service by ID |
+| `/api/services/:id/reviews` | GET | Get reviews for a service |
 | `/api/report` | POST | Submit status update `{serviceId, status, price?}` |
+| `/api/reviews` | POST | Submit a review `{serviceId, user, rating, comment}` |
+| `/api/book` | POST | Book a service slot `{serviceId, vehicleId, timeSlot, type}` |
+| `/api/vehicles` | GET/POST | Get all vehicles or add new vehicle |
+| `/api/vehicles/:id` | GET | Get vehicle details |
+| `/api/vehicles/:id/costs` | GET | Get vehicle cost history |
 | `/api/stats` | GET | Get aggregated statistics |
 
 Service types: `fuel_station`, `mechanic`, `tire_shop`, `car_wash`
@@ -56,6 +62,14 @@ Status values:
 - Fuel stations: `available`, `low`, `empty`
 - Other services: `open`, `busy`, `closed`
 
+## Service Data Structure
+
+Each service object includes:
+- Basic: `id`, `name`, `type`, `lat`, `lng`, `status`, `price`, `phone`, `services`, `lastUpdated`
+- Trust: `trustScore` (0-5), `reviewCount`, `isVerified`, `reviews[]`
+- Fuel stations: `fuelTypes[]`, `amenities[]`, `is24Hours`
+- Garages: `bookingSlots[]`, `garageServiceTypes[]`
+
 ## Geographic Constraints
 
 All locations are validated against Gondar city bounds:
@@ -63,6 +77,30 @@ All locations are validated against Gondar city bounds:
 - Longitude: 37.38 to 37.54
 
 The Azezo area (south of Gondar on the Bahir Dar highway) is a key fuel corridor with 5 fuel stations plus associated mechanics and tire shops.
+
+## Demo Features
+
+### Trust & Reviews
+- Star ratings (0-5) with review counts
+- Verified badge for trusted services
+- Review submission with ratings and comments
+
+### Booking System
+- Time slot booking for garages and car washes
+- Tow request form for emergency service
+- Direct call buttons via `tel:` links
+
+### Personalized Filters
+- Fuel type (diesel/petrol)
+- Amenities (store, restroom, ATM, car wash)
+- 24/7 availability toggle
+- Max price slider
+- Garage service type dropdown
+
+### Vehicle Profiles
+- Save multiple vehicles with fuel type and range
+- Track preferred garage
+- View cost history (fuel vs repairs)
 
 ## Documentation Reference
 
@@ -85,10 +123,23 @@ curl http://localhost:3000/api/services
 # Get only fuel stations
 curl http://localhost:3000/api/services?type=fuel_station
 
+# Filter by fuel type and 24/7
+curl "http://localhost:3000/api/services?fuelType=diesel&is24Hours=true"
+
 # Submit a report
 curl -X POST http://localhost:3000/api/report \
   -H "Content-Type: application/json" \
   -d '{"serviceId": 1, "status": "available", "price": 54.50}'
+
+# Submit a review
+curl -X POST http://localhost:3000/api/reviews \
+  -H "Content-Type: application/json" \
+  -d '{"serviceId": 1, "user": "Abebe", "rating": 5, "comment": "Great!"}'
+
+# Book a slot
+curl -X POST http://localhost:3000/api/book \
+  -H "Content-Type: application/json" \
+  -d '{"serviceId": 13, "vehicleId": 1, "timeSlot": "09:00", "type": "garage"}'
 ```
 
 ## Code Style
