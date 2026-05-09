@@ -271,12 +271,27 @@
             padding: 4px;
             border: 1px solid rgba(244, 162, 97, 0.3);
             box-shadow: 0 0 20px rgba(244, 162, 97, 0.1);
+            z-index: 1;
+            position: relative;
         }
 
         #map {
             height: 460px;
             border-radius: 14px;
             overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Map overlay to prevent interaction when sheet is open */
+        #mapOverlay {
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            display: none;
+        }
+
+        #mapOverlay.active {
+            display: block;
         }
 
         @media (min-width: 900px) {
@@ -1539,6 +1554,56 @@
 
         .auth-step.active {
             display: block;
+        }
+
+        .role-toggle {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .role-toggle input[type="radio"] {
+            display: none;
+        }
+
+        .role-toggle .role-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .role-toggle .role-option:hover {
+            border-color: var(--color-brand-primary);
+            background: rgba(244, 162, 97, 0.1);
+        }
+
+        .role-toggle input[type="radio"]:checked + .role-option {
+            background: rgba(244, 162, 97, 0.2);
+            border-color: var(--color-brand-primary);
+            color: var(--color-brand-primary);
+        }
+
+        .role-toggle .role-icon {
+            font-size: 1.1rem;
+        }
+
+        #vehicleTypeGroup {
+            transition: opacity 0.2s ease;
+        }
+
+        #vehicleTypeGroup.hidden {
+            opacity: 0.3;
+            pointer-events: none;
         }
 
         .auth-link {
@@ -5402,10 +5467,25 @@
                 <h3 style="color: #f8fafc; margin-bottom: 8px;">Almost there!</h3>
                 <p style="color: #64748b; margin-bottom: 16px;">Tell us about yourself</p>
                 <div class="input-group">
-                    <label>Your Name</label>
-                    <input type="text" placeholder="Full name" id="newFullNameInput">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Your full name" id="newFullNameInput">
                 </div>
                 <div class="input-group">
+                    <label>I am a</label>
+                    <div class="role-toggle">
+                        <input type="radio" name="userRole" id="roleDriver" value="driver" checked>
+                        <label for="roleDriver" class="role-option">
+                            <span class="role-icon">🚗</span>
+                            <span>Driver</span>
+                        </label>
+                        <input type="radio" name="userRole" id="roleProvider" value="provider">
+                        <label for="roleProvider" class="role-option">
+                            <span class="role-icon">⛽</span>
+                            <span>Station Provider</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="input-group" id="vehicleTypeGroup">
                     <label>Vehicle Type</label>
                     <select id="newVehicleTypeSelect">
                         <option value="">Select vehicle</option>
@@ -5491,6 +5571,7 @@
                         <p>Loading map...</p>
                     </div>
                 </div>
+                <div id="mapOverlay"></div>
             </div>
             <div class="legend-container">
                 <div class="legend-item">
@@ -6640,6 +6721,35 @@
         let markers = [];
         let services = [];
         let currentFilter = 'all';
+        let searchQuery = '';
+        let currentLanguage = 'en';
+
+        // Translations
+        const translations = {
+            en: {
+                searchPlaceholder: 'Search stations...',
+                filterAll: 'All',
+                filterFuel: '⛽ Fuel',
+                filterMechanic: '🔧 Mechanic',
+                filterTire: '🛞 Tire',
+                filterCarWash: '🚿 Wash',
+                filterAvailable: '🟢 Available',
+                signIn: 'Sign In',
+                noResults: 'No results found'
+            },
+            am: {
+                searchPlaceholder: 'ጋይ እናይ...',
+                filterAll: 'ሁሉ',
+                filterFuel: '⛽ ነዳጅ',
+                filterMechanic: '🔧 ሜካኒክ',
+                filterTire: '🛞 ጎምባር',
+                filterCarWash: '🚿 መታጠቢያ',
+                filterAvailable: '🟢 ነቅል',
+                signIn: 'ግባ',
+                noResults: 'ውጤት አልተገኘም'
+            }
+        };
+
         let currentServiceId = null;
         let selectedRating = 0;
         let selectedSlot = null;
@@ -6808,6 +6918,7 @@
             document.getElementById('sheetBackdrop').classList.add('visible');
             document.getElementById('stationSheet').classList.add('open');
             document.getElementById('stationSheet').classList.remove('half', 'full');
+            document.getElementById('mapOverlay').classList.add('active');
 
             // Reset to info tab
             document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
@@ -6822,6 +6933,7 @@
         function closeStationSheet() {
             document.getElementById('sheetBackdrop').classList.remove('visible');
             document.getElementById('stationSheet').classList.remove('open', 'peek', 'half', 'full');
+            document.getElementById('mapOverlay').classList.remove('active');
             currentSheetService = null;
             sheetCurrentState = 'closed';
 
@@ -7383,6 +7495,33 @@
             }, 500);
         }
 
+        // Apply translations to UI elements
+        function applyTranslations() {
+            const t = translations[currentLanguage];
+
+            // Update search placeholder
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.placeholder = t.searchPlaceholder;
+            }
+
+            // Update filter chips
+            const filterChips = document.querySelectorAll('.filter-chips .chip');
+            const chipLabels = [t.filterAll, t.filterFuel, t.filterMechanic, t.filterTire, t.filterCarWash, t.filterAvailable];
+            filterChips.forEach((chip, index) => {
+                if (chipLabels[index]) {
+                    chip.textContent = chipLabels[index];
+                }
+            });
+
+            // Update sign in button
+            const signInBtn = document.getElementById('signInBtn');
+            if (signInBtn) {
+                const signInSpan = signInBtn.querySelector('span');
+                if (signInSpan) signInSpan.textContent = t.signIn;
+            }
+        }
+
         // Create custom marker icon
         function createMarkerIcon(service) {
             const typeConfig = serviceTypes[service.type] || { icon: '📍' };
@@ -7752,9 +7891,17 @@
             markers.forEach(marker => marker.remove());
             markers = [];
 
-            const filtered = currentFilter === 'all'
+            let filtered = currentFilter === 'all'
                 ? services
                 : services.filter(s => s.type === currentFilter);
+
+            // Apply search query filter
+            if (searchQuery) {
+                filtered = filtered.filter(s =>
+                    s.name.toLowerCase().includes(searchQuery) ||
+                    (s.services && s.services.some(srv => srv.toLowerCase().includes(searchQuery)))
+                );
+            }
 
             filtered.forEach(service => {
                 const marker = L.marker([service.lat, service.lng], {
@@ -7899,16 +8046,179 @@
                 signInBtn.addEventListener('click', () => openAuthModal('login'));
             }
 
+            // Clean auth modal: close button
+            const cleanAuthClose = document.getElementById('cleanAuthClose');
+            if (cleanAuthClose) {
+                cleanAuthClose.addEventListener('click', () => {
+                    document.getElementById('cleanAuthModal').classList.remove('active'));
+                });
+            }
+
+            // Clean auth: Send OTP button
+            const newSendOtpBtn = document.getElementById('newSendOtpBtn');
+            if (newSendOtpBtn) {
+                newSendOtpBtn.addEventListener('click', async () => {
+                    const phone = document.getElementById('newPhoneInput').value.trim();
+                    if (!phone) {
+                        showToast('Please enter your phone number', 'error');
+                        return;
+                    }
+                    newSendOtpBtn.disabled = true;
+                    newSendOtpBtn.textContent = 'Sending...';
+                    try {
+                        const response = await fetch(`${API_BASE}/auth/request-otp`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ phone })
+                        });
+                        if (response.ok) {
+                            pendingPhone = phone;
+                            document.getElementById('newSentPhone').textContent = phone;
+                            document.getElementById('newAuthStep1').classList.remove('active');
+                            document.getElementById('newAuthStep2').classList.add('active');
+                            setupNewOTPInputs();
+                        } else {
+                            const data = await response.json();
+                            showToast(data.message || 'Failed to send code', 'error');
+                        }
+                    } catch (error) {
+                        showToast('Network error. Please try again.', 'error');
+                    } finally {
+                        newSendOtpBtn.disabled = false;
+                        newSendOtpBtn.textContent = 'Send Code';
+                    }
+                });
+            }
+
+            // Clean auth: Verify OTP button
+            const newVerifyOtpBtn = document.getElementById('newVerifyOtpBtn');
+            if (newVerifyOtpBtn) {
+                newVerifyOtpBtn.addEventListener('click', async () => {
+                    const inputs = document.querySelectorAll('.otp-digit');
+                    const otp = Array.from(inputs).map(i => i.value).join('');
+                    if (otp.length !== 6) {
+                        showToast('Please enter the 6-digit code', 'error');
+                        return;
+                    }
+                    newVerifyOtpBtn.disabled = true;
+                    newVerifyOtpBtn.textContent = 'Verifying...';
+                    try {
+                        const response = await fetch(`${API_BASE}/auth/verify-otp`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ phone: pendingPhone, otp })
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            localStorage.setItem('authToken', data.token);
+                            if (data.isNewUser) {
+                                document.getElementById('newAuthStep2').classList.remove('active');
+                                document.getElementById('newAuthStep3').classList.add('active');
+                            } else {
+                                currentUser = data.user;
+                                document.getElementById('cleanAuthModal').classList.remove('active');
+                                updateAuthHeader();
+                                showToast('Welcome back!', 'success');
+                            }
+                        } else {
+                            const data = await response.json();
+                            showToast(data.message || 'Invalid code', 'error');
+                        }
+                    } catch (error) {
+                        showToast('Network error. Please try again.', 'error');
+                    } finally {
+                        newVerifyOtpBtn.disabled = false;
+                        newVerifyOtpBtn.textContent = 'Verify';
+                    }
+                });
+            }
+
+            // Clean auth: Change phone button
+            const newChangePhoneBtn = document.getElementById('newChangePhoneBtn');
+            if (newChangePhoneBtn) {
+                newChangePhoneBtn.addEventListener('click', () => {
+                    document.getElementById('newAuthStep1').classList.add('active');
+                    document.getElementById('newAuthStep2').classList.remove('active');
+                });
+            }
+
+            // Clean auth: Complete registration button
+            const newCompleteRegBtn = document.getElementById('newCompleteRegBtn');
+            if (newCompleteRegBtn) {
+                newCompleteRegBtn.addEventListener('click', async () => {
+                    const fullName = document.getElementById('newFullNameInput').value.trim();
+                    if (!fullName) {
+                        showToast('Please enter your full name', 'error');
+                        return;
+                    }
+                    const role = document.querySelector('input[name="userRole"]:checked')?.value || 'driver';
+                    const vehicleType = document.getElementById('newVehicleTypeSelect')?.value || '';
+
+                    newCompleteRegBtn.disabled = true;
+                    newCompleteRegBtn.textContent = 'Creating account...';
+
+                    try {
+                        const endpoint = role === 'provider'
+                            ? `${API_BASE}/auth/register/provider`
+                            : `${API_BASE}/auth/register/driver`;
+                        const body = {
+                            phone: pendingPhone,
+                            name: fullName,
+                            role: role
+                        };
+                        if (role === 'driver' && vehicleType) {
+                            body.vehicleType = vehicleType;
+                        }
+
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(body)
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            localStorage.setItem('authToken', data.token);
+                            currentUser = { ...data.user, role: role };
+                            document.getElementById('cleanAuthModal').classList.remove('active');
+                            updateAuthHeader();
+                            updateUserDashboards();
+                            showToast(`Welcome, ${fullName}!`, 'success');
+                        } else {
+                            const data = await response.json();
+                            showToast(data.message || 'Registration failed', 'error');
+                        }
+                    } catch (error) {
+                        showToast('Network error. Please try again.', 'error');
+                    } finally {
+                        newCompleteRegBtn.disabled = false;
+                        newCompleteRegBtn.textContent = 'Get Started';
+                    }
+                });
+            }
+
+            // Role toggle: show/hide vehicle type based on role
+            document.querySelectorAll('input[name="userRole"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const vehicleGroup = document.getElementById('vehicleTypeGroup');
+                    if (vehicleGroup) {
+                        if (e.target.value === 'provider') {
+                            vehicleGroup.classList.add('hidden');
+                        } else {
+                            vehicleGroup.classList.remove('hidden');
+                        }
+                    }
+                });
+            });
+
             // Language toggle handler
             const langToggle = document.getElementById('langToggle');
             if (langToggle) {
                 langToggle.addEventListener('click', () => {
-                    const currentLang = langToggle.querySelector('.lang-current');
-                    if (currentLang.textContent === 'EN') {
-                        currentLang.textContent = 'አማ';
-                    } else {
-                        currentLang.textContent = 'EN';
-                    }
+                    const currentLangSpan = langToggle.querySelector('.lang-current');
+                    currentLanguage = currentLanguage === 'en' ? 'am' : 'en';
+                    currentLangSpan.textContent = currentLanguage === 'en' ? 'EN' : 'አማ';
+                    applyTranslations();
                 });
             }
 
@@ -7918,6 +8228,25 @@
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     currentFilter = btn.dataset.filter;
+                    updateMarkers();
+                });
+            });
+
+            // Search input handler
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchQuery = e.target.value.toLowerCase().trim();
+                    updateMarkers();
+                });
+            }
+
+            // Filter chips handler
+            document.querySelectorAll('.filter-chips .chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentFilter = chip.dataset.filter;
                     updateMarkers();
                 });
             });
@@ -8729,8 +9058,6 @@
         }
 
         // ============ DRIVER QUOTA ============
-        let driverQuota = { diesel: { used: 0, limit: 100 }, petrol: { used: 0, limit: 100 } };
-
         async function loadDriverQuota() {
             try {
                 const response = await fetch(`${API_BASE}/driver/quota`, {
@@ -8890,8 +9217,8 @@
         }
 
         // ============ PURCHASE MODAL ============
-        let currentPurchaseService = null;
-        let currentTransactionId = null;
+        currentPurchaseService = null;
+        currentTransactionId = null;
 
         function openPurchaseModal(serviceId) {
             const service = services.find(s => s.id === serviceId);
