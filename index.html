@@ -23,70 +23,166 @@
             box-sizing: border-box;
         }
 
+        /* ===================================
+   CSS Custom Properties - Design System
+   =================================== */
+
+        :root {
+            /* Primary Brand Colors */
+            --color-brand-primary: #f4a261;
+            --color-brand-secondary: #e76f51;
+            --color-brand-gradient: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+
+            /* Service Type Colors */
+            --color-fuel: #ef4444;
+            --color-mechanic: #3b82f6;
+            --color-tire: #f97316;
+            --color-carwash: #14b8a6;
+
+            /* Status Colors */
+            --color-available: #22c55e;
+            --color-low: #eab308;
+            --color-empty: #ef4444;
+            --color-open: #22c55e;
+            --color-busy: #eab308;
+            --color-closed: #ef4444;
+
+            /* Feedback Colors */
+            --color-success: #22c55e;
+            --color-success-bg: rgba(34, 197, 94, 0.15);
+            --color-success-text: #4ade80;
+            --color-success-border: rgba(34, 197, 94, 0.3);
+            --color-warning: #f59e0b;
+            --color-warning-bg: rgba(245, 158, 11, 0.15);
+            --color-warning-text: #fbbf24;
+            --color-warning-border: rgba(245, 158, 11, 0.3);
+            --color-danger: #ef4444;
+            --color-danger-bg: rgba(239, 68, 68, 0.15);
+            --color-danger-text: #f87171;
+            --color-danger-border: rgba(239, 68, 68, 0.3);
+            --color-info: #3b82f6;
+            --color-info-bg: rgba(59, 130, 246, 0.15);
+            --color-info-text: #60a5fa;
+            --color-info-border: rgba(59, 130, 246, 0.3);
+
+            /* Background Colors */
+            --bg-primary: #0a0a14;
+            --bg-surface: #1a1a2e;
+            --bg-elevated: #0f0f1a;
+            --bg-hover: #252540;
+            --bg-overlay: rgba(0, 0, 0, 0.7);
+
+            /* Text Colors */
+            --text-primary: #e0e0e0;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --text-accent: #f4a261;
+            --text-inverse: #ffffff;
+
+            /* Border Colors */
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-default: rgba(255, 255, 255, 0.15);
+            --border-strong: rgba(255, 255, 255, 0.3);
+
+            /* Typography Scale */
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 2rem;
+
+            --font-normal: 400;
+            --font-medium: 500;
+            --font-semibold: 600;
+            --font-bold: 700;
+            --font-extrabold: 800;
+
+            --leading-none: 1;
+            --leading-tight: 1.25;
+            --leading-normal: 1.5;
+            --leading-relaxed: 1.75;
+
+            /* Spacing Scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 10px;
+            --radius-xl: 12px;
+            --radius-2xl: 16px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(244, 162, 97, 0.1);
+
+            /* Transitions */
+            --transition-fast: 150ms ease-out;
+            --transition-base: 200ms ease-out;
+            --transition-slow: 300ms ease-out;
+        }
+
+        /* =================================== */
+
         body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a14;
-            color: #e0e0e0;
-            line-height: 1.5;
+            font-family: var(--font-family);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: var(--leading-normal);
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 15px;
+            padding: var(--space-4);
+            padding-top: 185px;
         }
 
-        header {
-            text-align: center;
-            padding: 20px 25px;
-            background: linear-gradient(90deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            color: white;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            position: relative;
-            border-bottom: 2px solid #f4a261;
+        @media (min-width: 768px) {
+            .container {
+                padding-top: 165px;
+            }
         }
 
-        header h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
+        /* Old gradient header - Hidden, replaced by minimal fixed header */
+        header:not(.app-header) {
+            display: none !important;
         }
 
-        header h1 .fuel-icon {
-            position: relative;
-            display: inline-block;
+        /* Old gradient header styles - Hidden */
+        header:not(.app-header) h1,
+        header:not(.app-header) p,
+        header:not(.app-header) .last-updated {
+            display: none !important;
         }
 
-        header h1 .fuel-icon::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, rgba(244, 162, 97, 0.3) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: -1;
+        /* Hide the old header stats bar top margin since we have fixed header */
+        /* Old header elements hidden */
+        header:not(.app-header) .fuel-icon {
+            display: none !important;
         }
 
-        header p {
-            font-size: 0.95rem;
-            opacity: 0.85;
-            font-weight: 400;
-        }
-
-        .last-updated {
-            font-size: 0.8rem;
-            margin-top: 10px;
-            opacity: 0.7;
-            font-weight: 500;
+        header:not(.app-header) p,
+        header:not(.app-header) .last-updated {
+            display: none !important;
         }
 
         .stats-bar {
@@ -96,21 +192,27 @@
             margin-bottom: 20px;
         }
 
+        @media (min-width: 768px) {
+            .stats-bar {
+                margin-top: 160px;
+            }
+        }
+
         .stat-card {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             padding: 18px 14px;
             border-radius: 16px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
             transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .stat-card.fuel { border-left: 4px solid #ef4444; }
-        .stat-card.mechanic { border-left: 4px solid #3b82f6; }
-        .stat-card.tire { border-left: 4px solid #f97316; }
-        .stat-card.carwash { border-left: 4px solid #14b8a6; }
+        .stat-card.fuel { border-left: 4px solid var(--color-fuel); }
+        .stat-card.mechanic { border-left: 4px solid var(--color-mechanic); }
+        .stat-card.tire { border-left: 4px solid var(--color-tire); }
+        .stat-card.carwash { border-left: 4px solid var(--color-carwash); }
 
         .stat-card:hover {
             transform: translateY(-3px);
@@ -138,14 +240,14 @@
             margin-bottom: 4px;
         }
 
-        .stat-card.fuel .number { color: #ef4444; }
-        .stat-card.mechanic .number { color: #3b82f6; }
-        .stat-card.tire .number { color: #f97316; }
-        .stat-card.carwash .number { color: #14b8a6; }
+        .stat-card.fuel .number { color: var(--color-fuel); }
+        .stat-card.mechanic .number { color: var(--color-mechanic); }
+        .stat-card.tire .number { color: var(--color-tire); }
+        .stat-card.carwash .number { color: var(--color-carwash); }
 
         .stat-card .label {
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             text-transform: uppercase;
             font-weight: 600;
             letter-spacing: 0.5px;
@@ -164,7 +266,7 @@
         }
 
         .map-wrapper {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 4px;
             border: 1px solid rgba(244, 162, 97, 0.3);
@@ -190,32 +292,32 @@
 
         .leaflet-control-zoom-in,
         .leaflet-control-zoom-out {
-            background: #1a1a2e !important;
-            color: #fff !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: var(--bg-surface) !important;
+            color: var(--text-inverse) !important;
+            border: 1px solid var(--border-subtle) !important;
             font-weight: 600 !important;
             font-size: 1.2rem !important;
         }
 
         .leaflet-control-zoom-in:hover,
         .leaflet-control-zoom-out:hover {
-            background: #252540 !important;
+            background: var(--bg-hover) !important;
         }
 
         .panel {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
         }
 
         .panel h2 {
             font-size: 1.1rem;
             margin-bottom: 16px;
-            color: #fff;
+            color: var(--text-inverse);
             font-weight: 700;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         /* Filter Buttons */
@@ -228,8 +330,8 @@
 
         .filter-btn {
             padding: 10px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: #0f0f1a;
+            border: 1px solid var(--border-default);
+            background: var(--bg-elevated);
             border-radius: 25px;
             font-size: 0.85rem;
             font-weight: 500;
@@ -238,47 +340,47 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-family: 'Inter', sans-serif;
         }
 
         .filter-btn:hover {
-            background: #1a1a2e;
-            border-color: rgba(255, 255, 255, 0.3);
+            background: var(--bg-surface);
+            border-color: var(--border-strong);
         }
 
         .filter-btn.active[data-filter="fuel_station"] {
-            background: #ef4444;
-            border-color: #ef4444;
+            background: var(--color-fuel);
+            border-color: var(--color-fuel);
             color: white;
         }
 
         .filter-btn.active[data-filter="mechanic"] {
-            background: #3b82f6;
-            border-color: #3b82f6;
+            background: var(--color-mechanic);
+            border-color: var(--color-mechanic);
             color: white;
         }
 
         .filter-btn.active[data-filter="tire_shop"] {
-            background: #f97316;
-            border-color: #f97316;
+            background: var(--color-tire);
+            border-color: var(--color-tire);
             color: white;
         }
 
         .filter-btn.active[data-filter="car_wash"] {
-            background: #14b8a6;
-            border-color: #14b8a6;
+            background: var(--color-carwash);
+            border-color: var(--color-carwash);
             color: white;
         }
 
         .filter-btn.active[data-filter="all"] {
-            background: linear-gradient(135deg, #f4a261, #e76f51);
-            border-color: #f4a261;
+            background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-secondary));
+            border-color: var(--color-brand-primary);
             color: white;
         }
 
         .filter-btn .count {
-            background: rgba(255, 255, 255, 0.15);
+            background: var(--border-default);
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 0.75rem;
@@ -288,7 +390,7 @@
         }
 
         .filter-btn.active .count {
-            background: rgba(255, 255, 255, 0.25);
+            background: var(--border-strong);
         }
 
         /* Form Styles */
@@ -301,12 +403,12 @@
             margin-bottom: 8px;
             font-weight: 600;
             font-size: 0.9rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .form-group label small {
             font-weight: 400;
-            color: #6b7280;
+            color: var(--text-muted);
             font-size: 0.8rem;
         }
 
@@ -314,11 +416,11 @@
         .form-group input {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 10px;
             font-size: 0.95rem;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
         }
@@ -326,19 +428,19 @@
         .form-group select:focus,
         .form-group input:focus {
             outline: none;
-            border-color: #f4a261;
+            border-color: var(--color-brand-primary);
             box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
         }
 
         .form-group select option {
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
         }
 
         .btn-submit {
             width: 100%;
             padding: 14px 20px;
-            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            background: var(--color-brand-gradient);
             color: white;
             border: none;
             border-radius: 12px;
@@ -373,14 +475,14 @@
 
         .message.success {
             background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
+            color: var(--color-success-text);
             border: 1px solid rgba(34, 197, 94, 0.3);
             display: block;
         }
 
         .message.error {
             background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
+            color: var(--color-danger-text);
             border: 1px solid rgba(239, 68, 68, 0.3);
             display: block;
         }
@@ -388,15 +490,15 @@
         .loading {
             text-align: center;
             padding: 40px;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .loading-spinner {
             display: inline-block;
             width: 35px;
             height: 35px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top-color: #f4a261;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--color-brand-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -431,12 +533,12 @@
             flex-shrink: 0;
         }
 
-        .legend-dot.available { background: #22c55e; }
-        .legend-dot.low { background: #eab308; }
-        .legend-dot.empty { background: #ef4444; }
-        .legend-dot.open { background: #22c55e; }
-        .legend-dot.busy { background: #eab308; }
-        .legend-dot.closed { background: #ef4444; }
+        .legend-dot.available { background: var(--color-available); }
+        .legend-dot.low { background: var(--color-low); }
+        .legend-dot.empty { background: var(--color-fuel); }
+        .legend-dot.open { background: var(--color-available); }
+        .legend-dot.busy { background: var(--color-low); }
+        .legend-dot.closed { background: var(--color-fuel); }
 
         .custom-marker {
             display: flex;
@@ -457,7 +559,7 @@
 
         .popup-content h3 {
             margin-bottom: 10px;
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1.05rem;
             font-weight: 600;
         }
@@ -500,13 +602,13 @@
         .popup-content .services-list {
             margin-top: 8px;
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .popup-content .phone {
             margin-top: 8px;
             font-size: 0.85rem;
-            color: #60a5fa;
+            color: var(--color-info-text);
         }
 
         /* Trust Score Styles */
@@ -518,17 +620,17 @@
         }
 
         .trust-score .stars {
-            color: #fbbf24;
+            color: var(--color-warning-text);
             font-size: 0.9rem;
         }
 
         .trust-score .score {
             font-weight: 600;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .trust-score .count {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.75rem;
         }
 
@@ -537,7 +639,7 @@
             align-items: center;
             gap: 4px;
             background: rgba(34, 197, 94, 0.2);
-            color: #4ade80;
+            color: var(--color-success-text);
             padding: 3px 8px;
             border-radius: 6px;
             font-size: 0.7rem;
@@ -570,7 +672,7 @@
         }
 
         .action-btn.call {
-            background: #22c55e;
+            background: var(--color-available);
             color: white;
         }
 
@@ -579,7 +681,7 @@
         }
 
         .action-btn.book {
-            background: #3b82f6;
+            background: var(--color-mechanic);
             color: white;
         }
 
@@ -588,7 +690,7 @@
         }
 
         .action-btn.tow {
-            background: #f97316;
+            background: var(--color-tire);
             color: white;
         }
 
@@ -604,7 +706,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: var(--bg-overlay);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -616,17 +718,17 @@
         }
 
         .modal {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 24px;
             max-width: 400px;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         .modal h3 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1.2rem;
             margin-bottom: 16px;
             font-weight: 700;
@@ -638,7 +740,7 @@
             right: 16px;
             background: none;
             border: none;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 1.5rem;
             cursor: pointer;
             width: 32px;
@@ -651,8 +753,8 @@
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: var(--border-subtle);
+            color: var(--text-inverse);
         }
 
         .modal-header {
@@ -669,23 +771,23 @@
 
         .slot-btn {
             padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: #0f0f1a;
+            border: 1px solid var(--border-default);
+            background: var(--bg-elevated);
             border-radius: 8px;
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .slot-btn:hover {
-            border-color: #3b82f6;
+            border-color: var(--color-mechanic);
             background: rgba(59, 130, 246, 0.1);
         }
 
         .slot-btn.selected {
-            background: #3b82f6;
-            border-color: #3b82f6;
+            background: var(--color-mechanic);
+            border-color: var(--color-mechanic);
             color: white;
         }
 
@@ -704,16 +806,16 @@
 
         .review-star:hover,
         .review-star.active {
-            color: #fbbf24;
+            color: var(--color-warning-text);
         }
 
         .review-form textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 10px;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
             resize: vertical;
@@ -723,17 +825,17 @@
 
         .review-form textarea:focus {
             outline: none;
-            border-color: #f4a261;
+            border-color: var(--color-brand-primary);
             box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
         }
 
         .review-form input {
             width: 100%;
             padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 10px;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
             margin-bottom: 16px;
@@ -741,12 +843,12 @@
 
         .review-form input:focus {
             outline: none;
-            border-color: #f4a261;
+            border-color: var(--color-brand-primary);
             box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
         }
 
         .photo-upload {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border: 2px dashed var(--border-strong);
             border-radius: 10px;
             padding: 20px;
             text-align: center;
@@ -756,12 +858,12 @@
         }
 
         .photo-upload:hover {
-            border-color: #3b82f6;
+            border-color: var(--color-mechanic);
             background: rgba(59, 130, 246, 0.05);
         }
 
         .photo-upload p {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.85rem;
             margin: 0;
         }
@@ -776,9 +878,9 @@
             align-items: center;
             gap: 10px;
             padding: 10px 14px;
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
             margin-bottom: 16px;
         }
 
@@ -786,18 +888,18 @@
             flex: 1;
             background: transparent;
             border: none;
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 0.9rem;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
         }
 
         .vehicle-selector select option {
-            background: #1a1a2e;
+            background: var(--bg-surface);
         }
 
         .vehicle-selector .add-btn {
-            background: #3b82f6;
+            background: var(--color-mechanic);
             border: none;
             color: white;
             padding: 6px 10px;
@@ -811,13 +913,91 @@
             background: #2563eb;
         }
 
+        /* ============ ADVANCED FILTERS ============ */
+        .show-advanced-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .show-advanced-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        .show-advanced-btn::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .show-advanced-btn.active::after {
+            transform: rotate(180deg);
+        }
+
+        .advanced-filter-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .advanced-filter-panel.open {
+            max-height: 1200px;
+            opacity: 1;
+        }
+
+        /* Collapsible sections with smooth transitions */
+        .collapsible-section {
+            margin-bottom: 16px;
+        }
+
+        .collapsible-section.hidden-content .collapsible-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        .collapsible-section.hidden-content.collapsed .collapsible-body {
+            max-height: 500px;
+        }
+
+        .collapsible-toggle-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-section.open .collapsible-toggle-icon {
+            transform: rotate(180deg);
+        }
+
         /* Advanced Filter Panel */
         .filter-panel {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
         }
 
         .filter-panel-header {
@@ -828,7 +1008,7 @@
         }
 
         .filter-panel-header h3 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1rem;
             font-weight: 700;
             margin: 0;
@@ -837,7 +1017,7 @@
         .filter-toggle {
             background: none;
             border: none;
-            color: #9ca3af;
+            color: var(--text-secondary);
             cursor: pointer;
             font-size: 0.85rem;
             padding: 4px 8px;
@@ -846,8 +1026,8 @@
         }
 
         .filter-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: var(--border-subtle);
+            color: var(--text-inverse);
         }
 
         .filter-content {
@@ -863,7 +1043,7 @@
         }
 
         .filter-section h4 {
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 10px;
@@ -880,15 +1060,15 @@
             align-items: center;
             gap: 6px;
             padding: 6px 12px;
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
         }
 
         .filter-checkbox:hover {
-            border-color: rgba(255, 255, 255, 0.2);
+            border-color: var(--border-strong);
         }
 
         .filter-checkbox input {
@@ -897,12 +1077,12 @@
 
         .filter-checkbox.checked {
             background: rgba(244, 162, 97, 0.2);
-            border-color: #f4a261;
+            border-color: var(--color-brand-primary);
         }
 
         .filter-checkbox span {
             font-size: 0.8rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .filter-range {
@@ -924,7 +1104,7 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: #f4a261;
+            background: var(--color-brand-primary);
             cursor: pointer;
         }
 
@@ -933,22 +1113,22 @@
             justify-content: space-between;
             margin-top: 6px;
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .filter-select {
             width: 100%;
             padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 8px;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             font-size: 0.85rem;
             cursor: pointer;
         }
 
         .filter-select option {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
         }
 
         .filter-actions {
@@ -969,7 +1149,7 @@
         }
 
         .filter-btn-action.apply {
-            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            background: var(--color-brand-gradient);
             color: white;
         }
 
@@ -980,25 +1160,25 @@
 
         .filter-btn-action.reset {
             background: #2d2d4a;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .filter-btn-action.reset:hover {
             background: #3d3d5a;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         /* Vehicle Profile Card */
         .vehicle-card {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
         }
 
         .vehicle-card h3 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 16px;
@@ -1008,7 +1188,7 @@
         }
 
         .vehicle-card .add-vehicle-btn {
-            background: #3b82f6;
+            background: var(--color-mechanic);
             border: none;
             color: white;
             padding: 6px 12px;
@@ -1029,10 +1209,10 @@
         }
 
         .vehicle-item {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 12px;
             padding: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -1043,7 +1223,7 @@
         }
 
         .vehicle-item.active {
-            border-color: #f4a261;
+            border-color: var(--color-brand-primary);
             background: rgba(244, 162, 97, 0.1);
         }
 
@@ -1055,14 +1235,14 @@
         }
 
         .vehicle-item-name {
-            color: #fff;
+            color: var(--text-inverse);
             font-weight: 600;
             font-size: 0.95rem;
         }
 
         .vehicle-item-fuel {
             background: rgba(59, 130, 246, 0.2);
-            color: #60a5fa;
+            color: var(--color-info-text);
             padding: 3px 8px;
             border-radius: 6px;
             font-size: 0.7rem;
@@ -1073,7 +1253,7 @@
             display: flex;
             gap: 16px;
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .vehicle-item-details span {
@@ -1084,15 +1264,15 @@
 
         /* Cost Tracker Card */
         .cost-card {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
         }
 
         .cost-card h3 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 16px;
@@ -1106,50 +1286,50 @@
         }
 
         .cost-summary-item {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 12px;
             text-align: center;
         }
 
         .cost-summary-item.fuel {
-            border-left: 3px solid #ef4444;
+            border-left: 3px solid var(--color-fuel);
         }
 
         .cost-summary-item.repair {
-            border-left: 3px solid #3b82f6;
+            border-left: 3px solid var(--color-mechanic);
         }
 
         .cost-summary-item .value {
             font-size: 1.4rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .cost-summary-item.fuel .value {
-            color: #ef4444;
+            color: var(--color-fuel);
         }
 
         .cost-summary-item.repair .value {
-            color: #3b82f6;
+            color: var(--color-mechanic);
         }
 
         .cost-summary-item .label {
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             text-transform: uppercase;
             margin-top: 4px;
         }
 
         .cost-chart {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 16px;
             margin-top: 16px;
         }
 
         .cost-chart h4 {
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 12px;
@@ -1170,7 +1350,7 @@
         .cost-bar-label {
             width: 80px;
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .cost-bar-track {
@@ -1188,17 +1368,17 @@
         }
 
         .cost-bar-fill.fuel {
-            background: linear-gradient(90deg, #ef4444, #f97316);
+            background: linear-gradient(90deg, var(--color-fuel), var(--color-tire));
         }
 
         .cost-bar-fill.repair {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(90deg, var(--color-mechanic), #8b5cf6);
         }
 
         .cost-bar-value {
             width: 60px;
             font-size: 0.75rem;
-            color: #fff;
+            color: var(--text-inverse);
             text-align: right;
             font-weight: 600;
         }
@@ -1246,13 +1426,13 @@
         }
 
         .auth-user-name {
-            color: #fff;
+            color: var(--text-inverse);
             font-weight: 600;
             font-size: 0.9rem;
         }
 
         .auth-badge {
-            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            background: var(--color-brand-gradient);
             color: white;
             padding: 4px 10px;
             border-radius: 12px;
@@ -1261,16 +1441,16 @@
         }
 
         .auth-badge.provider {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--color-mechanic) 0%, #8b5cf6 100%);
         }
 
         .auth-badge.admin {
-            background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+            background: linear-gradient(135deg, var(--color-fuel) 0%, var(--color-tire) 100%);
         }
 
         .btn-signin {
             padding: 10px 20px;
-            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            background: var(--color-brand-gradient);
             color: white;
             border: none;
             border-radius: 10px;
@@ -1288,8 +1468,8 @@
         .btn-signout {
             padding: 8px 14px;
             background: #2d2d4a;
-            color: #9ca3af;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
             font-size: 0.8rem;
             font-weight: 600;
@@ -1299,12 +1479,12 @@
 
         .btn-signout:hover {
             background: #3d3d5a;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .btn-dashboard {
             padding: 8px 14px;
-            background: #3b82f6;
+            background: var(--color-mechanic);
             color: white;
             border: none;
             border-radius: 8px;
@@ -1319,7 +1499,7 @@
         }
 
         .btn-dashboard.admin-btn {
-            background: #ef4444;
+            background: var(--color-fuel);
         }
 
         .btn-dashboard.admin-btn:hover {
@@ -1340,16 +1520,16 @@
             text-align: center;
             font-size: 1.5rem;
             font-weight: 700;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid var(--border-strong);
             border-radius: 10px;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             transition: all 0.2s ease;
         }
 
         .otp-input:focus {
             outline: none;
-            border-color: #f4a261;
+            border-color: var(--color-brand-primary);
             box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
         }
 
@@ -1367,7 +1547,7 @@
         }
 
         .auth-link a {
-            color: #f4a261;
+            color: var(--color-brand-primary);
             text-decoration: none;
             font-size: 0.85rem;
             cursor: pointer;
@@ -1379,7 +1559,7 @@
 
         .auth-error {
             background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
+            color: var(--color-danger-text);
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 8px;
             padding: 10px;
@@ -1394,7 +1574,7 @@
 
         .auth-success {
             background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
+            color: var(--color-success-text);
             border: 1px solid rgba(34, 197, 94, 0.3);
             border-radius: 8px;
             padding: 10px;
@@ -1409,23 +1589,23 @@
 
         /* File Upload Styles */
         .file-upload-area {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border: 2px dashed var(--border-strong);
             border-radius: 10px;
             padding: 24px 16px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
             margin-bottom: 16px;
-            background: #0f0f1a;
+            background: var(--bg-elevated);
         }
 
         .file-upload-area:hover {
-            border-color: #3b82f6;
+            border-color: var(--color-mechanic);
             background: rgba(59, 130, 246, 0.05);
         }
 
         .file-upload-area.dragover {
-            border-color: #3b82f6;
+            border-color: var(--color-mechanic);
             background: rgba(59, 130, 246, 0.1);
         }
 
@@ -1435,14 +1615,14 @@
         }
 
         .file-upload-text {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.85rem;
         }
 
         .file-upload-text small {
             display: block;
             margin-top: 4px;
-            color: #6b7280;
+            color: var(--text-muted);
         }
 
         .file-upload-area input[type="file"] {
@@ -1457,18 +1637,18 @@
             max-width: 100%;
             max-height: 120px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
         }
 
         .file-preview .file-name {
             font-size: 0.75rem;
-            color: #4ade80;
+            color: var(--color-success-text);
             margin-top: 6px;
         }
 
         /* Quota Card Styles */
         .quota-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, var(--bg-surface) 0%, #16213e 100%);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
@@ -1476,7 +1656,7 @@
         }
 
         .quota-card h3 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 16px;
@@ -1491,7 +1671,7 @@
             border: none;
             border-radius: 6px;
             padding: 6px 10px;
-            color: #f4a261;
+            color: var(--color-brand-primary);
             cursor: pointer;
             font-size: 0.85rem;
             transition: all 0.2s ease;
@@ -1514,13 +1694,13 @@
 
         .quota-item-label {
             font-size: 0.85rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-weight: 600;
         }
 
         .quota-item-value {
             font-size: 0.85rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .quota-progress {
@@ -1537,7 +1717,7 @@
         }
 
         .quota-progress-fill.high {
-            background: linear-gradient(90deg, #22c55e, #16a34a);
+            background: linear-gradient(90deg, var(--color-available), #16a34a);
         }
 
         .quota-progress-fill.medium {
@@ -1545,31 +1725,31 @@
         }
 
         .quota-progress-fill.low {
-            background: linear-gradient(90deg, #ef4444, #dc2626);
+            background: linear-gradient(90deg, var(--color-fuel), #dc2626);
         }
 
         .quota-progress-fill.empty {
-            background: #6b7280;
+            background: var(--text-muted);
         }
 
         .quota-progress-fill.diesel {
-            background: linear-gradient(90deg, #ef4444, #f97316);
+            background: linear-gradient(90deg, var(--color-fuel), var(--color-tire));
         }
 
         .quota-progress-fill.petrol {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(90deg, var(--color-mechanic), #8b5cf6);
         }
 
         .quota-reset {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--text-muted);
             margin-top: 12px;
             text-align: center;
         }
 
         /* Purchase History Styles */
         .purchase-history {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             margin-top: 20px;
@@ -1577,7 +1757,7 @@
         }
 
         .purchase-history h4 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 0.95rem;
             font-weight: 700;
             margin-bottom: 14px;
@@ -1595,7 +1775,7 @@
         .purchase-history-table th {
             text-align: left;
             padding: 8px 6px;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-weight: 600;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             font-size: 0.7rem;
@@ -1604,7 +1784,7 @@
 
         .purchase-history-table td {
             padding: 10px 6px;
-            color: #e0e0e0;
+            color: var(--text-primary);
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
@@ -1613,25 +1793,25 @@
         }
 
         .purchase-history-table .amount {
-            color: #4ade80;
+            color: var(--color-success-text);
             font-weight: 600;
         }
 
         .purchase-history-table .cost {
-            color: #f4a261;
+            color: var(--color-brand-primary);
             font-weight: 600;
         }
 
         .purchase-history .empty-state {
             text-align: center;
             padding: 20px;
-            color: #6b7280;
+            color: var(--text-muted);
             font-size: 0.85rem;
         }
 
         /* Purchase Modal Styles */
         .purchase-summary {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 16px;
             margin: 16px 0;
@@ -1641,26 +1821,26 @@
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .purchase-row:last-child {
             border-bottom: none;
             font-weight: 700;
-            color: #f4a261;
+            color: var(--color-brand-primary);
         }
 
         .purchase-row span:first-child {
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .purchase-row span:last-child {
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .quota-warning {
             background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
+            color: var(--color-danger-text);
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 8px;
             padding: 12px;
@@ -1675,7 +1855,7 @@
 
         .telebir-notice {
             background: rgba(59, 130, 246, 0.15);
-            color: #60a5fa;
+            color: var(--color-info-text);
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 8px;
             padding: 10px;
@@ -1694,13 +1874,13 @@
         }
 
         .purchase-success h4 {
-            color: #4ade80;
+            color: var(--color-success-text);
             margin-bottom: 12px;
         }
 
         /* Provider Dashboard Styles */
         .provider-dashboard {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
@@ -1708,7 +1888,7 @@
         }
 
         .provider-dashboard h3 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 16px;
@@ -1725,7 +1905,7 @@
         }
 
         .provider-stat {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             text-align: center;
@@ -1734,33 +1914,33 @@
         .provider-stat .value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .provider-stat.capacity .value {
-            color: #3b82f6;
+            color: var(--color-mechanic);
         }
 
         .provider-stat.purchases .value {
-            color: #f4a261;
+            color: var(--color-brand-primary);
         }
 
         .provider-stat .label {
             font-size: 0.7rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             text-transform: uppercase;
             margin-top: 4px;
         }
 
         .provider-capacity-form {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 16px;
         }
 
         .provider-capacity-form label {
             font-size: 0.85rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
             margin-bottom: 8px;
             display: block;
         }
@@ -1774,7 +1954,7 @@
             text-align: center;
             font-size: 1.2rem;
             font-weight: 700;
-            color: #f4a261;
+            color: var(--color-brand-primary);
         }
 
         .capacity-indicators {
@@ -1785,14 +1965,14 @@
 
         .capacity-indicator {
             flex: 1;
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 8px;
             padding: 10px;
         }
 
         .capacity-indicator-label {
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
@@ -1812,7 +1992,7 @@
         }
 
         .capacity-indicator-fill.high {
-            background: linear-gradient(90deg, #22c55e, #16a34a);
+            background: linear-gradient(90deg, var(--color-available), #16a34a);
         }
 
         .capacity-indicator-fill.medium {
@@ -1820,18 +2000,18 @@
         }
 
         .capacity-indicator-fill.low {
-            background: linear-gradient(90deg, #ef4444, #dc2626);
+            background: linear-gradient(90deg, var(--color-fuel), #dc2626);
         }
 
         .delivery-form {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-top: 16px;
         }
 
         .delivery-form h5 {
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.85rem;
             margin-bottom: 12px;
         }
@@ -1847,15 +2027,15 @@
             padding: 8px 10px;
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 6px;
-            background: #1a1a2e;
-            color: #fff;
+            background: var(--bg-surface);
+            color: var(--text-inverse);
             font-size: 0.85rem;
         }
 
         .btn-add-delivery {
             width: 100%;
             padding: 10px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, var(--color-available) 0%, #16a34a 100%);
             color: white;
             border: none;
             border-radius: 6px;
@@ -1873,7 +2053,7 @@
         .btn-update-capacity {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--color-mechanic) 0%, #8b5cf6 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -1891,14 +2071,14 @@
 
         /* Enhanced Provider Dashboard Styles */
         .provider-section {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 16px;
             margin-bottom: 16px;
         }
 
         .provider-section h4 {
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.9rem;
             margin-bottom: 12px;
             display: flex;
@@ -1915,7 +2095,7 @@
         }
 
         .analytics-card {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 12px;
             text-align: center;
@@ -1924,29 +2104,29 @@
         .analytics-card .value {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .analytics-card .label {
             font-size: 0.65rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             text-transform: uppercase;
             margin-top: 4px;
         }
 
-        .analytics-card.revenue .value { color: #22c55e; }
+        .analytics-card.revenue .value { color: var(--color-available); }
         .analytics-card.avg-sales .value { color: #8b5cf6; }
 
         /* Bar Chart */
         .sales-chart {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 16px;
         }
 
         .sales-chart h4 {
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.85rem;
             margin-bottom: 12px;
         }
@@ -1961,7 +2141,7 @@
 
         .chart-bar {
             flex: 1;
-            background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(180deg, var(--color-mechanic), #8b5cf6);
             border-radius: 4px 4px 0 0;
             min-height: 8px;
             transition: height 0.5s ease;
@@ -1969,7 +2149,7 @@
         }
 
         .chart-bar:hover {
-            background: linear-gradient(180deg, #60a5fa, #a78bfa);
+            background: linear-gradient(180deg, var(--color-info-text), #a78bfa);
         }
 
         .chart-bar::after {
@@ -1979,13 +2159,13 @@
             left: 50%;
             transform: translateX(-50%);
             font-size: 0.6rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             white-space: nowrap;
         }
 
         /* Pie Chart */
         .fuel-breakdown {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 16px;
@@ -2001,7 +2181,7 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: conic-gradient(#f4a261 0deg, #22c55e 0deg 180deg, #3b82f6 180deg 360deg);
+            background: conic-gradient(var(--color-brand-primary) 0deg, var(--color-available) 0deg 180deg, var(--color-mechanic) 180deg 360deg);
             position: relative;
         }
 
@@ -2014,7 +2194,7 @@
             align-items: center;
             gap: 8px;
             font-size: 0.75rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
             margin-bottom: 6px;
         }
 
@@ -2026,7 +2206,7 @@
 
         /* Recent Activity */
         .recent-activity {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 16px;
@@ -2051,16 +2231,16 @@
         }
 
         .activity-item .desc {
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .activity-item .time {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.65rem;
         }
 
         .no-activity {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.8rem;
             text-align: center;
             padding: 20px;
@@ -2068,7 +2248,7 @@
 
         /* Admin Panel Styles */
         .admin-panel {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
@@ -2084,7 +2264,7 @@
             display: flex;
             gap: 4px;
             margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-subtle);
             padding-bottom: 12px;
             overflow-x: auto;
         }
@@ -2093,7 +2273,7 @@
             padding: 10px 16px;
             border: none;
             background: transparent;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
@@ -2105,12 +2285,12 @@
 
         .admin-nav-btn:hover {
             background: rgba(255, 255, 255, 0.05);
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .admin-nav-btn.active {
             background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
+            color: var(--color-fuel);
             font-weight: 600;
         }
 
@@ -2130,32 +2310,32 @@
         }
 
         .admin-stat-card {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 12px;
             padding: 20px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
         }
 
         .admin-stat-card .value {
             font-size: 2rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--text-inverse);
             margin-bottom: 4px;
         }
 
         .admin-stat-card .label {
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             text-transform: uppercase;
         }
 
-        .admin-stat-card.users .value { color: #3b82f6; }
-        .admin-stat-card.drivers .value { color: #22c55e; }
-        .admin-stat-card.providers .value { color: #f4a261; }
-        .admin-stat-card.pending .value { color: #eab308; }
+        .admin-stat-card.users .value { color: var(--color-mechanic); }
+        .admin-stat-card.drivers .value { color: var(--color-available); }
+        .admin-stat-card.providers .value { color: var(--color-brand-primary); }
+        .admin-stat-card.pending .value { color: var(--color-low); }
         .admin-stat-card.transactions .value { color: #8b5cf6; }
-        .admin-stat-card.revenue .value { color: #14b8a6; }
+        .admin-stat-card.revenue .value { color: var(--color-carwash); }
 
         .verification-filter {
             display: flex;
@@ -2165,10 +2345,10 @@
 
         .verification-filter-btn {
             padding: 8px 14px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: #0f0f1a;
+            border: 1px solid var(--border-default);
+            background: var(--bg-elevated);
             border-radius: 6px;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -2178,16 +2358,16 @@
         .verification-filter-btn:hover,
         .verification-filter-btn.active {
             background: rgba(244, 162, 97, 0.2);
-            border-color: #f4a261;
-            color: #f4a261;
+            border-color: var(--color-brand-primary);
+            color: var(--color-brand-primary);
         }
 
         .verification-card {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
         }
 
         .verification-header {
@@ -2207,7 +2387,7 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(135deg, var(--color-mechanic), #8b5cf6);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2218,12 +2398,12 @@
 
         .verification-user-info .name {
             font-weight: 600;
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 0.95rem;
         }
 
         .verification-user-info .phone {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.8rem;
         }
 
@@ -2236,15 +2416,15 @@
             margin-top: 4px;
         }
 
-        .role-badge.driver { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
-        .role-badge.provider { background: rgba(244, 162, 97, 0.2); color: #f4a261; }
-        .role-badge.admin { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .role-badge.driver { background: rgba(34, 197, 94, 0.2); color: var(--color-success-text); }
+        .role-badge.provider { background: rgba(244, 162, 97, 0.2); color: var(--color-brand-primary); }
+        .role-badge.admin { background: rgba(239, 68, 68, 0.2); color: var(--color-fuel); }
 
         .verification-meta {
             display: flex;
             gap: 16px;
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             margin-bottom: 12px;
         }
 
@@ -2261,7 +2441,7 @@
             border-radius: 6px;
             padding: 6px 10px;
             font-size: 0.75rem;
-            color: #60a5fa;
+            color: var(--color-info-text);
         }
 
         .verification-actions {
@@ -2272,7 +2452,7 @@
 
         .btn-approve {
             padding: 8px 16px;
-            background: #22c55e;
+            background: var(--color-available);
             color: white;
             border: none;
             border-radius: 6px;
@@ -2286,7 +2466,7 @@
 
         .btn-reject {
             padding: 8px 16px;
-            background: #ef4444;
+            background: var(--color-fuel);
             color: white;
             border: none;
             border-radius: 6px;
@@ -2300,7 +2480,7 @@
 
         .btn-view-docs {
             padding: 8px 14px;
-            background: #3b82f6;
+            background: var(--color-mechanic);
             color: white;
             border: none;
             border-radius: 6px;
@@ -2321,25 +2501,25 @@
         .users-search-bar input {
             flex: 1;
             padding: 10px 14px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 8px;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             font-size: 0.85rem;
             font-family: 'Inter', sans-serif;
         }
 
         .users-search-bar input:focus {
             outline: none;
-            border-color: #f4a261;
+            border-color: var(--color-brand-primary);
         }
 
         .users-search-bar select {
             padding: 10px 14px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 8px;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             font-size: 0.85rem;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
@@ -2353,11 +2533,11 @@
         .users-table th {
             text-align: left;
             padding: 12px 10px;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-weight: 600;
             font-size: 0.75rem;
             text-transform: uppercase;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .users-table td {
@@ -2378,7 +2558,7 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(135deg, var(--color-mechanic), #8b5cf6);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2394,10 +2574,10 @@
             font-weight: 600;
         }
 
-        .status-badge.active { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
-        .status-badge.suspended { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .status-badge.pending { background: rgba(234, 179, 8, 0.2); color: #eab308; }
-        .status-badge.verified { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .status-badge.active { background: rgba(34, 197, 94, 0.2); color: var(--color-success-text); }
+        .status-badge.suspended { background: rgba(239, 68, 68, 0.2); color: var(--color-fuel); }
+        .status-badge.pending { background: rgba(234, 179, 8, 0.2); color: var(--color-low); }
+        .status-badge.verified { background: rgba(34, 197, 94, 0.2); color: var(--color-success-text); }
 
         .user-actions {
             display: flex;
@@ -2406,10 +2586,10 @@
 
         .user-action-btn {
             padding: 6px 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             background: transparent;
             border-radius: 6px;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -2418,12 +2598,12 @@
 
         .user-action-btn:hover {
             background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .user-action-btn.suspend {
             border-color: rgba(239, 68, 68, 0.3);
-            color: #ef4444;
+            color: var(--color-fuel);
         }
 
         .stations-grid {
@@ -2433,10 +2613,10 @@
         }
 
         .station-manage-card {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 12px;
             padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
         }
 
         .station-manage-header {
@@ -2448,19 +2628,19 @@
 
         .station-manage-name {
             font-weight: 600;
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 0.95rem;
         }
 
         .station-manage-location {
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             margin-top: 2px;
         }
 
         .station-manage-owner {
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             margin-bottom: 8px;
         }
 
@@ -2488,7 +2668,7 @@
         .capacity-bar-label {
             width: 50px;
             font-size: 0.7rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .capacity-bar-track {
@@ -2505,20 +2685,20 @@
             border-radius: 3px;
         }
 
-        .capacity-bar-fill.high { background: #22c55e; }
+        .capacity-bar-fill.high { background: var(--color-available); }
         .capacity-bar-fill.medium { background: #f59e0b; }
-        .capacity-bar-fill.low { background: #ef4444; }
+        .capacity-bar-fill.low { background: var(--color-fuel); }
 
         .capacity-bar-value {
             width: 35px;
             font-size: 0.7rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
             text-align: right;
         }
 
         .station-rating {
             font-size: 0.8rem;
-            color: #fbbf24;
+            color: var(--color-warning-text);
             margin-bottom: 8px;
         }
 
@@ -2527,7 +2707,7 @@
         .btn-edit-station {
             flex: 1;
             padding: 8px;
-            background: #3b82f6;
+            background: var(--color-mechanic);
             color: white;
             border: none;
             border-radius: 6px;
@@ -2548,11 +2728,11 @@
         .audit-log-table th {
             text-align: left;
             padding: 10px 8px;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-weight: 600;
             font-size: 0.7rem;
             text-transform: uppercase;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .audit-log-table td {
@@ -2562,10 +2742,10 @@
 
         .audit-log-table tr:hover { background: rgba(255, 255, 255, 0.02); }
 
-        .audit-timestamp { color: #6b7280; font-size: 0.75rem; }
-        .audit-user { color: #e0e0e0; }
-        .audit-action { color: #f4a261; }
-        .audit-entity { color: #9ca3af; }
+        .audit-timestamp { color: var(--text-muted); font-size: 0.75rem; }
+        .audit-user { color: var(--text-primary); }
+        .audit-action { color: var(--color-brand-primary); }
+        .audit-entity { color: var(--text-secondary); }
 
         .audit-log-scroll { max-height: 400px; overflow-y: auto; }
 
@@ -2585,7 +2765,7 @@
             max-width: 100%;
             max-height: 60vh;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
         }
 
         .document-zoom-controls { display: flex; gap: 8px; }
@@ -2593,9 +2773,9 @@
         .zoom-btn {
             padding: 8px 12px;
             background: #2d2d4a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 6px;
-            color: #e0e0e0;
+            color: var(--text-primary);
             cursor: pointer;
             font-size: 0.85rem;
         }
@@ -2605,10 +2785,10 @@
         .reject-modal textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-default);
             border-radius: 8px;
-            background: #0f0f1a;
-            color: #fff;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
             resize: vertical;
@@ -2618,7 +2798,7 @@
 
         .reject-modal textarea:focus {
             outline: none;
-            border-color: #ef4444;
+            border-color: var(--color-fuel);
         }
 
         .reject-modal-actions { display: flex; gap: 10px; }
@@ -2629,7 +2809,7 @@
             background: #2d2d4a;
             border: none;
             border-radius: 8px;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-weight: 600;
             cursor: pointer;
         }
@@ -2637,7 +2817,7 @@
         .reject-modal-actions .btn-confirm-reject {
             flex: 1;
             padding: 10px;
-            background: #ef4444;
+            background: var(--color-fuel);
             border: none;
             border-radius: 8px;
             color: white;
@@ -2658,7 +2838,7 @@
         }
 
         .toast {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 8px;
             padding: 12px 16px;
             display: flex;
@@ -2666,19 +2846,19 @@
             gap: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             animation: slideIn 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
         }
 
-        .toast.success { border-left: 4px solid #22c55e; }
-        .toast.error { border-left: 4px solid #ef4444; }
+        .toast.success { border-left: 4px solid var(--color-available); }
+        .toast.error { border-left: 4px solid var(--color-fuel); }
 
         .toast-icon { font-size: 1rem; }
-        .toast.success .toast-icon { color: #22c55e; }
-        .toast.error .toast-icon { color: #ef4444; }
+        .toast.success .toast-icon { color: var(--color-available); }
+        .toast.error .toast-icon { color: var(--color-fuel); }
 
         .toast-message {
             font-size: 0.85rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         @keyframes slideIn {
@@ -2689,13 +2869,13 @@
         .no-pending {
             text-align: center;
             padding: 40px;
-            color: #6b7280;
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
         /* Station Info */
         .station-info {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 16px;
@@ -2714,18 +2894,18 @@
         }
 
         .station-info-row .label {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.75rem;
         }
 
         .station-info-row .value {
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.8rem;
         }
 
         /* Edit Form */
         .edit-form {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 16px;
@@ -2737,7 +2917,7 @@
 
         .form-group label {
             display: block;
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.7rem;
             margin-bottom: 4px;
             text-transform: uppercase;
@@ -2749,14 +2929,14 @@
             padding: 8px 10px;
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 6px;
-            background: #1a1a2e;
-            color: #fff;
+            background: var(--bg-surface);
+            color: var(--text-inverse);
             font-size: 0.85rem;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--color-mechanic);
         }
 
         .form-row {
@@ -2779,13 +2959,13 @@
             align-items: center;
             gap: 6px;
             font-size: 0.8rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .checkbox-item input[type="checkbox"] {
             width: 16px;
             height: 16px;
-            accent-color: #3b82f6;
+            accent-color: var(--color-mechanic);
         }
 
         .toggle-container {
@@ -2831,7 +3011,7 @@
         }
 
         .toggle-switch input:checked + .toggle-slider {
-            background-color: #22c55e;
+            background-color: var(--color-available);
         }
 
         .toggle-switch input:checked + .toggle-slider:before {
@@ -2841,7 +3021,7 @@
         .btn-save-changes {
             width: 100%;
             padding: 10px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, var(--color-available) 0%, #16a34a 100%);
             color: white;
             border: none;
             border-radius: 6px;
@@ -2858,7 +3038,7 @@
 
         /* Delivery History */
         .delivery-history {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 16px;
@@ -2867,11 +3047,11 @@
         .delivery-table {
             width: 100%;
             font-size: 0.75rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .delivery-table th {
-            color: #9ca3af;
+            color: var(--text-secondary);
             text-align: left;
             padding: 6px 4px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -2899,17 +3079,17 @@
 
         .fuel-badge.diesel {
             background: rgba(244, 162, 97, 0.2);
-            color: #f4a261;
+            color: var(--color-brand-primary);
         }
 
         .fuel-badge.petrol {
             background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
+            color: var(--color-mechanic);
         }
 
         /* Customer Feedback */
         .feedback-section {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 16px;
@@ -2924,18 +3104,18 @@
 
         .avg-rating .stars {
             font-size: 1.2rem;
-            color: #fbbf24;
+            color: var(--color-warning-text);
         }
 
         .avg-rating .rating-value {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .avg-rating .review-count {
             font-size: 0.7rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .reviews-list {
@@ -2961,18 +3141,18 @@
 
         .review-user {
             font-size: 0.75rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-weight: 600;
         }
 
         .review-rating {
-            color: #fbbf24;
+            color: var(--color-warning-text);
             font-size: 0.7rem;
         }
 
         .review-text {
             font-size: 0.7rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             line-height: 1.4;
         }
 
@@ -2996,7 +3176,7 @@
         }
 
         .quick-action-btn.available {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, var(--color-available) 0%, #16a34a 100%);
             color: white;
         }
 
@@ -3006,13 +3186,13 @@
         }
 
         .quick-action-btn.empty {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: linear-gradient(135deg, var(--color-fuel) 0%, #dc2626 100%);
             color: white;
         }
 
         .quick-action-btn.secondary {
             background: #2d2d4a;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .quick-action-btn:hover {
@@ -3039,7 +3219,7 @@
         }
 
         .collapsible-toggle {
-            color: #9ca3af;
+            color: var(--text-secondary);
             font-size: 0.8rem;
             transition: transform 0.2s;
         }
@@ -3054,7 +3234,7 @@
 
         /* Admin Panel Styles */
         .admin-panel {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 20px;
@@ -3062,7 +3242,7 @@
         }
 
         .admin-panel h3 {
-            color: #fff;
+            color: var(--text-inverse);
             font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 16px;
@@ -3072,11 +3252,11 @@
         }
 
         .pending-item {
-            background: #0f0f1a;
+            background: var(--bg-elevated);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
         }
 
         .pending-item-header {
@@ -3088,12 +3268,12 @@
 
         .pending-item-name {
             font-weight: 600;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         .pending-item-role {
             background: rgba(244, 162, 97, 0.2);
-            color: #f4a261;
+            color: var(--color-brand-primary);
             padding: 3px 8px;
             border-radius: 6px;
             font-size: 0.7rem;
@@ -3102,13 +3282,13 @@
 
         .pending-item-details {
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-secondary);
             margin-bottom: 12px;
         }
 
         .pending-item-docs {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--text-muted);
             margin-bottom: 12px;
         }
 
@@ -3120,7 +3300,7 @@
         .btn-approve {
             flex: 1;
             padding: 8px;
-            background: #22c55e;
+            background: var(--color-available);
             color: white;
             border: none;
             border-radius: 6px;
@@ -3137,7 +3317,7 @@
         .btn-reject {
             flex: 1;
             padding: 8px;
-            background: #ef4444;
+            background: var(--color-fuel);
             color: white;
             border: none;
             border-radius: 6px;
@@ -3154,12 +3334,12 @@
         .no-pending {
             text-align: center;
             padding: 20px;
-            color: #6b7280;
+            color: var(--text-muted);
         }
 
         /* Purchase Button on Fuel Cards */
         .action-btn.purchase {
-            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            background: var(--color-brand-gradient);
             color: white;
         }
 
@@ -3179,10 +3359,10 @@
         }
 
         .toast {
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 10px;
             padding: 14px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             animation: slideIn 0.3s ease;
             display: flex;
@@ -3206,7 +3386,7 @@
         .toast-message {
             flex: 1;
             font-size: 0.9rem;
-            color: #fff;
+            color: var(--text-inverse);
         }
 
         @keyframes slideIn {
@@ -3236,7 +3416,7 @@
 
 .risk-badge.risk-low {
     background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
+    color: var(--color-success-text);
 }
 
 .risk-badge.risk-medium {
@@ -3246,7 +3426,7 @@
 
 .risk-badge.risk-high {
     background: rgba(239, 68, 68, 0.25);
-    color: #f87171;
+    color: var(--color-danger-text);
     animation: pulse-risk 2s ease-in-out infinite;
 }
 
@@ -3299,7 +3479,7 @@
 }
 
 .alert-banner .alert-dismiss {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--border-strong);
     border: none;
     color: white;
     width: 28px;
@@ -3314,11 +3494,11 @@
 }
 
 .alert-banner .alert-dismiss:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--border-strong);
 }
 
 .alert-banner .alert-count {
-    background: rgba(255, 255, 255, 0.25);
+    background: var(--border-strong);
     padding: 4px 10px;
     border-radius: 12px;
     font-size: 0.8rem;
@@ -3327,15 +3507,15 @@
 
 /* Prediction Panel */
 .prediction-panel {
-    background: #1a1a2e;
+    background: var(--bg-surface);
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-subtle);
 }
 
 .prediction-panel h3 {
-    color: #fff;
+    color: var(--text-inverse);
     font-size: 1rem;
     font-weight: 700;
     margin-bottom: 14px;
@@ -3350,12 +3530,12 @@
     align-items: center;
     margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 .prediction-summary .alert-count {
     background: rgba(239, 68, 68, 0.2);
-    color: #f87171;
+    color: var(--color-danger-text);
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -3364,7 +3544,7 @@
 
 .prediction-summary .healthy-count {
     background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
+    color: var(--color-success-text);
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -3391,7 +3571,7 @@
 .prediction-row .station-name {
     flex: 1;
     font-size: 0.85rem;
-    color: #e0e0e0;
+    color: var(--text-primary);
     font-weight: 500;
 }
 
@@ -3403,7 +3583,7 @@
 
 .prediction-row .days-left {
     font-size: 0.75rem;
-    color: #9ca3af;
+    color: var(--text-secondary);
     min-width: 70px;
     text-align: right;
 }
@@ -3419,7 +3599,7 @@
 .prediction-info h4 {
     font-size: 0.8rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-inverse);
     margin-bottom: 8px;
     display: flex;
     align-items: center;
@@ -3434,16 +3614,16 @@
 }
 
 .prediction-detail .label {
-    color: #9ca3af;
+    color: var(--text-secondary);
 }
 
 .prediction-detail .value {
     font-weight: 600;
 }
 
-.prediction-detail .value.low { color: #4ade80; }
+.prediction-detail .value.low { color: var(--color-success-text); }
 .prediction-detail .value.medium { color: #facc15; }
-.prediction-detail .value.high { color: #f87171; }
+.prediction-detail .value.high { color: var(--color-danger-text); }
 
 /* Mini Chart (CSS Bar Chart) */
 .prediction-chart {
@@ -3456,19 +3636,19 @@
 
 .prediction-bar {
     flex: 1;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--border-subtle);
     border-radius: 3px;
     min-height: 4px;
     transition: height 0.3s ease;
 }
 
-.prediction-bar.healthy { background: #4ade80; }
+.prediction-bar.healthy { background: var(--color-success-text); }
 .prediction-bar.warning { background: #facc15; }
-.prediction-bar.danger { background: #f87171; }
+.prediction-bar.danger { background: var(--color-danger-text); }
 
 /* Dashboard Prediction Widget */
 .prediction-widget {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, var(--bg-surface) 0%, #16213e 100%);
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 20px;
@@ -3476,7 +3656,7 @@
 }
 
 .prediction-widget h3 {
-    color: #fff;
+    color: var(--text-inverse);
     font-size: 0.95rem;
     font-weight: 700;
     margin-bottom: 12px;
@@ -3487,11 +3667,11 @@
 
 .prediction-tip {
     background: rgba(59, 130, 246, 0.1);
-    border-left: 3px solid #3b82f6;
+    border-left: 3px solid var(--color-mechanic);
     padding: 10px 12px;
     border-radius: 0 8px 8px 0;
     font-size: 0.8rem;
-    color: #e0e0e0;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 
@@ -3500,23 +3680,391 @@
 }
 
 .prediction-tip strong {
-    color: #60a5fa;
+    color: var(--color-info-text);
 }
 
 /* Risk marker indicator on map */
 .custom-marker.risk-high {
-    box-shadow: 0 0 0 3px #ef4444, 0 3px 8px rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 0 3px var(--color-fuel), 0 3px 8px rgba(239, 68, 68, 0.5);
     animation: marker-pulse 2s ease-in-out infinite;
 }
 
 .custom-marker.risk-medium {
-    box-shadow: 0 0 0 2px #eab308, 0 3px 8px rgba(234, 179, 8, 0.3);
+    box-shadow: 0 0 0 2px var(--color-low), 0 3px 8px rgba(234, 179, 8, 0.3);
 }
 
 @keyframes marker-pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
 }
+
+
+/* ==================== NEW MINIMAL HEADER STYLES ==================== */
+
+        /* App Header - Minimal, Fixed */
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .header-left { display: flex; align-items: center; }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #f8fafc;
+            text-decoration: none;
+        }
+
+        .logo-icon { font-size: 24px; }
+        .logo-text { font-weight: 700; letter-spacing: -0.3px; }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .lang-toggle {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 6px 12px;
+            color: var(--text-primary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            font-family: Inter, sans-serif;
+            min-width: 48px;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            color: var(--text-inverse);
+        }
+
+        .sign-in-btn {
+            background: #6366f1;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 18px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            font-family: Inter, sans-serif;
+        }
+
+        .sign-in-btn:hover {
+            background: #5558e3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .notification-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 200ms;
+        }
+
+        .notification-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-inverse);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px 6px 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .user-menu:hover { background: rgba(255,255,255,0.1); }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-name { font-size: 14px; font-weight: 500; color: #f8fafc; }
+
+        .search-bar {
+            position: fixed;
+            top: 70px;
+            left: 16px;
+            right: 16px;
+            height: 48px;
+            background: #161622;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+            z-index: 900;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        .search-bar:focus-within {
+            border-color: #6366f1;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-icon { font-size: 18px; opacity: 0.6; }
+
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #f8fafc;
+            font-size: 15px;
+            outline: none;
+            font-family: Inter, sans-serif;
+        }
+
+        .search-bar input::placeholder { color: #64748b; }
+
+        .filter-chips {
+            position: fixed;
+            top: 130px;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 8px;
+            padding: 0 16px;
+            padding-bottom: 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            z-index: 800;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .filter-chips::-webkit-scrollbar { display: none; }
+
+        @media (min-width: 768px) {
+            .filter-chips {
+                top: 116px;
+                padding-bottom: 0;
+            }
+        }
+
+        .chip {
+            flex-shrink: 0;
+            background: rgba(22, 22, 34, 0.95);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+            font-family: Inter, sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chip.active { background: #6366f1; border-color: #6366f1; color: white; }
+
+        .chip:hover:not(.active) {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .chip .chip-icon { font-size: 14px; }
+
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-modal.active { display: flex; }
+
+        .auth-card {
+            background: #161622;
+            border-radius: 20px;
+            padding: 32px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .auth-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #94a3b8;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+
+        .auth-close:hover { background: rgba(255,255,255,0.15); color: var(--text-inverse); }
+
+        .auth-header-text { text-align: center; margin-bottom: 24px; }
+
+        .auth-header-text h2 {
+            color: #f8fafc;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-header-text p { color: #64748b; font-size: 0.9rem; }
+
+        .auth-step { display: none; }
+        .auth-step.active { display: block; }
+
+        .input-group { margin-bottom: 16px; }
+
+        .input-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
+            font-size: 15px;
+            font-family: Inter, sans-serif;
+            transition: all 200ms;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .input-group select option { background: var(--bg-elevated); }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px 20px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            font-family: Inter, sans-serif;
+        }
+
+        .btn-primary:hover { background: #5558e3; transform: translateY(-1px); }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-text {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 12px;
+            width: 100%;
+            text-align: center;
+            transition: color 200ms;
+        }
+
+        .btn-text:hover { color: var(--text-inverse); }
+
+        .otp-inputs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .otp-digit {
+            width: 44px;
+            height: 52px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            background: var(--bg-elevated);
+            color: var(--text-inverse);
+            transition: all 200ms;
+        }
+
+        .otp-digit:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .otp-sent-msg { text-align: center; color: #64748b; font-size: 0.9rem; margin-bottom: 16px; }
+        .otp-sent-msg span { color: #6366f1; font-weight: 600; }
+
 
 /* ==================== MOBILE-FIRST OPTIMIZATIONS ==================== */
 
@@ -3553,7 +4101,7 @@
             gap: 4px;
             background: none;
             border: none;
-            color: #9ca3af;
+            color: var(--text-secondary);
             cursor: pointer;
             padding: 8px 16px;
             border-radius: 12px;
@@ -3572,7 +4120,7 @@
         }
 
         .nav-item.active {
-            color: #f4a261;
+            color: var(--color-brand-primary);
         }
 
         .nav-item.active .icon {
@@ -3616,7 +4164,7 @@
             position: fixed;
             bottom: 160px;
             right: 20px;
-            background: #1a1a2e;
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 8px;
             z-index: 1001;
@@ -3638,7 +4186,7 @@
             padding: 12px 16px;
             background: none;
             border: none;
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
@@ -3736,7 +4284,7 @@
 
         .swipe-actions.left {
             right: 0;
-            background: linear-gradient(90deg, transparent, #3b82f6);
+            background: linear-gradient(90deg, transparent, var(--color-mechanic));
             padding-right: 16px;
             color: white;
             font-weight: 600;
@@ -3744,7 +4292,7 @@
 
         .swipe-actions.right {
             left: 0;
-            background: linear-gradient(-90deg, transparent, #22c55e);
+            background: linear-gradient(-90deg, transparent, var(--color-available));
             padding-left: 16px;
             color: white;
             font-weight: 600;
@@ -3760,7 +4308,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, var(--bg-surface), #16213e);
             padding: 12px 16px;
             padding-top: calc(12px + env(safe-area-inset-top));
             display: flex;
@@ -3779,7 +4327,7 @@
         .install-banner span {
             flex: 1;
             font-size: 0.85rem;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .install-banner button {
@@ -3799,7 +4347,7 @@
 
         #dismissInstall {
             background: rgba(255,255,255,0.1);
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         /* Data Saving Mode */
@@ -3823,7 +4371,7 @@
             background: rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 20px;
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-size: 0.75rem;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
@@ -3832,8 +4380,8 @@
 
         .data-toggle-btn.active {
             background: rgba(244,162,97,0.2);
-            border-color: #f4a261;
-            color: #f4a261;
+            border-color: var(--color-brand-primary);
+            color: var(--color-brand-primary);
         }
 
         /* Compact header on scroll */
@@ -3982,7 +4530,7 @@
             }
 
             .service-card-mobile {
-                background: #1a1a2e;
+                background: var(--bg-surface);
                 border-radius: 12px;
                 padding: 14px;
                 margin-bottom: 10px;
@@ -3991,7 +4539,7 @@
             }
 
             .service-card-mobile:active {
-                background: #252540;
+                background: var(--bg-hover);
             }
 
             /* Hide elements on mobile */
@@ -4049,7 +4597,7 @@
         .swipe-hint {
             display: none;
             font-size: 0.7rem;
-            color: #6b7280;
+            color: var(--text-muted);
             text-align: center;
             margin-top: 4px;
         }
@@ -4059,9 +4607,742 @@
                 display: block;
             }
         }
+
+        /* ============ ENHANCED BOTTOM SHEET STYLES ============ */
+        .sheet-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 200ms, visibility 200ms;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .sheet-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #161622;
+            border-radius: 24px 24px 0 0;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 -8px 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            will-change: transform;
+            touch-action: none;
+        }
+
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+
+        .bottom-sheet.peek {
+            transform: translateY(calc(100% - 180px));
+        }
+
+        .bottom-sheet.half {
+            transform: translateY(calc(100% - 50vh));
+        }
+
+        .bottom-sheet.full {
+            transform: translateY(0);
+        }
+
+        .sheet-drag-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin: 12px auto;
+            cursor: grab;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .sheet-drag-handle::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            right: -12px;
+            bottom: -12px;
+        }
+
+        .sheet-drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .sheet-header {
+            padding: 0 24px 16px;
+            flex-shrink: 0;
+        }
+
+        .sheet-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .sheet-station-info {
+            flex: 1;
+        }
+
+        .sheet-close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #94a3b8;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+
+        .sheet-close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .sheet-station-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin: 0 0 6px 0;
+            line-height: 1.2;
+        }
+
+        .sheet-station-address {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0 0 12px 0;
+        }
+
+        .sheet-station-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sheet-status-badge {
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .sheet-status-badge.available,
+        .sheet-status-badge.open {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .sheet-status-badge.low,
+        .sheet-status-badge.busy {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+
+        .sheet-status-badge.empty,
+        .sheet-status-badge.closed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .sheet-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: #fbbf24;
+        }
+
+        .sheet-rating-text {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .sheet-verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .sheet-actions {
+            display: flex;
+            gap: 12px;
+            padding: 0 24px 20px;
+            overflow-x: auto;
+            flex-shrink: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sheet-actions::-webkit-scrollbar { display: none; }
+
+        .sheet-action-btn {
+            flex: 1;
+            min-width: 95px;
+            padding: 16px 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 200ms;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sheet-action-btn:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .sheet-action-btn.primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-color: #6366f1;
+        }
+
+        .sheet-action-btn.primary .sheet-action-label {
+            color: white;
+        }
+
+        .sheet-action-btn .sheet-action-icon {
+            font-size: 24px;
+        }
+
+        .sheet-action-btn .sheet-action-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .sheet-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+
+        .sheet-tab {
+            flex: 1;
+            padding: 16px 12px;
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: color 200ms;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sheet-tab.active {
+            color: #f8fafc;
+        }
+
+        .sheet-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .sheet-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
+        }
+
+        .sheet-tab-content {
+            display: none;
+        }
+
+        .sheet-tab-content.active {
+            display: block;
+        }
+
+        .sheet-info-section {
+            margin-bottom: 24px;
+        }
+
+        .sheet-info-section h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+        }
+
+        .sheet-info-grid {
+            display: grid;
+            gap: 4px;
+        }
+
+        .sheet-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sheet-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .sheet-info-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .sheet-info-value {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sheet-fuel-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .sheet-fuel-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            gap: 14px;
+        }
+
+        .sheet-fuel-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .sheet-fuel-icon.diesel { background: rgba(244, 162, 97, 0.2); }
+        .sheet-fuel-icon.petrol { background: rgba(59, 130, 246, 0.2); }
+
+        .sheet-fuel-details { flex: 1; }
+
+        .sheet-fuel-type {
+            font-weight: 600;
+            color: #f8fafc;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .sheet-fuel-price {
+            color: #22c55e;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sheet-fuel-status {
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .sheet-fuel-status.in-stock {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .sheet-fuel-status.low {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+
+        .sheet-fuel-status.out {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .sheet-capacity-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .sheet-capacity-label {
+            font-size: 13px;
+            color: #64748b;
+            width: 70px;
+        }
+
+        .sheet-capacity-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .sheet-capacity-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .sheet-capacity-fill.high { background: linear-gradient(90deg, #22c55e, #16a34a); }
+        .sheet-capacity-fill.medium { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .sheet-capacity-fill.low { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+        .sheet-capacity-value {
+            font-size: 13px;
+            color: #94a3b8;
+            width: 50px;
+            text-align: right;
+        }
+
+        .sheet-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sheet-amenity-tag {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 16px;
+            border-radius: 24px;
+            font-size: 13px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sheet-services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sheet-service-tag {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .sheet-reviews-summary {
+            text-align: center;
+            padding: 24px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .sheet-rating-large {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .sheet-rating-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .sheet-rating-stars {
+            font-size: 1.5rem;
+            color: #fbbf24;
+        }
+
+        .sheet-rating-count {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .sheet-reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .sheet-review-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .sheet-review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sheet-review-author {
+            font-weight: 600;
+            color: #f8fafc;
+            font-size: 14px;
+        }
+
+        .sheet-review-rating {
+            color: #fbbf24;
+            font-size: 14px;
+        }
+
+        .sheet-review-text {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .sheet-review-date {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 10px;
+        }
+
+        .sheet-risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+
+        .sheet-risk-badge.low { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .sheet-risk-badge.medium { background: rgba(234, 179, 8, 0.2); color: #facc15; }
+        .sheet-risk-badge.high {
+            background: rgba(239, 68, 68, 0.25);
+            color: #f87171;
+            animation: pulse-risk 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-risk {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .sheet-prediction-info {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .sheet-prediction-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .sheet-prediction-header h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin: 0;
+        }
+
+        .sheet-prediction-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 13px;
+        }
+
+        .sheet-prediction-row:last-child { border-bottom: none; }
+
+        .sheet-prediction-label { color: #64748b; }
+
+        .sheet-prediction-value { font-weight: 600; }
+        .sheet-prediction-value.low { color: #4ade80; }
+        .sheet-prediction-value.medium { color: #facc15; }
+        .sheet-prediction-value.high { color: #f87171; }
+
+        .sheet-booking-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .sheet-slot-btn {
+            padding: 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sheet-slot-btn:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .sheet-slot-btn.selected {
+            background: #6366f1;
+            border-color: #6366f1;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sheet-header { padding: 0 20px 14px; }
+            .sheet-actions { padding: 0 20px 16px; }
+            .sheet-content { padding: 16px 20px; }
+            .sheet-station-name { font-size: 20px; }
+            .sheet-action-btn { min-width: 85px; padding: 14px 10px; }
+            .sheet-action-btn .sheet-action-icon { font-size: 22px; }
+        }
     </style>
 </head>
 <body>
+    <!-- Bottom Sheet Backdrop -->
+    <div class="sheet-backdrop" id="sheetBackdrop"></div>
+
+    <!-- Bottom Sheet for Station Details -->
+    <div class="bottom-sheet" id="stationSheet">
+        <div class="sheet-drag-handle" id="sheetDragHandle"></div>
+
+        <!-- Header -->
+        <div class="sheet-header">
+            <div class="sheet-header-top">
+                <div class="sheet-station-info">
+                    <h2 class="sheet-station-name" id="sheetStationName">Station Name</h2>
+                    <p class="sheet-station-address" id="sheetStationAddress">Address</p>
+                    <div class="sheet-station-meta">
+                        <span class="sheet-status-badge" id="sheetStatusBadge">Available</span>
+                        <span class="sheet-rating" id="sheetRating">4.5</span>
+                        <span class="sheet-rating-text" id="sheetRatingCount">(12 reviews)</span>
+                        <span class="sheet-verified-badge" id="sheetVerifiedBadge" style="display: none;">Verified</span>
+                    </div>
+                </div>
+                <button class="sheet-close-btn" id="sheetCloseBtn">&times;</button>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="sheet-actions" id="sheetActions">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- Tabs -->
+        <div class="sheet-tabs">
+            <button class="sheet-tab active" data-tab="info">Info</button>
+            <button class="sheet-tab" data-tab="fuel">Fuel</button>
+            <button class="sheet-tab" data-tab="reviews">Reviews</button>
+        </div>
+
+        <!-- Content -->
+        <div class="sheet-content">
+            <!-- Info Tab -->
+            <div class="sheet-tab-content active" id="tabInfo">
+                <div class="sheet-info-section">
+                    <h4>Details</h4>
+                    <div class="sheet-info-grid" id="sheetInfoGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="sheet-info-section" id="sheetAmenitiesSection">
+                    <h4>Amenities</h4>
+                    <div class="sheet-amenities" id="sheetAmenities">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="sheet-info-section" id="sheetPredictionSection" style="display: none;">
+                    <div class="sheet-prediction-info">
+                        <div class="sheet-prediction-header">
+                            <h4>📈 Fuel Forecast</h4>
+                            <span class="sheet-risk-badge" id="sheetRiskBadge">Low Risk</span>
+                        </div>
+                        <div id="sheetPredictionContent">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fuel Tab (for fuel stations) -->
+            <div class="sheet-tab-content" id="tabFuel">
+                <div class="sheet-fuel-list" id="sheetFuelList">
+                    <!-- Populated by JS -->
+                </div>
+                <div class="sheet-info-section" id="sheetCapacitySection" style="display: none;">
+                    <h4>Tank Capacity</h4>
+                    <div id="sheetCapacityBars">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Tab -->
+            <div class="sheet-tab-content" id="tabReviews">
+                <div class="sheet-reviews-summary">
+                    <div class="sheet-rating-large">
+                        <span class="sheet-rating-number" id="sheetAvgRating">4.5</span>
+                        <div>
+                            <span class="sheet-rating-stars" id="sheetStarsDisplay">★★★★☆</span>
+                            <p class="sheet-rating-count" id="sheetTotalReviews">Based on 12 reviews</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sheet-reviews-list" id="sheetReviewsList">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Pull to Refresh Indicator -->
     <div class="pull-refresh" id="pullRefresh">
         <span>Pull to refresh...</span>
@@ -4082,15 +5363,98 @@
         </button>
     </div>
 
-    <div class="container">
-        <header id="mainHeader">
-            <h1><span class="fuel-icon">⛽</span> Gondar Auto Services</h1>
-            <p>Fuel stations, mechanics, tire shops & car washes</p>
-            <p class="last-updated" id="lastUpdated">Last updated: --</p>
-            <div class="auth-header" id="authHeader">
-                <button class="btn-signin" onclick="openAuthModal('login')">Sign In</button>
+    <!-- NEW CLEAN AUTH MODAL -->
+    <div class="auth-modal" id="cleanAuthModal">
+        <div class="auth-card">
+            <button class="auth-close" id="cleanAuthClose">&times;</button>
+
+            <div class="auth-header-text">
+                <h2>Welcome to GondarFuel</h2>
+                <p>Track fuel availability in real-time</p>
             </div>
-        </header>
+
+            <!-- Step 1: Phone -->
+            <div class="auth-step active" id="newAuthStep1">
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" placeholder="+251 91 XXX XXXX" id="newPhoneInput">
+                </div>
+                <button class="btn-primary" id="newSendOtpBtn">Send Code</button>
+            </div>
+
+            <!-- Step 2: OTP -->
+            <div class="auth-step" id="newAuthStep2">
+                <p class="otp-sent-msg">Code sent to <span id="newSentPhone"></span></p>
+                <div class="otp-inputs">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="0">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="1">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="2">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="3">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="4">
+                    <input type="text" maxlength="1" class="otp-digit" data-index="5">
+                </div>
+                <button class="btn-primary" id="newVerifyOtpBtn">Verify</button>
+                <button class="btn-text" id="newChangePhoneBtn">Change phone</button>
+            </div>
+
+            <!-- Step 3: Register -->
+            <div class="auth-step" id="newAuthStep3">
+                <h3 style="color: #f8fafc; margin-bottom: 8px;">Almost there!</h3>
+                <p style="color: #64748b; margin-bottom: 16px;">Tell us about yourself</p>
+                <div class="input-group">
+                    <label>Your Name</label>
+                    <input type="text" placeholder="Full name" id="newFullNameInput">
+                </div>
+                <div class="input-group">
+                    <label>Vehicle Type</label>
+                    <select id="newVehicleTypeSelect">
+                        <option value="">Select vehicle</option>
+                        <option value="car">Car</option>
+                        <option value="truck">Truck</option>
+                        <option value="bus">Bus</option>
+                        <option value="motorcycle">Motorcycle</option>
+                    </select>
+                </div>
+                <button class="btn-primary" id="newCompleteRegBtn">Get Started</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW MINIMAL HEADER -->
+    <header class="app-header" id="appHeader">
+        <div class="header-left">
+            <a href="#" class="logo">
+                <span class="logo-icon">⛽</span>
+                <span class="logo-text">GondarFuel</span>
+            </a>
+        </div>
+        <div class="header-right">
+            <button class="lang-toggle" id="langToggle">
+                <span class="lang-current">EN</span>
+            </button>
+            <button class="sign-in-btn" id="signInBtn">
+                <span>Sign In</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-bar" id="searchBar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search stations..." id="searchInput">
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="filter-chips" id="filterChips">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="fuel_station">⛽ Fuel</button>
+        <button class="chip" data-filter="mechanic">🔧 Mechanic</button>
+        <button class="chip" data-filter="tire_shop">🛞 Tire</button>
+        <button class="chip" data-filter="car_wash">🚿 Wash</button>
+        <button class="chip" data-filter="available">🟢 Available</button>
+    </div>
+
+    <div class="container">
 
         <!-- Shortage Alert Banner -->
         <div class="alert-banner hidden" id="shortageAlert">
@@ -4141,95 +5505,108 @@
                     <div class="legend-dot empty"></div>
                     <span>Empty/Closed</span>
                 </div>
-                <div class="legend-item" style="border-left: 2px solid #4ade80; padding-left: 8px;">
+                <div class="legend-item" style="border-left: 2px solid var(--color-success-text); padding-left: 8px;">
                     <span style="font-size: 0.75rem;">🟢 Low Risk</span>
                 </div>
                 <div class="legend-item" style="border-left: 2px solid #facc15; padding-left: 8px;">
                     <span style="font-size: 0.75rem;">🟡 Medium Risk</span>
                 </div>
-                <div class="legend-item" style="border-left: 2px solid #f87171; padding-left: 8px;">
+                <div class="legend-item" style="border-left: 2px solid var(--color-danger-text); padding-left: 8px;">
                     <span style="font-size: 0.75rem;">🔴 High Risk</span>
                 </div>
             </div>
 
-            <!-- ML Prediction Panel -->
-            <div class="prediction-panel" id="predictionPanel">
-                <h3>📊 Fuel Predictions</h3>
-                <div class="prediction-summary">
-                    <span class="healthy-count" id="healthyCount">12 healthy</span>
-                    <span class="alert-count" id="riskCount">0 at risk</span>
+            <!-- ML Prediction Panel (Collapsible) -->
+            <div class="collapsible" id="predictionPanelCollapsible">
+                <div class="collapsible-header" onclick="toggleCollapsibleSection('predictionPanelCollapsible')">
+                    <h3>📊 Fuel Predictions</h3>
+                    <span class="collapsible-toggle"></span>
                 </div>
-                <div class="prediction-list" id="predictionList">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- Vehicle Profile Card -->
-            <div class="vehicle-card">
-                <h3>
-                    <span>🚗 My Vehicles</span>
-                    <button class="add-vehicle-btn" onclick="openAddVehicleModal()">+ Add</button>
-                </h3>
-                <div class="vehicle-list" id="vehicleList">
-                    <div class="vehicle-item active" data-vehicle-id="1">
-                        <div class="vehicle-item-header">
-                            <span class="vehicle-item-name">My Toyota Corolla</span>
-                            <span class="vehicle-item-fuel">Petrol</span>
-                        </div>
-                        <div class="vehicle-item-details">
-                            <span>⛽ 450km range</span>
-                            <span>🔧 Preferred: Azezo Auto Repair</span>
-                        </div>
+                <div class="collapsible-content">
+                    <div class="prediction-summary">
+                        <span class="healthy-count" id="healthyCount">12 healthy</span>
+                        <span class="alert-count" id="riskCount">0 at risk</span>
                     </div>
-                    <div class="vehicle-item" data-vehicle-id="2">
-                        <div class="vehicle-item-header">
-                            <span class="vehicle-item-name">Work Truck</span>
-                            <span class="vehicle-item-fuel">Diesel</span>
-                        </div>
-                        <div class="vehicle-item-details">
-                            <span>⛽ 600km range</span>
-                            <span>🔧 Preferred: Diesel Specialist</span>
-                        </div>
+                    <div class="prediction-list" id="predictionList">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- Cost Tracker Card -->
-            <div class="cost-card">
-                <h3>💰 Cost Tracker</h3>
-                <div class="cost-summary">
-                    <div class="cost-summary-item fuel">
-                        <div class="value" id="totalFuelCost">6,000</div>
-                        <div class="label">Total Fuel (ETB)</div>
-                    </div>
-                    <div class="cost-summary-item repair">
-                        <div class="value" id="totalRepairCost">3,500</div>
-                        <div class="label">Total Repairs (ETB)</div>
+            <!-- Vehicle Profile Card (Collapsible) -->
+            <div class="collapsible" id="vehicleCardCollapsible">
+                <div class="collapsible-header" onclick="toggleCollapsibleSection('vehicleCardCollapsible')">
+                    <h3>🚗 My Vehicles</h3>
+                    <span class="collapsible-toggle"></span>
+                </div>
+                <div class="collapsible-content">
+                    <button class="add-vehicle-btn" onclick="openAddVehicleModal()" style="margin-bottom: 12px;">+ Add Vehicle</button>
+                    <div class="vehicle-list" id="vehicleList">
+                        <div class="vehicle-item active" data-vehicle-id="1">
+                            <div class="vehicle-item-header">
+                                <span class="vehicle-item-name">My Toyota Corolla</span>
+                                <span class="vehicle-item-fuel">Petrol</span>
+                            </div>
+                            <div class="vehicle-item-details">
+                                <span>⛽ 450km range</span>
+                                <span>🔧 Preferred: Azezo Auto Repair</span>
+                            </div>
+                        </div>
+                        <div class="vehicle-item" data-vehicle-id="2">
+                            <div class="vehicle-item-header">
+                                <span class="vehicle-item-name">Work Truck</span>
+                                <span class="vehicle-item-fuel">Diesel</span>
+                            </div>
+                            <div class="vehicle-item-details">
+                                <span>⛽ 600km range</span>
+                                <span>🔧 Preferred: Diesel Specialist</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="cost-chart">
-                    <h4>Monthly Spending</h4>
-                    <div class="cost-bars" id="costBars">
-                        <div class="cost-bar">
-                            <span class="cost-bar-label">Apr</span>
-                            <div class="cost-bar-track">
-                                <div class="cost-bar-fill fuel" style="width: 70%"></div>
-                            </div>
-                            <span class="cost-bar-value">2,500</span>
+            </div>
+
+            <!-- Cost Tracker Card (Collapsible) -->
+            <div class="collapsible" id="costCardCollapsible">
+                <div class="collapsible-header" onclick="toggleCollapsibleSection('costCardCollapsible')">
+                    <h3>💰 Cost Tracker</h3>
+                    <span class="collapsible-toggle"></span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="cost-summary">
+                        <div class="cost-summary-item fuel">
+                            <div class="value" id="totalFuelCost">6,000</div>
+                            <div class="label">Total Fuel (ETB)</div>
                         </div>
-                        <div class="cost-bar">
-                            <span class="cost-bar-label">Mar</span>
-                            <div class="cost-bar-track">
-                                <div class="cost-bar-fill repair" style="width: 50%"></div>
-                            </div>
-                            <span class="cost-bar-value">3,500</span>
+                        <div class="cost-summary-item repair">
+                            <div class="value" id="totalRepairCost">3,500</div>
+                            <div class="label">Total Repairs (ETB)</div>
                         </div>
-                        <div class="cost-bar">
-                            <span class="cost-bar-label">Feb</span>
-                            <div class="cost-bar-track">
-                                <div class="cost-bar-fill fuel" style="width: 45%"></div>
+                    </div>
+                    <div class="cost-chart">
+                        <h4>Monthly Spending</h4>
+                        <div class="cost-bars" id="costBars">
+                            <div class="cost-bar">
+                                <span class="cost-bar-label">Apr</span>
+                                <div class="cost-bar-track">
+                                    <div class="cost-bar-fill fuel" style="width: 70%"></div>
+                                </div>
+                                <span class="cost-bar-value">2,500</span>
                             </div>
-                            <span class="cost-bar-value">1,500</span>
+                            <div class="cost-bar">
+                                <span class="cost-bar-label">Mar</span>
+                                <div class="cost-bar-track">
+                                    <div class="cost-bar-fill repair" style="width: 50%"></div>
+                                </div>
+                                <span class="cost-bar-value">3,500</span>
+                            </div>
+                            <div class="cost-bar">
+                                <span class="cost-bar-label">Feb</span>
+                                <div class="cost-bar-track">
+                                    <div class="cost-bar-fill fuel" style="width: 45%"></div>
+                                </div>
+                                <span class="cost-bar-value">1,500</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -4276,11 +5653,16 @@
                     <div class="quota-reset" id="quotaReset">Resets at midnight EAT</div>
                 </div>
 
-                <!-- Purchase History Section -->
-                <div class="purchase-history">
-                    <h4>📜 Recent Purchases</h4>
-                    <div id="purchaseHistoryContent">
-                        <div class="empty-state">Loading...</div>
+                <!-- Purchase History Section (Collapsible) -->
+                <div class="collapsible" id="purchaseHistoryCollapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsibleSection('purchaseHistoryCollapsible')">
+                        <h4>📜 Purchase History</h4>
+                        <span class="collapsible-toggle"></span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div id="purchaseHistoryContent">
+                            <div class="empty-state">Loading...</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4428,13 +5810,13 @@
                         </div>
                     </div>
 
-                    <!-- Sales Chart Section -->
-                    <div class="provider-section">
-                        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <!-- Sales Chart Section (Collapsible - Open by default) -->
+                    <div class="collapsible open" id="salesChartCollapsible">
+                        <div class="collapsible-header" onclick="toggleCollapsibleSection('salesChartCollapsible')">
                             <h4>📈 Daily Sales (Last 7 Days)</h4>
-                            <span class="collapsible-toggle">▼</span>
+                            <span class="collapsible-toggle"></span>
                         </div>
-                        <div class="collapsible-content open">
+                        <div class="collapsible-content always-open">
                             <div class="sales-chart">
                                 <div class="chart-container" id="salesChartContainer">
                                     <!-- Bars will be generated by JS -->
@@ -4443,32 +5825,42 @@
                         </div>
                     </div>
 
-                    <!-- Fuel Breakdown Section -->
-                    <div class="provider-section">
-                        <h4>⛽ Fuel Type Breakdown</h4>
-                        <div class="fuel-breakdown">
-                            <div class="pie-container">
-                                <div class="pie-chart" id="fuelPieChart"></div>
-                                <div class="pie-legend">
-                                    <div class="legend-item">
-                                        <div class="legend-color" style="background: #f4a261;"></div>
-                                        <span>Diesel: <span id="dieselPercent">--%</span></span>
-                                    </div>
-                                    <div class="legend-item">
-                                        <div class="legend-color" style="background: #3b82f6;"></div>
-                                        <span>Petrol: <span id="petrolPercent">--%</span></span>
+                    <!-- Fuel Breakdown Section (Collapsible) -->
+                    <div class="collapsible" id="fuelBreakdownCollapsible">
+                        <div class="collapsible-header" onclick="toggleCollapsibleSection('fuelBreakdownCollapsible')">
+                            <h4>⛽ Fuel Type Breakdown</h4>
+                            <span class="collapsible-toggle"></span>
+                        </div>
+                        <div class="collapsible-content">
+                            <div class="fuel-breakdown">
+                                <div class="pie-container">
+                                    <div class="pie-chart" id="fuelPieChart"></div>
+                                    <div class="pie-legend">
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background: var(--color-brand-primary);"></div>
+                                            <span>Diesel: <span id="dieselPercent">--%</span></span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background: var(--color-mechanic);"></div>
+                                            <span>Petrol: <span id="petrolPercent">--%</span></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Recent Activity Section -->
-                    <div class="provider-section">
-                        <h4>🕐 Recent Activity</h4>
-                        <div class="recent-activity">
-                            <div class="activity-list" id="recentActivityList">
-                                <div class="no-activity">Loading recent activity...</div>
+                    <!-- Recent Activity Section (Collapsible) -->
+                    <div class="collapsible" id="recentActivityCollapsible">
+                        <div class="collapsible-header" onclick="toggleCollapsibleSection('recentActivityCollapsible')">
+                            <h4>🕐 Recent Activity</h4>
+                            <span class="collapsible-toggle"></span>
+                        </div>
+                        <div class="collapsible-content">
+                            <div class="recent-activity">
+                                <div class="activity-list" id="recentActivityList">
+                                    <div class="no-activity">Loading recent activity...</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -4532,7 +5924,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="toggle-container">
-                                        <label style="color: #9ca3af; font-size: 0.7rem; text-transform: uppercase;">24/7 Available</label>
+                                        <label style="color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase;">24/7 Available</label>
                                         <label class="toggle-switch">
                                             <input type="checkbox" id="edit24Hours">
                                             <span class="toggle-slider"></span>
@@ -4587,7 +5979,7 @@
                                     <option value="petrol">Petrol</option>
                                 </select>
                                 <input type="number" id="deliveryAmount" placeholder="Liters" min="1" max="10000">
-                                <input type="date" id="deliveryDate" style="flex: 1; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; background: #1a1a2e; color: #fff; font-size: 0.85rem;">
+                                <input type="date" id="deliveryDate" style="flex: 1; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; background: var(--bg-surface); color: var(--text-inverse); font-size: 0.85rem;">
                             </div>
                             <button class="btn-add-delivery" onclick="addDelivery()">+ Add Delivery</button>
                         </div>
@@ -4610,7 +6002,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="deliveryHistoryTable">
-                                        <tr><td colspan="3" style="text-align: center; color: #9ca3af;">No deliveries yet</td></tr>
+                                        <tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">No deliveries yet</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -4669,13 +6061,14 @@
                     </button>
                 </div>
 
-                <!-- Advanced Filters -->
-                <div class="filter-panel">
-                    <div class="filter-panel-header">
-                        <h3>🔍 Advanced Filters</h3>
-                        <button class="filter-toggle" onclick="toggleFilterPanel()">Show</button>
-                    </div>
-                    <div class="filter-content" id="filterContent">
+                <!-- Advanced Filters Toggle -->
+                <button class="show-advanced-btn" id="showAdvancedBtn" onclick="toggleAdvancedFilters()">
+                    + More Filters
+                </button>
+
+                <!-- Advanced Filter Panel (hidden by default) -->
+                <div class="advanced-filter-panel" id="advancedFilterPanel">
+                    <div class="filter-panel">
                         <div class="filter-section">
                             <h4>Fuel Type</h4>
                             <div class="filter-checkboxes" id="fuelTypeFilters">
@@ -4802,7 +6195,7 @@
                 </select>
                 <button class="add-btn" onclick="openAddVehicleModal()">+ Add</button>
             </div>
-            <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 12px;">Select a time slot:</p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 12px;">Select a time slot:</p>
             <div class="slot-grid" id="bookingSlots"></div>
             <button class="btn-submit" onclick="submitBooking()">Confirm Booking</button>
         </div>
@@ -4821,7 +6214,7 @@
             </div>
             <div class="form-group">
                 <label>Issue Description</label>
-                <textarea id="towIssue" placeholder="Describe the problem" style="width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; background: #0f0f1a; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.9rem; resize: vertical; min-height: 80px;"></textarea>
+                <textarea id="towIssue" placeholder="Describe the problem" style="width: 100%; padding: 12px; border: 1px solid var(--border-default); border-radius: 10px; background: var(--bg-elevated); color: var(--text-inverse); font-family: 'Inter', sans-serif; font-size: 0.9rem; resize: vertical; min-height: 80px;"></textarea>
             </div>
             <button class="btn-submit" onclick="submitTowRequest()">Request Tow</button>
         </div>
@@ -4839,7 +6232,7 @@
                     <label>Your Name</label>
                     <input type="text" id="reviewName" placeholder="Enter your name">
                 </div>
-                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 8px;">Rate this service:</p>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 8px;">Rate this service:</p>
                 <div class="review-stars" id="reviewStars">
                     <span class="review-star" data-rating="1">★</span>
                     <span class="review-star" data-rating="2">★</span>
@@ -4907,7 +6300,7 @@
 
             <!-- Step 2: OTP Verification -->
             <div class="auth-step" id="authStep2">
-                <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 8px;">Enter the 6-digit code sent to your phone</p>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 8px;">Enter the 6-digit code sent to your phone</p>
                 <div class="otp-inputs" id="otpInputs">
                     <input type="text" class="otp-input" maxlength="1" data-index="0">
                     <input type="text" class="otp-input" maxlength="1" data-index="1">
@@ -5091,7 +6484,7 @@
             <div id="purchaseStep1">
                 <div class="form-group">
                     <label>Fuel Station</label>
-                    <input type="text" id="purchaseStation" readonly style="background: #0f0f1a; cursor: not-allowed;">
+                    <input type="text" id="purchaseStation" readonly style="background: var(--bg-elevated); cursor: not-allowed;">
                 </div>
                 <div class="form-group">
                     <label>Fuel Type</label>
@@ -5124,12 +6517,12 @@
                 <!-- Quota Info -->
                 <div class="quota-info" id="quotaInfo" style="display: none;">
                     <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <span style="color: #9ca3af; font-size: 0.85rem;">Available Quota</span>
-                        <span id="quotaAvailable" style="color: #4ade80; font-weight: 600;">-- L</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Available Quota</span>
+                        <span id="quotaAvailable" style="color: var(--color-success-text); font-weight: 600;">-- L</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-                        <span style="color: #9ca3af; font-size: 0.85rem;">Remaining After Purchase</span>
-                        <span id="quotaRemaining" style="color: #fff; font-weight: 600;">-- L</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">Remaining After Purchase</span>
+                        <span id="quotaRemaining" style="color: var(--text-inverse); font-weight: 600;">-- L</span>
                     </div>
                 </div>
 
@@ -5153,19 +6546,19 @@
             <div id="purchaseStep2" style="display: none;">
                 <div class="purchase-redirecting" style="text-align: center; padding: 20px 0;">
                     <div style="font-size: 3rem; margin-bottom: 16px;">Redirecting...</div>
-                    <h4 style="color: #fff; margin-bottom: 12px;">Redirecting to TeleBir</h4>
-                    <p style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 20px;">Please complete your payment on the TeleBir portal.</p>
-                    <div style="background: #0f0f1a; border-radius: 10px; padding: 16px; margin-bottom: 16px;">
+                    <h4 style="color: var(--text-inverse); margin-bottom: 12px;">Redirecting to TeleBir</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">Please complete your payment on the TeleBir portal.</p>
+                    <div style="background: var(--bg-elevated); border-radius: 10px; padding: 16px; margin-bottom: 16px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="color: #9ca3af;">Transaction ID</span>
-                            <span id="telebirTransactionId" style="color: #f4a261; font-weight: 600;">--</span>
+                            <span style="color: var(--text-secondary);">Transaction ID</span>
+                            <span id="telebirTransactionId" style="color: var(--color-brand-primary); font-weight: 600;">--</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #9ca3af;">Amount</span>
-                            <span id="telebirAmount" style="color: #fff; font-weight: 600;">--</span>
+                            <span style="color: var(--text-secondary);">Amount</span>
+                            <span id="telebirAmount" style="color: var(--text-inverse); font-weight: 600;">--</span>
                         </div>
                     </div>
-                    <p style="color: #6b7280; font-size: 0.8rem; margin-bottom: 16px;">After completing payment, click the button below to confirm.</p>
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 16px;">After completing payment, click the button below to confirm.</p>
                     <button class="btn-submit" onclick="confirmPurchase()">I've Completed Payment</button>
                     <button class="filter-btn-action reset" style="margin-top: 10px; width: 100%;" onclick="closeModal('purchaseModal')">Cancel</button>
                 </div>
@@ -5176,19 +6569,19 @@
                 <div class="purchase-success">
                     <div class="success-icon">Success</div>
                     <h4>Purchase Successful!</h4>
-                    <p style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 16px;">Your fuel quota has been updated.</p>
-                    <div style="background: #0f0f1a; border-radius: 10px; padding: 16px; margin-bottom: 16px; text-align: left;">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Your fuel quota has been updated.</p>
+                    <div style="background: var(--bg-elevated); border-radius: 10px; padding: 16px; margin-bottom: 16px; text-align: left;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="color: #9ca3af; font-size: 0.85rem;">Transaction ID</span>
-                            <span id="successTransactionId" style="color: #4ade80; font-size: 0.85rem;">--</span>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">Transaction ID</span>
+                            <span id="successTransactionId" style="color: var(--color-success-text); font-size: 0.85rem;">--</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="color: #9ca3af; font-size: 0.85rem;">Fuel Type</span>
-                            <span id="successFuelType" style="color: #fff; font-size: 0.85rem;">--</span>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">Fuel Type</span>
+                            <span id="successFuelType" style="color: var(--text-inverse); font-size: 0.85rem;">--</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #9ca3af; font-size: 0.85rem;">Amount</span>
-                            <span id="successAmount" style="color: #fff; font-size: 0.85rem;">-- L</span>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">Amount</span>
+                            <span id="successAmount" style="color: var(--text-inverse); font-size: 0.85rem;">-- L</span>
                         </div>
                     </div>
                 </div>
@@ -5199,8 +6592,8 @@
             <div id="purchaseError" style="display: none;">
                 <div style="text-align: center; padding: 20px 0;">
                     <div style="font-size: 3rem; margin-bottom: 16px;">Failed</div>
-                    <h4 style="color: #f87171; margin-bottom: 12px;">Purchase Failed</h4>
-                    <p id="purchaseErrorMessage" style="color: #9ca3af; font-size: 0.9rem; margin-bottom: 20px;">An error occurred. Please try again.</p>
+                    <h4 style="color: var(--color-danger-text); margin-bottom: 12px;">Purchase Failed</h4>
+                    <p id="purchaseErrorMessage" style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">An error occurred. Please try again.</p>
                     <button class="btn-submit" onclick="resetPurchaseModal()">Try Again</button>
                 </div>
             </div>
@@ -5234,12 +6627,12 @@
 
         // Status colors
         const statusColors = {
-            available: '#22c55e',
-            low: '#eab308',
-            empty: '#ef4444',
-            open: '#22c55e',
-            busy: '#eab308',
-            closed: '#ef4444'
+            available: 'var(--color-available)',
+            low: 'var(--color-low)',
+            empty: 'var(--color-fuel)',
+            open: 'var(--color-available)',
+            busy: 'var(--color-low)',
+            closed: 'var(--color-fuel)'
         };
 
         // Global state
@@ -5316,7 +6709,376 @@
 
             // Setup touch ripple effects
             setupRippleEffects();
+
+            // Setup bottom sheet
+            setupBottomSheet();
         }
+
+        // ============ BOTTOM SHEET FUNCTIONALITY ============
+        let currentSheetService = null;
+        let sheetDragStartY = 0;
+        let sheetCurrentState = 'peek';
+
+        function setupBottomSheet() {
+            const sheet = document.getElementById('stationSheet');
+            const backdrop = document.getElementById('sheetBackdrop');
+            const handle = document.getElementById('sheetDragHandle');
+            const closeBtn = document.getElementById('sheetCloseBtn');
+
+            // Close button
+            closeBtn.addEventListener('click', closeStationSheet);
+
+            // Backdrop click
+            backdrop.addEventListener('click', closeStationSheet);
+
+            // Tab switching
+            document.querySelectorAll('.sheet-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.sheet-tab-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById('tab' + capitalize(tab.dataset.tab)).classList.add('active');
+                });
+            });
+
+            // Drag handle touch events
+            handle.addEventListener('touchstart', (e) => {
+                sheetDragStartY = e.touches[0].clientY;
+                handle.style.background = 'rgba(255,255,255,0.5)';
+            });
+
+            handle.addEventListener('touchmove', (e) => {
+                const deltaY = e.touches[0].clientY - sheetDragStartY;
+
+                if (deltaY > 50 && sheetCurrentState !== 'closed') {
+                    closeStationSheet();
+                } else if (deltaY < -50 && sheetCurrentState === 'peek') {
+                    expandSheet('half');
+                } else if (deltaY < -50 && sheetCurrentState === 'half') {
+                    expandSheet('full');
+                }
+            });
+
+            handle.addEventListener('touchend', () => {
+                handle.style.background = 'rgba(255,255,255,0.3)';
+            });
+        }
+
+        function openStationSheet(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+
+            currentSheetService = service;
+            sheetCurrentState = 'peek';
+
+            // Update header
+            document.getElementById('sheetStationName').textContent = service.name;
+            document.getElementById('sheetStationAddress').textContent = service.address || 'Gondar, Ethiopia';
+
+            // Status badge
+            const statusBadge = document.getElementById('sheetStatusBadge');
+            statusBadge.textContent = serviceTypes[service.type]?.statusLabels?.[service.status] || service.status;
+            statusBadge.className = 'sheet-status-badge ' + service.status;
+
+            // Rating
+            if (service.trustScore) {
+                document.getElementById('sheetRating').textContent = '★'.repeat(Math.floor(service.trustScore));
+                document.getElementById('sheetRatingCount').textContent = `(${service.reviewCount || 0} reviews)`;
+            } else {
+                document.getElementById('sheetRating').textContent = '';
+                document.getElementById('sheetRatingCount').textContent = '';
+            }
+
+            // Verified badge
+            document.getElementById('sheetVerifiedBadge').style.display = service.isVerified ? 'inline-flex' : 'none';
+
+            // Update actions
+            updateSheetActions(service);
+
+            // Update info tab
+            updateSheetInfoTab(service);
+
+            // Update fuel tab (for fuel stations)
+            updateSheetFuelTab(service);
+
+            // Update reviews tab
+            updateSheetReviewsTab(service);
+
+            // Show sheet
+            document.getElementById('sheetBackdrop').classList.add('visible');
+            document.getElementById('stationSheet').classList.add('open');
+            document.getElementById('stationSheet').classList.remove('half', 'full');
+
+            // Reset to info tab
+            document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.sheet-tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('.sheet-tab[data-tab="info"]').classList.add('active');
+            document.getElementById('tabInfo').classList.add('active');
+
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStationSheet() {
+            document.getElementById('sheetBackdrop').classList.remove('visible');
+            document.getElementById('stationSheet').classList.remove('open', 'peek', 'half', 'full');
+            currentSheetService = null;
+            sheetCurrentState = 'closed';
+
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+
+        function expandSheet(state) {
+            const sheet = document.getElementById('stationSheet');
+            sheet.classList.remove('peek', 'half', 'full');
+            sheet.classList.add(state);
+            sheetCurrentState = state;
+        }
+
+        function updateSheetActions(service) {
+            const actions = document.getElementById('sheetActions');
+
+            if (service.type === 'fuel_station') {
+                actions.innerHTML = `
+                    <button class="sheet-action-btn" onclick="window.location.href='tel:${service.phone?.replace(/ /g, '') || ''}'">
+                        <span class="sheet-action-icon">📞</span>
+                        <span class="sheet-action-label">Call</span>
+                    </button>
+                    <button class="sheet-action-btn primary" onclick="openPurchaseModal(${service.id})">
+                        <span class="sheet-action-icon">⛽</span>
+                        <span class="sheet-action-label">Buy Fuel</span>
+                    </button>
+                    <button class="sheet-action-btn" onclick="navigateToStation(${service.id})">
+                        <span class="sheet-action-icon">🧭</span>
+                        <span class="sheet-action-label">Navigate</span>
+                    </button>
+                    <button class="sheet-action-btn" onclick="openReviewModal(${service.id})">
+                        <span class="sheet-action-icon">⭐</span>
+                        <span class="sheet-action-label">Review</span>
+                    </button>
+                `;
+            } else {
+                actions.innerHTML = `
+                    <button class="sheet-action-btn" onclick="window.location.href='tel:${service.phone?.replace(/ /g, '') || ''}'">
+                        <span class="sheet-action-icon">📞</span>
+                        <span class="sheet-action-label">Call</span>
+                    </button>
+                    ${service.bookingSlots ? `<button class="sheet-action-btn primary" onclick="openBookingFromSheet(${service.id})">
+                        <span class="sheet-action-icon">📅</span>
+                        <span class="sheet-action-label">Book</span>
+                    </button>` : ''}
+                    <button class="sheet-action-btn" onclick="navigateToStation(${service.id})">
+                        <span class="sheet-action-icon">🧭</span>
+                        <span class="sheet-action-label">Navigate</span>
+                    </button>
+                    <button class="sheet-action-btn" onclick="openReviewModal(${service.id})">
+                        <span class="sheet-action-icon">⭐</span>
+                        <span class="sheet-action-label">Review</span>
+                    </button>
+                `;
+            }
+        }
+
+        function navigateToStation(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (!service) return;
+
+            // Open in maps app
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${service.lat},${service.lng}`;
+            window.open(url, '_blank');
+        }
+
+        function openBookingFromSheet(serviceId) {
+            closeStationSheet();
+            setTimeout(() => openBookingModal(serviceId), 300);
+        }
+
+        function updateSheetInfoTab(service) {
+            const infoGrid = document.getElementById('sheetInfoGrid');
+            const typeConfig = serviceTypes[service.type];
+
+            let rows = [
+                { label: 'Type', value: typeConfig?.label || service.type },
+                { label: 'Status', value: typeConfig?.statusLabels?.[service.status] || service.status },
+            ];
+
+            if (service.price) {
+                rows.push({ label: 'Price', value: service.price + ' ETB' });
+            }
+
+            if (service.phone) {
+                rows.push({ label: 'Phone', value: service.phone });
+            }
+
+            if (service.services && service.services.length > 0) {
+                const servicesSection = `
+                    <div class="sheet-info-section">
+                        <h4>Services</h4>
+                        <div class="sheet-services-list">
+                            ${service.services.map(s => `<span class="sheet-service-tag">${s.replace(/_/g, ' ')}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('sheetInfoGrid').closest('.sheet-info-section').insertAdjacentHTML('afterend', servicesSection);
+            }
+
+            infoGrid.innerHTML = rows.map(row => `
+                <div class="sheet-info-row">
+                    <span class="sheet-info-label">${row.label}</span>
+                    <span class="sheet-info-value">${row.value}</span>
+                </div>
+            `).join('');
+
+            // Update amenities
+            const amenitiesSection = document.getElementById('sheetAmenitiesSection');
+            if (service.amenities && service.amenities.length > 0) {
+                amenitiesSection.style.display = 'block';
+                document.getElementById('sheetAmenities').innerHTML = service.amenities.map(a =>
+                    `<span class="sheet-amenity-tag">${getAmenityIcon(a)} ${a.replace(/_/g, ' ')}</span>`
+                ).join('');
+            } else {
+                amenitiesSection.style.display = 'none';
+            }
+
+            // Update prediction
+            const predictionSection = document.getElementById('sheetPredictionSection');
+            if (service.type === 'fuel_station' && service.prediction) {
+                predictionSection.style.display = 'block';
+
+                const riskBadge = document.getElementById('sheetRiskBadge');
+                riskBadge.className = 'sheet-risk-badge ' + service.prediction.shortageRisk;
+                riskBadge.innerHTML = `${getRiskEmoji(service.prediction.shortageRisk)} ${service.prediction.shortageRisk === 'high' ? 'High Risk' : service.prediction.shortageRisk === 'medium' ? 'Watch' : 'Healthy'}`;
+
+                document.getElementById('sheetPredictionContent').innerHTML = `
+                    <div class="sheet-prediction-row">
+                        <span class="sheet-prediction-label">Days of stock</span>
+                        <span class="sheet-prediction-value">${service.prediction.daysOfStock || '--'} days</span>
+                    </div>
+                    <div class="sheet-prediction-row">
+                        <span class="sheet-prediction-label">Expected refill</span>
+                        <span class="sheet-prediction-value">${service.prediction.nextRefill || '--'}</span>
+                    </div>
+                    <div class="sheet-prediction-row">
+                        <span class="sheet-prediction-label">Daily demand</span>
+                        <span class="sheet-prediction-value">${service.prediction.predictedDemand || '--'} L</span>
+                    </div>
+                `;
+            } else {
+                predictionSection.style.display = 'none';
+            }
+        }
+
+        function updateSheetFuelTab(service) {
+            if (service.type !== 'fuel_station') {
+                document.getElementById('tabFuel').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('tabFuel').style.display = 'block';
+
+            const fuelList = document.getElementById('sheetFuelList');
+            const fuelTypes = [
+                { type: 'diesel', icon: '🛢️', price: service.price || 54.50, status: service.status === 'empty' ? 'out' : service.status === 'low' ? 'low' : 'in-stock' },
+                { type: 'petrol', icon: '⛽', price: (service.price || 54.50) + 1, status: service.status === 'empty' ? 'out' : service.status === 'low' ? 'low' : 'in-stock' }
+            ];
+
+            fuelList.innerHTML = fuelTypes.map(fuel => `
+                <div class="sheet-fuel-item">
+                    <div class="sheet-fuel-icon ${fuel.type}">${fuel.icon}</div>
+                    <div class="sheet-fuel-details">
+                        <div class="sheet-fuel-type">${fuel.type.charAt(0).toUpperCase() + fuel.type.slice(1)}</div>
+                        <div class="sheet-fuel-price">${fuel.price.toFixed(2)} ETB/L</div>
+                    </div>
+                    <span class="sheet-fuel-status ${fuel.status}">${fuel.status === 'in-stock' ? 'In Stock' : fuel.status === 'low' ? 'Low' : 'Out'}</span>
+                </div>
+            `).join('');
+
+            // Capacity bars
+            const capacitySection = document.getElementById('sheetCapacitySection');
+            if (service.capacity) {
+                capacitySection.style.display = 'block';
+                document.getElementById('sheetCapacityBars').innerHTML = `
+                    <div class="sheet-capacity-item">
+                        <span class="sheet-capacity-label">Diesel</span>
+                        <div class="sheet-capacity-bar">
+                            <div class="sheet-capacity-fill ${getCapacityClass(service.capacity.diesel)}" style="width: ${service.capacity.diesel}%"></div>
+                        </div>
+                        <span class="sheet-capacity-value">${service.capacity.diesel}%</span>
+                    </div>
+                    <div class="sheet-capacity-item">
+                        <span class="sheet-capacity-label">Petrol</span>
+                        <div class="sheet-capacity-bar">
+                            <div class="sheet-capacity-fill ${getCapacityClass(service.capacity.petrol)}" style="width: ${service.capacity.petrol}%"></div>
+                        </div>
+                        <span class="sheet-capacity-value">${service.capacity.petrol}%</span>
+                    </div>
+                `;
+            } else {
+                capacitySection.style.display = 'none';
+            }
+        }
+
+        function getCapacityClass(percent) {
+            if (percent >= 50) return 'high';
+            if (percent >= 25) return 'medium';
+            return 'low';
+        }
+
+        function updateSheetReviewsTab(service) {
+            document.getElementById('sheetAvgRating').textContent = service.trustScore?.toFixed(1) || '0';
+            document.getElementById('sheetStarsDisplay').textContent = '★'.repeat(Math.floor(service.trustScore || 0)) + '☆'.repeat(5 - Math.floor(service.trustScore || 0));
+            document.getElementById('sheetTotalReviews').textContent = `Based on ${service.reviewCount || 0} reviews`;
+
+            const reviewsList = document.getElementById('sheetReviewsList');
+            if (service.reviews && service.reviews.length > 0) {
+                reviewsList.innerHTML = service.reviews.map(review => `
+                    <div class="sheet-review-card">
+                        <div class="sheet-review-header">
+                            <span class="sheet-review-author">${review.user || 'Anonymous'}</span>
+                            <span class="sheet-review-rating">${'★'.repeat(review.rating)}</span>
+                        </div>
+                        <p class="sheet-review-text">${review.comment || ''}</p>
+                        <span class="sheet-review-date">${review.date ? new Date(review.date).toLocaleDateString() : ''}</span>
+                    </div>
+                `).join('');
+            } else {
+                reviewsList.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No reviews yet. Be the first to review!</p>';
+            }
+        }
+
+        function getAmenityIcon(amenity) {
+            const icons = {
+                convenience_store: '🏪',
+                restroom: '🚻',
+                atm: '🏧',
+                car_wash: '🚿',
+                mechanic: '🔧',
+                tire_shop: '🛞',
+                parking: '🅿️',
+                wifi: '📶'
+            };
+            return icons[amenity] || '✓';
+        }
+
+        // Override marker click to open bottom sheet
+        const originalCreatePopupContent = createPopupContent;
+        createPopupContent = function(service) {
+            return originalCreatePopupContent(service).replace('onclick="openReviewModal', 'onclick="openStationSheet(' + service.id + '); openReviewModal');
+        };
+
+        // Also update marker clicks
+        const originalUpdateMarkers = updateMarkers;
+        updateMarkers = function() {
+            originalUpdateMarkers();
+            markers.forEach(marker => {
+                marker.off('click');
+                marker.on('click', () => {
+                    openStationSheet(marker.serviceId);
+                    map.closePopup();
+                });
+            });
+        };
 
         // FAB functionality
         function setupFAB() {
@@ -5547,12 +7309,8 @@
 
                     if (nearest) {
                         map.setView([nearest.lat, nearest.lng], 15);
-                        // Show station popup
-                        markers.forEach(m => {
-                            if (m.serviceId === nearest.id) {
-                                m.openPopup();
-                            }
-                        });
+                        // Open bottom sheet for nearest station
+                        openStationSheet(nearest.id);
                         showToast('Nearest station: ' + nearest.name, 'success');
                     }
                 }, () => {
@@ -5730,7 +7488,8 @@
                     ${actionButtons ? `<div class="action-buttons">${actionButtons}</div>` : ''}
                     ${predictionInfo}
                     <p style="margin-top:8px;font-size:0.75rem;color:#999;">Updated: ${lastUpdated}</p>
-                    <button style="margin-top:8px;padding:6px 12px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#9ca3af;font-size:0.75rem;cursor:pointer;width:100%;" onclick="openReviewModal(${service.id})">Write a Review</button>
+                    <button style="margin-top:8px;padding:6px 12px;background:#6366f1;border:none;border-radius:6px;color:white;font-size:0.75rem;cursor:pointer;width:100%;font-weight:600;" onclick="openStationSheet(${service.id})">View Details</button>
+                    <button style="margin-top:6px;padding:6px 12px;background:var(--bg-surface);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:var(--text-secondary);font-size:0.75rem;cursor:pointer;width:100%;" onclick="openReviewModal(${service.id})">Write a Review</button>
                 </div>
             `;
         }
@@ -6002,8 +7761,14 @@
                     icon: createMarkerIcon(service)
                 }).addTo(map);
 
-                marker.bindPopup(createPopupContent(service));
-                marker.serviceId = service.id; // Store service ID for reference
+                marker.serviceId = service.id;
+
+                // Click handler opens bottom sheet instead of popup
+                marker.on('click', () => {
+                    map.closePopup();
+                    openStationSheet(service.id);
+                });
+
                 markers.push(marker);
             });
         }
@@ -6127,6 +7892,25 @@
                 isMobile = window.innerWidth <= 768;
                 setupMobileFeatures();
             });
+
+            // Sign In button handler
+            const signInBtn = document.getElementById('signInBtn');
+            if (signInBtn) {
+                signInBtn.addEventListener('click', () => openAuthModal('login'));
+            }
+
+            // Language toggle handler
+            const langToggle = document.getElementById('langToggle');
+            if (langToggle) {
+                langToggle.addEventListener('click', () => {
+                    const currentLang = langToggle.querySelector('.lang-current');
+                    if (currentLang.textContent === 'EN') {
+                        currentLang.textContent = 'አማ';
+                    } else {
+                        currentLang.textContent = 'EN';
+                    }
+                });
+            }
 
             // Filter buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -6490,11 +8274,17 @@
         }
 
         // Filter panel functions
+        function toggleAdvancedFilters() {
+            const btn = document.getElementById('showAdvancedBtn');
+            const panel = document.getElementById('advancedFilterPanel');
+            btn.classList.toggle('active');
+            panel.classList.toggle('open');
+            btn.textContent = panel.classList.contains('open') ? '- Less Filters' : '+ More Filters';
+        }
+
+        // Legacy function for backward compatibility
         function toggleFilterPanel() {
-            const content = document.getElementById('filterContent');
-            const toggle = document.querySelector('.filter-toggle');
-            content.classList.toggle('active');
-            toggle.textContent = content.classList.contains('active') ? 'Hide' : 'Show';
+            toggleAdvancedFilters();
         }
 
         function resetFilters() {
@@ -7611,7 +9401,7 @@
 
             // Update pie chart using conic-gradient
             const dieselAngle = (dieselPct / 100) * 360;
-            pieChart.style.background = `conic-gradient(#f4a261 0deg, #f4a261 ${dieselAngle}deg, #3b82f6 ${dieselAngle}deg 360deg)`;
+            pieChart.style.background = `conic-gradient(var(--color-brand-primary) 0deg, var(--color-brand-primary) ${dieselAngle}deg, var(--color-mechanic) ${dieselAngle}deg 360deg)`;
 
             // Update legend
             document.getElementById('dieselPercent').textContent = `${dieselPct}%`;
@@ -7672,7 +9462,7 @@
         function renderDeliveryHistory() {
             const tbody = document.getElementById('deliveryHistoryTable');
             if (!providerAnalytics.deliveryHistory || providerAnalytics.deliveryHistory.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #9ca3af;">No deliveries yet</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">No deliveries yet</td></tr>';
                 return;
             }
 
@@ -7807,11 +9597,19 @@
             }
         }
 
+        // Toggle collapsible section by ID
+        function toggleCollapsibleSection(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                section.classList.toggle('open');
+            }
+        }
+
         function toggleCollapsible(header) {
             const content = header.nextElementSibling;
             const toggle = header.querySelector('.collapsible-toggle');
             content.classList.toggle('open');
-            toggle.textContent = content.classList.contains('open') ? '▼' : '▶';
+            toggle.textContent = content.classList.contains('open') ? '▼' : '▲';
         }
 
         async function loadDailySales() {
@@ -8168,8 +9966,8 @@
                         <div class="user-cell">
                             <div class="user-cell-avatar">${user.name.charAt(0)}</div>
                             <div>
-                                <div style="font-weight: 600; color: #fff;">${user.name}</div>
-                                <div style="font-size: 0.75rem; color: #9ca3af;">${user.phone}</div>
+                                <div style="font-weight: 600; color: var(--text-inverse);">${user.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">${user.phone}</div>
                             </div>
                         </div>
                     </td>
@@ -8264,7 +10062,7 @@
                     <div class="station-manage-location">Lat: ${station.lat.toFixed(4)}, Lng: ${station.lng.toFixed(4)}</div>
                     <div class="station-manage-owner">Owner: ${station.phone || 'N/A'}</div>
                     <span class="station-manage-status ${station.status}">${station.status}</span>
-                    ${station.price ? `<div style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 8px;">Price: ${station.price} ETB</div>` : ''}
+                    ${station.price ? `<div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Price: ${station.price} ETB</div>` : ''}
                     <div class="station-capacity-bars">
                         <div class="capacity-bar-row">
                             <span class="capacity-bar-label">Diesel</span>
@@ -8419,18 +10217,18 @@
             const capacityHtml = (service.type === 'fuel_station' && currentUser) ? `
                 <div class="station-capacity" style="margin: 10px 0; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; font-size: 0.75rem;">
                     <div class="capacity-row" style="display: flex; align-items: center; margin-bottom: 4px;">
-                        <span style="width: 45px; color: #9ca3af;">Diesel</span>
+                        <span style="width: 45px; color: var(--text-secondary);">Diesel</span>
                         <div style="flex: 1; height: 4px; background: #2d2d4a; border-radius: 2px; margin: 0 8px; overflow: hidden;">
-                            <div style="width: ${service.dieselCapacity || 80}%; height: 100%; background: ${(service.dieselCapacity || 80) >= 50 ? '#22c55e' : (service.dieselCapacity || 80) >= 25 ? '#f59e0b' : '#ef4444'}; border-radius: 2px;"></div>
+                            <div style="width: ${service.dieselCapacity || 80}%; height: 100%; background: ${(service.dieselCapacity || 80) >= 50 ? 'var(--color-available)' : (service.dieselCapacity || 80) >= 25 ? '#f59e0b' : 'var(--color-fuel)'}; border-radius: 2px;"></div>
                         </div>
-                        <span style="width: 32px; text-align: right; color: #e0e0e0;">${service.dieselCapacity || 80}%</span>
+                        <span style="width: 32px; text-align: right; color: var(--text-primary);">${service.dieselCapacity || 80}%</span>
                     </div>
                     <div class="capacity-row" style="display: flex; align-items: center;">
-                        <span style="width: 45px; color: #9ca3af;">Petrol</span>
+                        <span style="width: 45px; color: var(--text-secondary);">Petrol</span>
                         <div style="flex: 1; height: 4px; background: #2d2d4a; border-radius: 2px; margin: 0 8px; overflow: hidden;">
-                            <div style="width: ${service.petrolCapacity || 75}%; height: 100%; background: ${(service.petrolCapacity || 75) >= 50 ? '#3b82f6' : (service.petrolCapacity || 75) >= 25 ? '#f59e0b' : '#ef4444'}; border-radius: 2px;"></div>
+                            <div style="width: ${service.petrolCapacity || 75}%; height: 100%; background: ${(service.petrolCapacity || 75) >= 50 ? 'var(--color-mechanic)' : (service.petrolCapacity || 75) >= 25 ? '#f59e0b' : 'var(--color-fuel)'}; border-radius: 2px;"></div>
                         </div>
-                        <span style="width: 32px; text-align: right; color: #e0e0e0;">${service.petrolCapacity || 75}%</span>
+                        <span style="width: 32px; text-align: right; color: var(--text-primary);">${service.petrolCapacity || 75}%</span>
                     </div>
                 </div>
             ` : '';
@@ -8448,7 +10246,7 @@
                     ${service.phone ? `<p class="phone">📞 ${service.phone}</p>` : ''}
                     ${actionButtons ? `<div class="action-buttons">${actionButtons}</div>` : ''}
                     <p style="margin-top:8px;font-size:0.75rem;color:#999;">Updated: ${lastUpdated}</p>
-                    <button style="margin-top:8px;padding:6px 12px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#9ca3af;font-size:0.75rem;cursor:pointer;width:100%;" onclick="openReviewModal(${service.id})">Write a Review</button>
+                    <button style="margin-top:8px;padding:6px 12px;background:var(--bg-surface);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:var(--text-secondary);font-size:0.75rem;cursor:pointer;width:100%;" onclick="openReviewModal(${service.id})">Write a Review</button>
                 </div>
             `;
         }
@@ -8479,7 +10277,7 @@
                 <h3>Reject Verification</h3>
                 <button class="modal-close" onclick="closeRejectModal()">&times;</button>
             </div>
-            <p style="color: #9ca3af; font-size: 0.85rem; margin-bottom: 16px;">Please provide a reason for rejecting this verification request.</p>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px;">Please provide a reason for rejecting this verification request.</p>
             <textarea id="rejectReason" placeholder="Enter rejection reason..."></textarea>
             <div class="reject-modal-actions">
                 <button class="btn-cancel" onclick="closeRejectModal()">Cancel</button>
