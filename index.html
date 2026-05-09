@@ -3220,7 +3220,305 @@
             }
         }
 
-        /* ==================== MOBILE-FIRST OPTIMIZATIONS ==================== */
+        /* ==================== ML PREDICTION STYLES ==================== */
+
+/* Risk Badges */
+.risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.risk-badge.risk-low {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+.risk-badge.risk-medium {
+    background: rgba(234, 179, 8, 0.2);
+    color: #facc15;
+}
+
+.risk-badge.risk-high {
+    background: rgba(239, 68, 68, 0.25);
+    color: #f87171;
+    animation: pulse-risk 2s ease-in-out infinite;
+}
+
+@keyframes pulse-risk {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.risk-badge .risk-icon {
+    font-size: 0.9rem;
+}
+
+/* Alert Banner */
+.alert-banner {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.alert-banner.hidden {
+    display: none;
+}
+
+.alert-banner .alert-icon {
+    font-size: 1.3rem;
+}
+
+.alert-banner .alert-text {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.alert-banner .alert-dismiss {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.alert-banner .alert-dismiss:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.alert-banner .alert-count {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Prediction Panel */
+.prediction-panel {
+    background: #1a1a2e;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.prediction-panel h3 {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prediction-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.prediction-summary .alert-count {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.prediction-summary .healthy-count {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.prediction-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.prediction-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.prediction-row:last-child {
+    border-bottom: none;
+}
+
+.prediction-row .station-name {
+    flex: 1;
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+.prediction-row .risk-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.prediction-row .days-left {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    min-width: 70px;
+    text-align: right;
+}
+
+/* Prediction in Popup */
+.prediction-info {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.prediction-info h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.prediction-detail {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    padding: 4px 0;
+}
+
+.prediction-detail .label {
+    color: #9ca3af;
+}
+
+.prediction-detail .value {
+    font-weight: 600;
+}
+
+.prediction-detail .value.low { color: #4ade80; }
+.prediction-detail .value.medium { color: #facc15; }
+.prediction-detail .value.high { color: #f87171; }
+
+/* Mini Chart (CSS Bar Chart) */
+.prediction-chart {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 30px;
+    margin-top: 8px;
+}
+
+.prediction-bar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    min-height: 4px;
+    transition: height 0.3s ease;
+}
+
+.prediction-bar.healthy { background: #4ade80; }
+.prediction-bar.warning { background: #facc15; }
+.prediction-bar.danger { background: #f87171; }
+
+/* Dashboard Prediction Widget */
+.prediction-widget {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.prediction-widget h3 {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prediction-tip {
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 3px solid #3b82f6;
+    padding: 10px 12px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.8rem;
+    color: #e0e0e0;
+    margin-bottom: 8px;
+}
+
+.prediction-tip:last-child {
+    margin-bottom: 0;
+}
+
+.prediction-tip strong {
+    color: #60a5fa;
+}
+
+/* Risk marker indicator on map */
+.custom-marker.risk-high {
+    box-shadow: 0 0 0 3px #ef4444, 0 3px 8px rgba(239, 68, 68, 0.5);
+    animation: marker-pulse 2s ease-in-out infinite;
+}
+
+.custom-marker.risk-medium {
+    box-shadow: 0 0 0 2px #eab308, 0 3px 8px rgba(234, 179, 8, 0.3);
+}
+
+@keyframes marker-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ==================== MOBILE-FIRST OPTIMIZATIONS ==================== */
 
         /* Safe area for notched phones */
         body {
@@ -3794,6 +4092,14 @@
             </div>
         </header>
 
+        <!-- Shortage Alert Banner -->
+        <div class="alert-banner hidden" id="shortageAlert">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-text" id="alertText">Stations may run out of fuel soon</span>
+            <span class="alert-count" id="alertCount">0</span>
+            <button class="alert-dismiss" onclick="dismissAlertBanner()">×</button>
+        </div>
+
         <div class="stats-bar">
             <div class="stat-card fuel">
                 <div class="number" id="statFuel">0</div>
@@ -3834,6 +4140,27 @@
                 <div class="legend-item">
                     <div class="legend-dot empty"></div>
                     <span>Empty/Closed</span>
+                </div>
+                <div class="legend-item" style="border-left: 2px solid #4ade80; padding-left: 8px;">
+                    <span style="font-size: 0.75rem;">🟢 Low Risk</span>
+                </div>
+                <div class="legend-item" style="border-left: 2px solid #facc15; padding-left: 8px;">
+                    <span style="font-size: 0.75rem;">🟡 Medium Risk</span>
+                </div>
+                <div class="legend-item" style="border-left: 2px solid #f87171; padding-left: 8px;">
+                    <span style="font-size: 0.75rem;">🔴 High Risk</span>
+                </div>
+            </div>
+
+            <!-- ML Prediction Panel -->
+            <div class="prediction-panel" id="predictionPanel">
+                <h3>📊 Fuel Predictions</h3>
+                <div class="prediction-summary">
+                    <span class="healthy-count" id="healthyCount">12 healthy</span>
+                    <span class="alert-count" id="riskCount">0 at risk</span>
+                </div>
+                <div class="prediction-list" id="predictionList">
+                    <!-- Populated by JS -->
                 </div>
             </div>
 
@@ -3904,6 +4231,22 @@
                             </div>
                             <span class="cost-bar-value">1,500</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ML Prediction Widget (Driver Dashboard) -->
+            <div class="prediction-widget" id="driverPredictionWidget">
+                <h3>🔮 Fuel Forecast</h3>
+                <div id="predictionTips">
+                    <div class="prediction-tip">
+                        <strong>Your frequent stations:</strong> Healthy stock for <span id="daysHealthy">5</span> days
+                    </div>
+                    <div class="prediction-tip">
+                        <strong>Heads up:</strong> Station <span id="upcomingRisk">--</span> may run low tomorrow
+                    </div>
+                    <div class="prediction-tip">
+                        <strong>Best time to refuel:</strong> <span id="bestRefuelTime">tomorrow morning</span>
                     </div>
                 </div>
             </div>
@@ -5287,9 +5630,16 @@
             const typeConfig = serviceTypes[service.type] || { icon: '📍' };
             const color = statusColors[service.status] || '#666';
 
+            // Determine risk class based on prediction
+            let riskClass = '';
+            if (service.prediction) {
+                if (service.prediction.shortageRisk === 'high') riskClass = 'risk-high';
+                else if (service.prediction.shortageRisk === 'medium') riskClass = 'risk-medium';
+            }
+
             return L.divIcon({
                 className: 'custom-marker-wrapper',
-                html: `<div class="custom-marker" style="background: ${color}">${typeConfig.icon}</div>`,
+                html: `<div class="custom-marker ${riskClass}" style="background: ${color}">${typeConfig.icon}</div>`,
                 iconSize: [32, 32],
                 iconAnchor: [16, 16]
             });
@@ -5324,6 +5674,36 @@
             // Verified badge
             const verifiedBadge = service.isVerified ? `<div class="verified-badge">✓ Verified</div>` : '';
 
+            // Risk badge for fuel stations
+            const riskBadge = service.type === 'fuel_station' && service.prediction ? `
+                <span class="risk-badge risk-${service.prediction.shortageRisk || 'low'}">
+                    <span class="risk-icon">${getRiskEmoji(service.prediction.shortageRisk)}</span>
+                    ${service.prediction.shortageRisk === 'high' ? 'High Risk' : service.prediction.shortageRisk === 'medium' ? 'Watch' : 'Healthy'}
+                </span>
+            ` : '';
+
+            // Prediction info for fuel stations
+            const predictionInfo = service.type === 'fuel_station' && service.prediction ? `
+                <div class="prediction-info">
+                    <h4>📈 Forecast</h4>
+                    <div class="prediction-detail">
+                        <span class="label">Days of stock:</span>
+                        <span class="value">${service.prediction.daysOfStock || '--'} days</span>
+                    </div>
+                    <div class="prediction-detail">
+                        <span class="label">Expected to run out:</span>
+                        <span class="value">${service.prediction.nextRefill || '--'}</span>
+                    </div>
+                    <div class="prediction-detail">
+                        <span class="label">Risk level:</span>
+                        <span class="value ${service.prediction.shortageRisk || 'low'}">${capitalize(service.prediction.shortageRisk || 'low')}</span>
+                    </div>
+                    <div class="prediction-chart">
+                        ${generatePredictionBars(service.prediction)}
+                    </div>
+                </div>
+            ` : '';
+
             // Action buttons based on service type
             let actionButtons = '';
             if (service.phone) {
@@ -5346,11 +5726,46 @@
                     ${service.price ? `<p><strong>Price:</strong> ${service.price} ETB</p>` : ''}
                     ${service.services ? `<p class="services-list"><strong>Services:</strong> ${formatServices(service.services)}</p>` : ''}
                     ${service.phone ? `<p class="phone">📞 ${service.phone}</p>` : ''}
+                    ${riskBadge}
                     ${actionButtons ? `<div class="action-buttons">${actionButtons}</div>` : ''}
+                    ${predictionInfo}
                     <p style="margin-top:8px;font-size:0.75rem;color:#999;">Updated: ${lastUpdated}</p>
                     <button style="margin-top:8px;padding:6px 12px;background:#1a1a2e;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:#9ca3af;font-size:0.75rem;cursor:pointer;width:100%;" onclick="openReviewModal(${service.id})">Write a Review</button>
                 </div>
             `;
+        }
+
+        // Helper to get risk emoji
+        function getRiskEmoji(risk) {
+            switch(risk) {
+                case 'high': return '🔴';
+                case 'medium': return '🟡';
+                default: return '🟢';
+            }
+        }
+
+        // Helper to capitalize first letter
+        function capitalize(str) {
+            return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+        }
+
+        // Generate prediction bars for 7-day forecast
+        function generatePredictionBars(prediction) {
+            const days = prediction.daysOfStock || 5;
+            let bars = '';
+            for (let i = 0; i < 7; i++) {
+                let barClass = 'healthy';
+                let height = 100;
+                if (i >= days) {
+                    barClass = 'danger';
+                    height = 20;
+                } else if (i >= days - 1) {
+                    barClass = 'warning';
+                    height = 50;
+                }
+                bars += `<div class="prediction-bar ${barClass}" style="height: ${height}%"></div>`;
+            }
+            return bars;
         }
 
         // Load services from API
@@ -5360,6 +5775,13 @@
                 if (!response.ok) throw new Error('Failed to load services');
 
                 services = await response.json();
+
+                // Generate demo predictions for fuel stations
+                generateDemoPredictions();
+
+                // Try to load ML predictions from API
+                loadPredictions();
+
                 // Cache services data for offline use
                 localStorage.setItem('cachedServices', JSON.stringify(services.slice(0, 15)));
                 updateMarkers();
@@ -5367,6 +5789,7 @@
                 updateStats();
                 updateCounts();
                 updateLastUpdated();
+                updatePredictionUI();
             } catch (error) {
                 console.error('Error loading services:', error);
                 showMessage('Failed to load services. Using demo data.', 'error');
@@ -5401,11 +5824,168 @@
                 { id: 26, name: 'Sparkle Car Wash - Azezo', type: 'car_wash', lat: 12.5608, lng: 37.4502, status: 'open', price: 150, phone: '+251 91 876 5450', services: ['exterior_wash', 'interior_clean'], lastUpdated: new Date().toISOString() },
                 { id: 27, name: 'Express Car Wash - Piazza', type: 'car_wash', lat: 12.6089, lng: 37.4667, status: 'open', price: 200, phone: '+251 91 876 5451', services: ['exterior_wash', 'wax'], lastUpdated: new Date().toISOString() }
             ];
+
+            // Generate demo predictions for fuel stations
+            generateDemoPredictions();
+
             updateMarkers();
             updateServiceDropdown();
             updateStats();
             updateCounts();
             updateLastUpdated();
+            updatePredictionUI();
+        }
+
+        // Generate demo predictions for fuel stations
+        function generateDemoPredictions() {
+            services.forEach(service => {
+                if (service.type === 'fuel_station') {
+                    const baseDemand = 400 + Math.random() * 200;
+                    const capacity = 5000; // Default capacity
+                    const daysOfStock = capacity / baseDemand;
+
+                    let risk = 'low';
+                    let nextRefill = getFutureDate(Math.ceil(daysOfStock));
+
+                    if (daysOfStock < 1.5) {
+                        risk = 'high';
+                    } else if (daysOfStock < 3) {
+                        risk = 'medium';
+                    }
+
+                    service.prediction = {
+                        shortageRisk: risk,
+                        predictedDemand: Math.round(baseDemand),
+                        daysOfStock: Math.round(daysOfStock * 10) / 10,
+                        nextRefill: nextRefill,
+                        sevenDayForecast: generateSevenDayForecast(daysOfStock)
+                    };
+                }
+            });
+        }
+
+        // Generate 7-day forecast array
+        function generateSevenDayForecast(daysOfStock) {
+            const forecast = [];
+            for (let i = 0; i < 7; i++) {
+                if (i >= daysOfStock) {
+                    forecast.push({ day: i + 1, risk: 'danger', level: 20 });
+                } else if (i >= daysOfStock - 1) {
+                    forecast.push({ day: i + 1, risk: 'warning', level: 50 });
+                } else {
+                    forecast.push({ day: i + 1, risk: 'healthy', level: 100 });
+                }
+            }
+            return forecast;
+        }
+
+        // Get future date string
+        function getFutureDate(daysFromNow) {
+            const date = new Date();
+            date.setDate(date.getDate() + daysFromNow);
+            return date.toISOString().split('T')[0];
+        }
+
+        // Update prediction UI with current predictions
+        function updatePredictionUI() {
+            const fuelStations = services.filter(s => s.type === 'fuel_station' && s.prediction);
+            const highRisk = fuelStations.filter(s => s.prediction.shortageRisk === 'high').length;
+            const mediumRisk = fuelStations.filter(s => s.prediction.shortageRisk === 'medium').length;
+            const healthy = fuelStations.length - highRisk - mediumRisk;
+
+            // Update summary counts
+            document.getElementById('healthyCount').textContent = `${healthy} healthy`;
+            document.getElementById('riskCount').textContent = `${highRisk + mediumRisk} at risk`;
+
+            // Update alert banner
+            const alertCount = highRisk;
+            const alertBanner = document.getElementById('shortageAlert');
+            if (alertCount > 0) {
+                alertBanner.classList.remove('hidden');
+                document.getElementById('alertText').textContent = `${alertCount} station${alertCount > 1 ? 's' : ''} may run out of fuel soon`;
+                document.getElementById('alertCount').textContent = alertCount;
+            } else {
+                alertBanner.classList.add('hidden');
+            }
+
+            // Update prediction list (show at-risk stations first)
+            const predictionList = document.getElementById('predictionList');
+            const atRiskStations = [...fuelStations].sort((a, b) => {
+                const riskOrder = { high: 0, medium: 1, low: 2 };
+                return riskOrder[a.prediction.shortageRisk] - riskOrder[b.prediction.shortageRisk];
+            });
+
+            predictionList.innerHTML = atRiskStations.map(station => `
+                <div class="prediction-row">
+                    <span class="station-name">${station.name}</span>
+                    <div class="risk-indicator">
+                        <span>${getRiskEmoji(station.prediction.shortageRisk)}</span>
+                        <span class="days-left">${station.prediction.daysOfStock} days</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update driver prediction widget
+            updateDriverPredictionWidget(fuelStations);
+        }
+
+        // Update driver prediction widget
+        function updateDriverPredictionWidget(fuelStations) {
+            const highRiskStations = fuelStations.filter(s => s.prediction.shortageRisk === 'high');
+            const avgDays = fuelStations.length > 0
+                ? (fuelStations.reduce((sum, s) => sum + s.prediction.daysOfStock, 0) / fuelStations.length).toFixed(1)
+                : 5;
+
+            document.getElementById('daysHealthy').textContent = avgDays;
+
+            if (highRiskStations.length > 0) {
+                document.getElementById('upcomingRisk').textContent = highRiskStations[0].name;
+            } else {
+                document.getElementById('upcomingRisk').textContent = 'None predicted';
+            }
+        }
+
+        // Dismiss alert banner
+        function dismissAlertBanner() {
+            document.getElementById('shortageAlert').classList.add('hidden');
+        }
+
+        // Load predictions from API
+        async function loadPredictions() {
+            try {
+                const response = await fetch(`${API_BASE}/predict/all`);
+                if (response.ok) {
+                    const data = await response.json();
+                    updatePredictionUIFromData(data.predictions);
+                }
+            } catch (error) {
+                console.log('Predictions API not available, using demo data');
+                // Demo predictions are generated in loadDemoData
+            }
+        }
+
+        // Update prediction UI from API data
+        function updatePredictionUIFromData(predictions) {
+            // Merge predictions with services
+            services.forEach(service => {
+                const prediction = predictions.find(p => p.serviceId === service.id);
+                if (prediction) {
+                    service.prediction = prediction;
+                }
+            });
+            updatePredictionUI();
+            updateMarkers();
+        }
+
+        // Update station markers with risk indicators
+        function updateStationRiskMarkers() {
+            markers.forEach(marker => {
+                const service = services.find(s => s.id === marker.serviceId);
+                if (service && service.prediction) {
+                    // Update marker icon with risk class
+                    marker.setIcon(createMarkerIcon(service));
+                }
+            });
         }
 
         // Update map markers
@@ -5423,6 +6003,7 @@
                 }).addTo(map);
 
                 marker.bindPopup(createPopupContent(service));
+                marker.serviceId = service.id; // Store service ID for reference
                 markers.push(marker);
             });
         }

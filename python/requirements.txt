@@ -1,0 +1,14 @@
+# Gondar Fuel Prediction Service - Dependencies
+# Install with: pip install -r requirements.txt
+
+# Prophet for time-series forecasting
+prophet>=1.1.0
+cmdstanpy>=1.1.0
+
+# FastAPI for REST API
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+
+# Data handling
+pandas>=2.0.0
+numpy>=1.24.0

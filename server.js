@@ -254,6 +254,147 @@ function handleNearbySSE(req, res) {
 
 // ==================== END PHASE 2 SETUP ====================
 
+// ==================== PHASE 4: ML PREDICTIONS ====================
+
+// Generate 7-day demo predictions for a station
+function generatePredictions(station) {
+    if (!station.capacity) return null;
+
+    const predictions = [];
+    const today = new Date();
+    const demand = station.avgDailyDemand || { diesel: 400, petrol: 100 };
+
+    // Base demand varies by station trust score and location
+    const trustMultiplier = 0.8 + (station.trustScore || 4.0) * 0.05;
+    const baseDiesel = demand.diesel * trustMultiplier;
+    const basePetrol = demand.petrol * trustMultiplier;
+
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(today);
+        date.setDate(date.getDate() + i);
+        const dayOfWeek = date.getDay();
+
+        // Weekend boost (Ethiopia has driving patterns similar to Western)
+        const weekendMultiplier = (dayOfWeek === 0 || dayOfWeek === 6) ? 1.15 : 1.0;
+
+        // Random variation for demo (-10% to +15%)
+        const randomVariation = 0.9 + Math.random() * 0.25;
+
+        const predictedDiesel = Math.round(baseDiesel * weekendMultiplier * randomVariation);
+        const predictedPetrol = Math.round(basePetrol * weekendMultiplier * randomVariation);
+
+        predictions.push({
+            date: date.toISOString().split('T')[0],
+            predicted_demand: {
+                diesel: predictedDiesel,
+                petrol: predictedPetrol,
+                total: predictedDiesel + predictedPetrol
+            },
+            lower_bound: {
+                diesel: Math.round(predictedDiesel * 0.75),
+                petrol: Math.round(predictedPetrol * 0.75)
+            },
+            upper_bound: {
+                diesel: Math.round(predictedDiesel * 1.30),
+                petrol: Math.round(predictedPetrol * 1.30)
+            },
+            confidence: 0.82 + Math.random() * 0.1
+        });
+    }
+
+    return predictions;
+}
+
+// Calculate shortage risk based on capacity, status, and recent reports
+function calculateShortageRisk(station) {
+    if (station.type !== 'fuel_station') return null;
+
+    const capacity = station.capacity || { diesel: 0, petrol: 0 };
+    const totalCapacity = capacity.diesel + capacity.petrol;
+    const avgDemand = station.avgDailyDemand || { diesel: 400, petrol: 100 };
+    const totalDailyDemand = avgDemand.diesel + avgDemand.petrol;
+
+    // Days of stock calculation
+    const daysOfStock = totalDailyDemand > 0 ? totalCapacity / totalDailyDemand : 0;
+
+    // Check recent low/empty reports (last 24 hours)
+    const recentReports = (station.reports || []).filter(r => {
+        const reportTime = new Date(r.timestamp);
+        const hoursAgo = (Date.now() - reportTime.getTime()) / (1000 * 60 * 60);
+        return hoursAgo < 24;
+    });
+
+    const lowReportCount = recentReports.filter(r => r.status === 'low').length;
+    const emptyReportCount = recentReports.filter(r => r.status === 'empty').length;
+
+    // Determine risk level
+    let risk = 'low';
+    let riskFactors = [];
+
+    // Capacity-based risk
+    if (daysOfStock < 1 || station.status === 'empty') {
+        risk = 'high';
+        riskFactors.push('Critical fuel shortage');
+    } else if (daysOfStock < 2 || station.status === 'low') {
+        risk = 'medium';
+        riskFactors.push('Low capacity warning');
+    }
+
+    // Report frequency risk
+    if (lowReportCount >= 2) {
+        risk = risk === 'high' ? 'high' : 'medium';
+        riskFactors.push('Multiple recent low-stock reports');
+    }
+    if (emptyReportCount >= 1) {
+        risk = 'high';
+        riskFactors.push('Recent empty-stock report');
+    }
+
+    // High-demand station risk
+    if (totalDailyDemand > 600 && daysOfStock < 3) {
+        risk = risk === 'low' ? 'medium' : risk;
+        riskFactors.push('High-demand station with limited stock');
+    }
+
+    return {
+        level: risk,
+        daysOfStock: Math.round(daysOfStock * 10) / 10,
+        totalCapacity,
+        totalDailyDemand,
+        riskFactors
+    };
+}
+
+// Estimate next refill date based on consumption rate
+function estimateNextRefill(station) {
+    const risk = calculateShortageRisk(station);
+    if (!risk) return null;
+
+    if (risk.daysOfStock < 1) {
+        // Estimate 2-4 days for emergency refill
+        const daysUntilRefill = 2 + Math.floor(Math.random() * 2);
+        const refillDate = new Date();
+        refillDate.setDate(refillDate.getDate() + daysUntilRefill);
+        return refillDate.toISOString().split('T')[0];
+    }
+
+    // Assume normal 5-7 day refill cycle
+    const cycleDays = 5 + Math.floor(Math.random() * 2);
+    const refillDate = new Date();
+    refillDate.setDate(refillDate.getDate() + cycleDays);
+    return refillDate.toISOString().split('T')[0];
+}
+
+// Broadcast prediction update via SSE
+function broadcastPredictionUpdate(stationId, predictionData) {
+    broadcastStationUpdate(stationId, 'prediction_update', {
+        stationId,
+        ...predictionData
+    });
+}
+
+// ==================== END PHASE 4 SETUP ====================
+
 // Comprehensive Gondar service data
 // Categories: fuel_station, mechanic, tire_shop, car_wash
 
@@ -261,30 +402,30 @@ let services = [
     // ==================== FUEL STATIONS ====================
 
     // Azezo Area - Major fuel corridor (south of Gondar, on highway to Bahir Dar)
-    { id: 1, name: 'Total Energies - Azezo Main', type: 'fuel_station', lat: 12.5589, lng: 37.4521, status: 'available', price: 54.50, phone: '+251 58 111 2345', services: ['diesel', 'petrol', 'lubricants'], lastUpdated: new Date().toISOString(), trustScore: 4.5, reviewCount: 89, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'atm'], is24Hours: false, reviews: [{ user: 'Abebe', rating: 5, comment: 'Great service!', verified: true, date: '2026-04-15' }, { user: 'Marta', rating: 4, comment: 'Good prices', verified: true, date: '2026-04-10' }] },
-    { id: 2, name: 'Oilibya - Azezo', type: 'fuel_station', lat: 12.5612, lng: 37.4498, status: 'available', price: 54.00, phone: '+251 58 111 3456', services: ['diesel', 'petrol', 'convenience_store'], lastUpdated: new Date().toISOString(), trustScore: 4.2, reviewCount: 67, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store'], is24Hours: false, reviews: [{ user: 'Kaleb', rating: 4, comment: 'Reliable', verified: true, date: '2026-04-12' }] },
-    { id: 3, name: 'Nile Petroleum - Azezo', type: 'fuel_station', lat: 12.5634, lng: 37.4476, status: 'low', price: 55.00, phone: '+251 58 111 4567', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 3.8, reviewCount: 45, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, reviews: [{ user: 'Dawit', rating: 3, comment: 'Sometimes runs out', verified: true, date: '2026-04-08' }] },
-    { id: 4, name: 'Libya Oil - Azezo', type: 'fuel_station', lat: 12.5578, lng: 37.4535, status: 'available', price: 53.50, phone: '+251 58 111 5678', services: ['diesel', 'petrol', 'lubricants', 'car_wash'], lastUpdated: new Date().toISOString(), trustScore: 4.3, reviewCount: 72, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'car_wash'], is24Hours: false, reviews: [{ user: 'Selam', rating: 5, comment: 'Best in Azezo!', verified: true, date: '2026-04-14' }] },
-    { id: 5, name: 'Ola Energy - Azezo', type: 'fuel_station', lat: 12.5656, lng: 37.4455, status: 'low', price: 54.50, phone: '+251 58 111 6789', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 4.0, reviewCount: 38, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, reviews: [{ user: 'Yonas', rating: 4, comment: 'Good service', verified: true, date: '2026-04-11' }] },
+    { id: 1, name: 'Total Energies - Azezo Main', type: 'fuel_station', lat: 12.5589, lng: 37.4521, status: 'available', price: 54.50, phone: '+251 58 111 2345', services: ['diesel', 'petrol', 'lubricants'], lastUpdated: new Date().toISOString(), trustScore: 4.5, reviewCount: 89, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'atm'], is24Hours: false, capacity: { diesel: 8500, petrol: 4000 }, avgDailyDemand: { diesel: 420, petrol: 110 }, reports: [], reviews: [{ user: 'Abebe', rating: 5, comment: 'Great service!', verified: true, date: '2026-04-15' }, { user: 'Marta', rating: 4, comment: 'Good prices', verified: true, date: '2026-04-10' }] },
+    { id: 2, name: 'Oilibya - Azezo', type: 'fuel_station', lat: 12.5612, lng: 37.4498, status: 'available', price: 54.00, phone: '+251 58 111 3456', services: ['diesel', 'petrol', 'convenience_store'], lastUpdated: new Date().toISOString(), trustScore: 4.2, reviewCount: 67, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store'], is24Hours: false, capacity: { diesel: 7200, petrol: 3200 }, avgDailyDemand: { diesel: 380, petrol: 95 }, reports: [], reviews: [{ user: 'Kaleb', rating: 4, comment: 'Reliable', verified: true, date: '2026-04-12' }] },
+    { id: 3, name: 'Nile Petroleum - Azezo', type: 'fuel_station', lat: 12.5634, lng: 37.4476, status: 'low', price: 55.00, phone: '+251 58 111 4567', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 3.8, reviewCount: 45, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, capacity: { diesel: 1200, petrol: 800 }, avgDailyDemand: { diesel: 480, petrol: 120 }, reports: [], reviews: [{ user: 'Dawit', rating: 3, comment: 'Sometimes runs out', verified: true, date: '2026-04-08' }] },
+    { id: 4, name: 'Libya Oil - Azezo', type: 'fuel_station', lat: 12.5578, lng: 37.4535, status: 'available', price: 53.50, phone: '+251 58 111 5678', services: ['diesel', 'petrol', 'lubricants', 'car_wash'], lastUpdated: new Date().toISOString(), trustScore: 4.3, reviewCount: 72, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'car_wash'], is24Hours: false, capacity: { diesel: 9200, petrol: 4500 }, avgDailyDemand: { diesel: 500, petrol: 130 }, reports: [], reviews: [{ user: 'Selam', rating: 5, comment: 'Best in Azezo!', verified: true, date: '2026-04-14' }] },
+    { id: 5, name: 'Ola Energy - Azezo', type: 'fuel_station', lat: 12.5656, lng: 37.4455, status: 'low', price: 54.50, phone: '+251 58 111 6789', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 4.0, reviewCount: 38, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, capacity: { diesel: 1500, petrol: 600 }, avgDailyDemand: { diesel: 400, petrol: 100 }, reports: [], reviews: [{ user: 'Yonas', rating: 4, comment: 'Good service', verified: true, date: '2026-04-11' }] },
 
     // City Center / Piazza Area
-    { id: 6, name: 'Total Energies - Piazza', type: 'fuel_station', lat: 12.6089, lng: 37.4654, status: 'available', price: 55.00, phone: '+251 58 111 7890', services: ['diesel', 'petrol', 'lubricants'], lastUpdated: new Date().toISOString(), trustScore: 4.6, reviewCount: 124, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'atm'], is24Hours: true, reviews: [{ user: 'Hanna', rating: 5, comment: 'Open 24/7!', verified: true, date: '2026-04-16' }, { user: 'Mikael', rating: 5, comment: 'Excellent', verified: true, date: '2026-04-13' }] },
-    { id: 7, name: 'Oilibya - Arada', type: 'fuel_station', lat: 12.6045, lng: 37.4612, status: 'available', price: 55.00, phone: '+251 58 111 8901', services: ['diesel', 'petrol', 'convenience_store'], lastUpdated: new Date().toISOString(), trustScore: 4.1, reviewCount: 56, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store'], is24Hours: false, reviews: [{ user: 'Tigist', rating: 4, comment: 'Convenient location', verified: true, date: '2026-04-09' }] },
+    { id: 6, name: 'Total Energies - Piazza', type: 'fuel_station', lat: 12.6089, lng: 37.4654, status: 'available', price: 55.00, phone: '+251 58 111 7890', services: ['diesel', 'petrol', 'lubricants'], lastUpdated: new Date().toISOString(), trustScore: 4.6, reviewCount: 124, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'atm'], is24Hours: true, capacity: { diesel: 12000, petrol: 6000 }, avgDailyDemand: { diesel: 650, petrol: 180 }, reports: [], reviews: [{ user: 'Hanna', rating: 5, comment: 'Open 24/7!', verified: true, date: '2026-04-16' }, { user: 'Mikael', rating: 5, comment: 'Excellent', verified: true, date: '2026-04-13' }] },
+    { id: 7, name: 'Oilibya - Arada', type: 'fuel_station', lat: 12.6045, lng: 37.4612, status: 'available', price: 55.00, phone: '+251 58 111 8901', services: ['diesel', 'petrol', 'convenience_store'], lastUpdated: new Date().toISOString(), trustScore: 4.1, reviewCount: 56, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store'], is24Hours: false, capacity: { diesel: 6800, petrol: 3000 }, avgDailyDemand: { diesel: 350, petrol: 90 }, reports: [], reviews: [{ user: 'Tigist', rating: 4, comment: 'Convenient location', verified: true, date: '2026-04-09' }] },
 
     // Stadium / Fasilides Area
-    { id: 8, name: 'Nile Petroleum - Stadium', type: 'fuel_station', lat: 12.6123, lng: 37.4723, status: 'available', price: 54.00, phone: '+251 58 111 9012', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 4.4, reviewCount: 78, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['restroom'], is24Hours: false, reviews: [{ user: 'Bezawit', rating: 5, comment: 'Fast service', verified: true, date: '2026-04-15' }] },
+    { id: 8, name: 'Nile Petroleum - Stadium', type: 'fuel_station', lat: 12.6123, lng: 37.4723, status: 'available', price: 54.00, phone: '+251 58 111 9012', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 4.4, reviewCount: 78, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['restroom'], is24Hours: false, capacity: { diesel: 5500, petrol: 2500 }, avgDailyDemand: { diesel: 320, petrol: 85 }, reports: [], reviews: [{ user: 'Bezawit', rating: 5, comment: 'Fast service', verified: true, date: '2026-04-15' }] },
 
     // Maraki Area
-    { id: 9, name: 'Libya Oil - Maraki', type: 'fuel_station', lat: 12.5934, lng: 37.4456, status: 'empty', price: null, phone: '+251 58 112 0123', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 3.5, reviewCount: 34, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, reviews: [{ user: 'Fikadu', rating: 3, comment: 'Often empty', verified: true, date: '2026-04-07' }] },
+    { id: 9, name: 'Libya Oil - Maraki', type: 'fuel_station', lat: 12.5934, lng: 37.4456, status: 'empty', price: null, phone: '+251 58 112 0123', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 3.5, reviewCount: 34, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, capacity: { diesel: 0, petrol: 0 }, avgDailyDemand: { diesel: 280, petrol: 70 }, reports: [], reviews: [{ user: 'Fikadu', rating: 3, comment: 'Often empty', verified: true, date: '2026-04-07' }] },
 
     // Airport Road
-    { id: 10, name: 'Total Energies - Airport Rd', type: 'fuel_station', lat: 12.6234, lng: 37.4812, status: 'low', price: 56.00, phone: '+251 58 112 1234', services: ['diesel', 'petrol', 'lubricants'], lastUpdated: new Date().toISOString(), trustScore: 4.2, reviewCount: 91, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom'], is24Hours: false, reviews: [{ user: 'Natan', rating: 4, comment: 'Good for airport trips', verified: true, date: '2026-04-14' }] },
+    { id: 10, name: 'Total Energies - Airport Rd', type: 'fuel_station', lat: 12.6234, lng: 37.4812, status: 'low', price: 56.00, phone: '+251 58 112 1234', services: ['diesel', 'petrol', 'lubricants'], lastUpdated: new Date().toISOString(), trustScore: 4.2, reviewCount: 91, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom'], is24Hours: false, capacity: { diesel: 2000, petrol: 1000 }, avgDailyDemand: { diesel: 380, petrol: 110 }, reports: [], reviews: [{ user: 'Natan', rating: 4, comment: 'Good for airport trips', verified: true, date: '2026-04-14' }] },
 
     // Kebele 08 / Addis Alem Area
-    { id: 11, name: 'Ola Energy - Addis Alem', type: 'fuel_station', lat: 12.5978, lng: 37.4689, status: 'available', price: 54.50, phone: '+251 58 112 2345', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 4.0, reviewCount: 42, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, reviews: [{ user: 'Rahel', rating: 4, comment: 'Decent prices', verified: true, date: '2026-04-10' }] },
+    { id: 11, name: 'Ola Energy - Addis Alem', type: 'fuel_station', lat: 12.5978, lng: 37.4689, status: 'available', price: 54.50, phone: '+251 58 112 2345', services: ['diesel', 'petrol'], lastUpdated: new Date().toISOString(), trustScore: 4.0, reviewCount: 42, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: [], is24Hours: false, capacity: { diesel: 4800, petrol: 2200 }, avgDailyDemand: { diesel: 290, petrol: 75 }, reports: [], reviews: [{ user: 'Rahel', rating: 4, comment: 'Decent prices', verified: true, date: '2026-04-10' }] },
 
     // Near University of Gondar
-    { id: 12, name: 'Total Energies - University', type: 'fuel_station', lat: 12.6189, lng: 37.4534, status: 'available', price: 54.00, phone: '+251 58 112 3456', services: ['diesel', 'petrol', 'convenience_store'], lastUpdated: new Date().toISOString(), trustScore: 4.7, reviewCount: 156, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'atm'], is24Hours: false, reviews: [{ user: 'Dagim', rating: 5, comment: 'Student friendly!', verified: true, date: '2026-04-16' }, { user: 'Sara', rating: 5, comment: 'Always has fuel', verified: true, date: '2026-04-12' }] },
+    { id: 12, name: 'Total Energies - University', type: 'fuel_station', lat: 12.6189, lng: 37.4534, status: 'available', price: 54.00, phone: '+251 58 112 3456', services: ['diesel', 'petrol', 'convenience_store'], lastUpdated: new Date().toISOString(), trustScore: 4.7, reviewCount: 156, isVerified: true, fuelTypes: ['diesel', 'petrol'], amenities: ['convenience_store', 'restroom', 'atm'], is24Hours: false, capacity: { diesel: 9800, petrol: 5000 }, avgDailyDemand: { diesel: 550, petrol: 150 }, reports: [], reviews: [{ user: 'Dagim', rating: 5, comment: 'Student friendly!', verified: true, date: '2026-04-16' }, { user: 'Sara', rating: 5, comment: 'Always has fuel', verified: true, date: '2026-04-12' }] },
 
     // ==================== MECHANIC SHOPS ====================
 
@@ -458,6 +599,7 @@ function handleApi(req, res, pathname, method) {
         const fuelType = url.searchParams.get('fuelType');
         const maxPrice = url.searchParams.get('maxPrice');
         const is24Hours = url.searchParams.get('is24Hours');
+        const includePrediction = url.searchParams.get('includePrediction') === 'true';
 
         let filtered = services;
         if (type) {
@@ -471,6 +613,26 @@ function handleApi(req, res, pathname, method) {
         }
         if (is24Hours === 'true') {
             filtered = filtered.filter(s => s.is24Hours === true);
+        }
+
+        // Add prediction data to fuel stations if requested
+        if (includePrediction || type === 'fuel_station') {
+            filtered = filtered.map(s => {
+                if (s.type === 'fuel_station' && s.capacity) {
+                    const risk = calculateShortageRisk(s);
+                    const nextRefill = estimateNextRefill(s);
+                    return {
+                        ...s,
+                        prediction: {
+                            shortageRisk: risk.level,
+                            daysOfStock: risk.daysOfStock,
+                            nextRefill,
+                            riskFactors: risk.riskFactors
+                        }
+                    };
+                }
+                return s;
+            });
         }
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -600,34 +762,84 @@ function handleApi(req, res, pathname, method) {
                 const service = services.find(s => s.id === data.serviceId || s.id === data.stationId);
 
                 if (service) {
+                    const oldStatus = service.status;
                     if (data.status) service.status = data.status;
                     if (data.price !== undefined && data.price !== null) service.price = data.price;
                     service.lastUpdated = new Date().toISOString();
 
-                    reports.push({
+                    // Track report for prediction analysis
+                    const reportEntry = {
                         serviceId: data.serviceId || data.stationId,
                         serviceName: service.name,
                         type: service.type,
                         status: data.status,
                         price: data.price,
                         timestamp: new Date().toISOString()
-                    });
+                    };
+
+                    // Add to station's report history (keep last 20)
+                    if (service.type === 'fuel_station') {
+                        if (!service.reports) service.reports = [];
+                        service.reports.push(reportEntry);
+                        if (service.reports.length > 20) service.reports.shift();
+
+                        // Update capacity estimate based on status
+                        if (data.capacity) {
+                            service.capacity = { ...service.capacity, ...data.capacity };
+                        } else if (data.status === 'available' && !service.capacity?.diesel) {
+                            // Estimate full capacity if now available
+                            service.capacity = { diesel: 8000, petrol: 4000 };
+                        } else if (data.status === 'low') {
+                            // Estimate low capacity
+                            service.capacity = { diesel: 1500, petrol: 800 };
+                        } else if (data.status === 'empty') {
+                            // No capacity
+                            service.capacity = { diesel: 0, petrol: 0 };
+                        }
+                    }
+
+                    reports.push(reportEntry);
 
                     console.log(`[REPORT] ${service.name} (${service.type}) updated: ${data.status}`);
 
                     // Broadcast station update via SSE
                     if (service.type === 'fuel_station') {
+                        const shortageRisk = calculateShortageRisk(service);
+                        const predictions = generatePredictions(service);
+
                         broadcastStationUpdate(service.id, 'status_update', {
                             stationId: service.id,
                             name: service.name,
                             status: service.status,
                             price: service.price,
-                            lastUpdated: service.lastUpdated
+                            lastUpdated: service.lastUpdated,
+                            capacity: service.capacity,
+                            prediction: {
+                                shortageRisk: shortageRisk.level,
+                                daysOfStock: shortageRisk.daysOfStock
+                            }
                         });
+
+                        // Broadcast prediction update if risk changed
+                        broadcastPredictionUpdate(service.id, {
+                            shortageRisk: shortageRisk.level,
+                            riskDetails: shortageRisk,
+                            predictedDemand: predictions[0]?.predicted_demand,
+                            nextRefill: estimateNextRefill(service)
+                        });
+
+                        console.log(`[ML] Prediction for ${service.name}: ${shortageRisk.level} risk, ${shortageRisk.daysOfStock} days stock`);
                     }
 
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: true, service }));
+                    res.end(JSON.stringify({
+                        success: true,
+                        service,
+                        prediction: service.type === 'fuel_station' ? {
+                            shortageRisk: calculateShortageRisk(service).level,
+                            daysOfStock: calculateShortageRisk(service).daysOfStock
+                        } : null
+                    }));
                 } else {
                     res.writeHead(404, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Service not found' }));
@@ -733,6 +945,239 @@ function handleApi(req, res, pathname, method) {
         return;
     }
 
+    // ==================== PHASE 4: ML PREDICTION ENDPOINTS ====================
+
+    // GET /api/predict/station/:id - Get 7-day prediction for specific station
+    if (pathname.match(/^\/api\/predict\/station\/\d+$/) && method === 'GET') {
+        const stationId = parseInt(pathname.split('/').pop());
+        const station = services.find(s => s.id === stationId && s.type === 'fuel_station');
+
+        if (!station) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Fuel station not found' }));
+            return true;
+        }
+
+        const predictions = generatePredictions(station);
+        const shortageRisk = calculateShortageRisk(station);
+        const nextRefill = estimateNextRefill(station);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            success: true,
+            stationId: station.id,
+            stationName: station.name,
+            status: station.status,
+            capacity: station.capacity,
+            predictions,
+            shortageRisk: shortageRisk.level,
+            riskDetails: shortageRisk,
+            nextRefill,
+            model: 'demo_ml_v1',
+            lastUpdated: new Date().toISOString()
+        }));
+        return true;
+    }
+
+    // GET /api/predict/all - Get predictions for all fuel stations
+    if (pathname === '/api/predict/all' && method === 'GET') {
+        const fuelStations = services.filter(s => s.type === 'fuel_station');
+
+        const predictions = fuelStations.map(station => {
+            const shortageRisk = calculateShortageRisk(station);
+            const predictions = generatePredictions(station);
+            const nextRefill = estimateNextRefill(station);
+            const todayPrediction = predictions[0]?.predicted_demand || { diesel: 0, petrol: 0 };
+
+            return {
+                stationId: station.id,
+                stationName: station.name,
+                status: station.status,
+                location: { lat: station.lat, lng: station.lng },
+                capacity: station.capacity,
+                prediction: {
+                    shortageRisk: shortageRisk.level,
+                    predictedToday: todayPrediction,
+                    daysOfStock: shortageRisk.daysOfStock,
+                    nextRefill,
+                    confidence: 0.85
+                },
+                riskFactors: shortageRisk.riskFactors
+            };
+        });
+
+        const highRiskStations = predictions.filter(p => p.prediction.shortageRisk === 'high');
+        const mediumRiskStations = predictions.filter(p => p.prediction.shortageRisk === 'medium');
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            success: true,
+            predictions,
+            summary: {
+                total: predictions.length,
+                lowRisk: predictions.filter(p => p.prediction.shortageRisk === 'low').length,
+                mediumRisk: mediumRiskStations.length,
+                highRisk: highRiskStations.length,
+                avgDaysOfStock: Math.round(
+                    predictions.reduce((sum, p) => sum + p.prediction.daysOfStock, 0) / predictions.length * 10
+                ) / 10
+            },
+            alerts: {
+                highRisk: highRiskStations.map(s => ({
+                    stationId: s.stationId,
+                    stationName: s.stationName,
+                    risk: 'high',
+                    reason: s.riskFactors[0] || 'Critical shortage',
+                    daysLeft: s.prediction.daysOfStock
+                })),
+                mediumRisk: mediumRiskStations.map(s => ({
+                    stationId: s.stationId,
+                    stationName: s.stationName,
+                    risk: 'medium',
+                    reason: s.riskFactors[0] || 'Low capacity warning',
+                    daysLeft: s.prediction.daysOfStock
+                }))
+            }
+        }));
+        return true;
+    }
+
+    // GET /api/predict/shortage-alerts - Get only stations with medium/high shortage risk
+    if (pathname === '/api/predict/shortage-alerts' && method === 'GET') {
+        const fuelStations = services.filter(s => s.type === 'fuel_station');
+
+        const alerts = fuelStations.map(station => {
+            const shortageRisk = calculateShortageRisk(station);
+
+            return {
+                stationId: station.id,
+                stationName: station.name,
+                status: station.status,
+                location: { lat: station.lat, lng: station.lng },
+                phone: station.phone,
+                risk: shortageRisk.level,
+                reason: shortageRisk.riskFactors[0] || 'Capacity below threshold',
+                reasons: shortageRisk.riskFactors,
+                daysLeft: shortageRisk.daysOfStock,
+                capacity: station.capacity,
+                dailyDemand: station.avgDailyDemand
+            };
+        }).filter(alert => alert.risk === 'high' || alert.risk === 'medium')
+          .sort((a, b) => {
+              const riskOrder = { high: 0, medium: 1, low: 2 };
+              return riskOrder[a.risk] - riskOrder[b.risk];
+          });
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            success: true,
+            alerts,
+            summary: {
+                total: alerts.length,
+                highRisk: alerts.filter(a => a.risk === 'high').length,
+                mediumRisk: alerts.filter(a => a.risk === 'medium').length
+            }
+        }));
+        return true;
+    }
+
+    // GET /api/predict/weekly/:id - Get weekly summary for a station
+    if (pathname.match(/^\/api\/predict\/weekly\/\d+$/) && method === 'GET') {
+        const stationId = parseInt(pathname.split('/').pop());
+        const station = services.find(s => s.id === stationId && s.type === 'fuel_station');
+
+        if (!station) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Fuel station not found' }));
+            return true;
+        }
+
+        const predictions = generatePredictions(station);
+        const shortageRisk = calculateShortageRisk(station);
+
+        // Calculate weekly totals
+        const weeklyTotal = predictions.reduce((sum, p) => {
+            sum.diesel += p.predicted_demand.diesel;
+            sum.petrol += p.predicted_demand.petrol;
+            return sum;
+        }, { diesel: 0, petrol: 0 });
+
+        // Find peak demand days
+        const peakDay = predictions.reduce((max, p) =>
+            p.predicted_demand.total > max.predicted_demand.total ? p : max
+        , predictions[0]);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            success: true,
+            stationId: station.id,
+            stationName: station.name,
+            weeklyForecast: {
+                totalPredicted: {
+                    diesel: weeklyTotal.diesel,
+                    petrol: weeklyTotal.petrol,
+                    liters: weeklyTotal.diesel + weeklyTotal.petrol
+                },
+                avgDaily: {
+                    diesel: Math.round(weeklyTotal.diesel / 7),
+                    petrol: Math.round(weeklyTotal.petrol / 7)
+                },
+                peakDemandDay: {
+                    date: peakDay.date,
+                    demand: peakDay.predicted_demand
+                },
+                dailyPredictions: predictions
+            },
+            riskAssessment: shortageRisk,
+            recommendations: generateRecommendations(station, shortageRisk)
+        }));
+        return true;
+    }
+
+    // Helper function to generate recommendations based on risk
+    function generateRecommendations(station, risk) {
+        const recommendations = [];
+
+        if (risk.level === 'high') {
+            recommendations.push({
+                type: 'urgent',
+                message: 'Consider redirecting vehicles to alternative stations',
+                priority: 1
+            });
+            recommendations.push({
+                type: 'info',
+                message: 'Contact station management for refill schedule',
+                priority: 2
+            });
+        } else if (risk.level === 'medium') {
+            recommendations.push({
+                type: 'warning',
+                message: 'Monitor fuel levels closely over next 24-48 hours',
+                priority: 2
+            });
+        }
+
+        if (station.capacity?.diesel < station.avgDailyDemand?.diesel * 3) {
+            recommendations.push({
+                type: 'info',
+                message: 'Diesel reserves below 3-day threshold',
+                priority: 3
+            });
+        }
+
+        if (!station.is24Hours) {
+            recommendations.push({
+                type: 'info',
+                message: 'Station is not 24/7 - plan visits during operating hours',
+                priority: 4
+            });
+        }
+
+        return recommendations;
+    }
+
+    // ==================== END PHASE 4 ENDPOINTS ====================
+
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Endpoint not found' }));
 }
@@ -775,6 +1220,11 @@ server.listen(PORT, () => {
     console.log('    - Booking system');
     console.log('    - Vehicle profiles');
     console.log('    - Cost tracking');
+    console.log('');
+    console.log('  ML Predictions (Phase 4):');
+    console.log('    - Shortage risk prediction');
+    console.log('    - 7-day demand forecast');
+    console.log('    - Real-time SSE updates');
     console.log('');
     console.log('  Ready! Press Ctrl+C to stop.');
     console.log('=========================================');
