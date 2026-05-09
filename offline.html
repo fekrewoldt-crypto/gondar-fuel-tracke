@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Gondar Fuel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #f4a261;
+        }
+        p {
+            font-size: 1rem;
+            color: #9ca3af;
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+        .retry-btn {
+            padding: 14px 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 162, 97, 0.4);
+        }
+        .cached-info {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            max-width: 400px;
+        }
+        .cached-info h2 {
+            font-size: 1rem;
+            color: #f4a261;
+            margin-bottom: 10px;
+        }
+        .cached-info ul {
+            list-style: none;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+        .cached-info li {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-available { background: #4ade80; }
+        .status-low { background: #fbbf24; }
+        .status-empty { background: #ef4444; }
+    </style>
+</head>
+<body>
+    <svg class="icon" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="55" stroke="#f4a261" stroke-width="4" fill="none" opacity="0.5"/>
+        <path d="M40 75 L60 35 L80 75" stroke="#f4a261" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="60" cy="85" r="4" fill="#ef4444"/>
+        <line x1="45" y1="95" x2="75" y2="95" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+
+    <h1>You're Offline</h1>
+    <p>No internet connection detected. The app will sync data when you're back online.</p>
+
+    <button class="retry-btn" onclick="retryConnection()">
+        Try Again
+    </button>
+
+    <div class="cached-info">
+        <h2>Last Known Fuel Stations</h2>
+        <ul id="cachedStations">
+            <li>Loading cached data...</li>
+        </ul>
+    </div>
+
+    <script>
+        // Load cached station data from localStorage
+        const cachedStations = JSON.parse(localStorage.getItem('cachedServices') || '[]');
+
+        const statusLabels = {
+            'available': 'Has Fuel',
+            'low': 'Low Stock',
+            'empty': 'Empty'
+        };
+
+        const stationList = document.getElementById('cachedStations');
+        if (cachedStations.length > 0) {
+            stationList.innerHTML = cachedStations.slice(0, 5).map(s => `
+                <li>
+                    <span class="status-dot status-${s.status}"></span>
+                    ${s.name} - ${statusLabels[s.status] || s.status}
+                </li>
+            `).join('');
+        } else {
+            stationList.innerHTML = '<li>No cached data available</li>';
+        }
+
+        function retryConnection() {
+            if (navigator.onLine) {
+                window.location.reload();
+            } else {
+                alert('Still offline. Please check your connection.');
+            }
+        }
+
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>

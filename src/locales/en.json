@@ -1,0 +1,70 @@
+{
+  "app": {
+    "name": "Gondar Fuel Tracker",
+    "tagline": "Track real-time fuel availability in Gondar"
+  },
+  "nav": {
+    "map": "Map",
+    "stations": "Stations",
+    "services": "Services",
+    "profile": "Profile",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
+  },
+  "auth": {
+    "phone": "Phone Number",
+    "phonePlaceholder": "+251 91 234 5678",
+    "sendOtp": "Send OTP",
+    "verifyOtp": "Verify",
+    "otpSent": "OTP sent to your phone",
+    "enterOtp": "Enter the 6-digit code",
+    "register": "Register",
+    "forgotPassword": "Forgot Password?"
+  },
+  "driver": {
+    "title": "Driver",
+    "myQuota": "My Quota",
+    "diesel": "Diesel",
+    "petrol": "Petrol",
+    "remaining": "remaining",
+    "purchase": "Buy Fuel",
+    "purchaseHistory": "Purchase History",
+    "dailyLimit": "Daily Limit"
+  },
+  "station": {
+    "available": "Available",
+    "low": "Low",
+    "empty": "Empty",
+    "hours": "Operating Hours",
+    "amenities": "Amenities",
+    "reviews": "Reviews",
+    "call": "Call",
+    "navigate": "Navigate"
+  },
+  "purchase": {
+    "title": "Purchase Fuel",
+    "fuelType": "Fuel Type",
+    "amount": "Amount (Liters)",
+    "total": "Total",
+    "goToTelebir": "Go to TeleBir",
+    "confirmPayment": "I've Completed Payment",
+    "quotaExceeded": "Daily limit reached",
+    "success": "Purchase successful!"
+  },
+  "status": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try Again",
+    "noConnection": "No internet connection",
+    "offline": "You are offline"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh"
+  }
+}

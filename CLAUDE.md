@@ -40,6 +40,10 @@ Multi-service architecture documented in separate files:
 | `index.html` | Demo frontend - Leaflet map, filters, booking, reviews, vehicle profiles |
 | `START-DEMO.command` | Mac launcher script |
 | `LOCATIONS.md` | All 28 service locations with coordinates and details |
+| `manifest.json` | PWA manifest for installable app |
+| `sw.js` | Service worker for offline caching |
+| `offline.html` | Offline fallback page |
+| `icons/` | PWA icons (SVG) for app installation |
 
 ## API Endpoints (Demo)
 
@@ -155,3 +159,31 @@ curl -X POST http://localhost:3000/api/book \
 - The frontend has embedded fallback data if the server API is unavailable
 - Map is restricted to pan within Gondar bounds using Leaflet's `setMaxBounds`
 - Frontend uses modern dark theme with gradient header, colored stat cards, and pill-shaped filter buttons
+
+## Progressive Web App (PWA)
+
+The app is installable and works offline via service worker caching.
+
+### PWA Files
+- `manifest.json` - App manifest with theme colors, icons, and display mode
+- `sw.js` - Service worker caching index.html and API responses
+- `offline.html` - Fallback page shown when offline
+- `icons/icon.svg` - App icon (512x512)
+- `icons/badge.svg` - Notification badge
+
+### PWA Features
+- **Installable**: Add to home screen on mobile browsers
+- **Offline Support**: Cached services list available without connection
+- **Push Notifications**: Ready for push notification integration
+- **Dark Theme**: Matches app theme (#16213e)
+
+### Browser Support
+- Chrome/Edge (Android & Desktop): Full PWA support
+- Safari (iOS): Add to Home Screen support, push notifications require extra setup
+
+### Testing PWA
+1. Open app in Chrome browser
+2. Open DevTools (F12) > Application tab
+3. Check "Service Workers" for registered worker
+4. Check "Manifest" for app installation prompt
+5. Test offline: toggle Network tab to offline, reload page

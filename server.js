@@ -1,8 +1,258 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const PORT = 3000;
+
+// ==================== PHASE 2: REAL-TIME (SSE) ====================
+
+// SSE connections storage
+let sseConnections = {
+    station: {}, // stationId -> array of response objects
+    nearby: []    // array of { res, lat, lng, radius }
+};
+
+// Token secret for SSE auth
+const TOKEN_SECRET = process.env.TOKEN_SECRET || crypto.randomBytes(32).toString('hex');
+
+// Generate SSE auth token (valid for 5 minutes)
+function generateSSEPolicy(userId) {
+    const payload = {
+        userId,
+        timestamp: Date.now(),
+        expiresAt: Date.now() + 5 * 60 * 1000,
+        nonce: crypto.randomBytes(8).toString('hex')
+    };
+    const data = Buffer.from(JSON.stringify(payload)).toString('base64');
+    const signature = crypto.createHmac('sha256', TOKEN_SECRET).update(data).digest('hex');
+    return `${data}.${signature}`;
+}
+
+// Verify SSE token
+function verifySSEPolicy(token) {
+    try {
+        const [data, signature] = token.split('.');
+        if (!data || !signature) return null;
+        const expectedSig = crypto.createHmac('sha256', TOKEN_SECRET).update(data).digest('hex');
+        if (signature !== expectedSig) return null;
+        const payload = JSON.parse(Buffer.from(data, 'base64').toString());
+        if (payload.expiresAt < Date.now()) return null;
+        return payload;
+    } catch {
+        return null;
+    }
+}
+
+// Auth middleware (simplified for SSE)
+function authMiddleware(req) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return null;
+    }
+    const token = authHeader.substring(7);
+    try {
+        const [data, signature] = token.split('.');
+        if (!data || !signature) return null;
+        const expectedSig = crypto.createHmac('sha256', TOKEN_SECRET).update(data).digest('hex');
+        if (signature !== expectedSig) return null;
+        return JSON.parse(Buffer.from(data, 'base64').toString());
+    } catch {
+        return null;
+    }
+}
+
+function requireAuth(req) {
+    const payload = authMiddleware(req);
+    if (!payload) return null;
+    return { id: payload.userId, phone: payload.userId }; // Simplified user object
+}
+
+// Send SSE event to a specific response
+function sendSSEEvent(res, eventType, data) {
+    if (res.writableEnded) return;
+    try {
+        res.write(`event: ${eventType}\n`);
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+    } catch (e) {
+        console.error('[SSE] Send error:', e.message);
+    }
+}
+
+// Broadcast station update to all subscribed clients
+function broadcastStationUpdate(stationId, eventType, data) {
+    // Broadcast to station-specific subscribers
+    const stationConnections = sseConnections.station[stationId] || [];
+    stationConnections.forEach(res => {
+        sendSSEEvent(res, eventType, data);
+    });
+
+    // Broadcast to nearby subscribers
+    const station = services.find(s => s.id === stationId);
+    if (station) {
+        sseConnections.nearby.forEach(({ res, lat, lng, radius }) => {
+            const distance = calculateDistance(lat, lng, station.lat, station.lng);
+            if (distance <= radius) {
+                sendSSEEvent(res, eventType, {
+                    ...data,
+                    distance: Math.round(distance * 100) / 100
+                });
+            }
+        });
+    }
+}
+
+// Haversine distance calculation (km)
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+// Handle SSE connections for station updates
+function handleStationSSE(req, res, stationId) {
+    stationId = parseInt(stationId);
+    const station = services.find(s => s.id === stationId);
+
+    if (!station) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Station not found' }));
+        return true;
+    }
+
+    // Set SSE headers
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'X-Accel-Buffering': 'no'
+    });
+
+    // Send initial station status
+    sendSSEEvent(res, 'station_status', {
+        stationId: station.id,
+        name: station.name,
+        status: station.status,
+        price: station.price,
+        lastUpdated: station.lastUpdated
+    });
+
+    // Register connection
+    if (!sseConnections.station[stationId]) {
+        sseConnections.station[stationId] = [];
+    }
+    sseConnections.station[stationId].push(res);
+
+    console.log(`[SSE] Client subscribed to station ${stationId} (${station.name})`);
+
+    // Handle client disconnect
+    req.on('close', () => {
+        const connections = sseConnections.station[stationId] || [];
+        const index = connections.indexOf(res);
+        if (index > -1) {
+            connections.splice(index, 1);
+        }
+        console.log(`[SSE] Client unsubscribed from station ${stationId}`);
+    });
+
+    // Keep connection alive with heartbeat
+    const heartbeat = setInterval(() => {
+        if (res.writableEnded) {
+            clearInterval(heartbeat);
+            return;
+        }
+        try {
+            res.write(': heartbeat\n\n');
+        } catch (e) {
+            clearInterval(heartbeat);
+        }
+    }, 30000);
+
+    req.on('close', () => clearInterval(heartbeat));
+
+    return true;
+}
+
+// Handle SSE connections for nearby updates
+function handleNearbySSE(req, res) {
+    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const lat = parseFloat(url.searchParams.get('lat'));
+    const lng = parseFloat(url.searchParams.get('lng'));
+    const radius = parseFloat(url.searchParams.get('radius')) || 10;
+
+    if (isNaN(lat) || isNaN(lng)) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'lat and lng query parameters are required' }));
+        return true;
+    }
+
+    // Set SSE headers
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'X-Accel-Buffering': 'no'
+    });
+
+    // Send initial nearby stations status
+    const nearbyStations = services
+        .filter(s => s.type === 'fuel_station')
+        .map(station => ({
+            stationId: station.id,
+            name: station.name,
+            status: station.status,
+            price: station.price,
+            distance: Math.round(calculateDistance(lat, lng, station.lat, station.lng) * 100) / 100,
+            lastUpdated: station.lastUpdated
+        }))
+        .filter(s => s.distance <= radius)
+        .sort((a, b) => a.distance - b.distance);
+
+    sendSSEEvent(res, 'nearby_stations', {
+        stations: nearbyStations,
+        center: { lat, lng },
+        radius
+    });
+
+    // Register connection
+    const clientInfo = { res, lat, lng, radius };
+    sseConnections.nearby.push(clientInfo);
+
+    console.log(`[SSE] Client subscribed to nearby (${lat.toFixed(4)}, ${lng.toFixed(4)}, ${radius}km)`);
+
+    // Handle client disconnect
+    req.on('close', () => {
+        const index = sseConnections.nearby.indexOf(clientInfo);
+        if (index > -1) {
+            sseConnections.nearby.splice(index, 1);
+        }
+        console.log('[SSE] Client unsubscribed from nearby');
+    });
+
+    // Keep connection alive
+    const heartbeat = setInterval(() => {
+        if (res.writableEnded) {
+            clearInterval(heartbeat);
+            return;
+        }
+        try {
+            res.write(': heartbeat\n\n');
+        } catch (e) {
+            clearInterval(heartbeat);
+        }
+    }, 30000);
+
+    req.on('close', () => clearInterval(heartbeat));
+
+    return true;
+}
+
+// ==================== END PHASE 2 SETUP ====================
 
 // Comprehensive Gondar service data
 // Categories: fuel_station, mechanic, tire_shop, car_wash
@@ -138,6 +388,70 @@ const server = http.createServer((req, res) => {
 });
 
 function handleApi(req, res, pathname, method) {
+    // ==================== PHASE 2: SSE ENDPOINTS ====================
+
+    // GET /api/events/station/:id - SSE for station updates
+    if (pathname.match(/^\/api\/events\/station\/\d+$/) && method === 'GET') {
+        const stationId = pathname.split('/')[4]; // Index 4 because path starts with /
+        return handleStationSSE(req, res, stationId);
+    }
+
+    // GET /api/events/nearby - SSE for nearby station updates
+    if (pathname === '/api/events/nearby' && method === 'GET') {
+        return handleNearbySSE(req, res);
+    }
+
+    // GET /api/ws-token - Get SSE auth token (valid for 5 minutes)
+    if (pathname === '/api/ws-token' && method === 'GET') {
+        const user = requireAuth(req);
+        if (!user) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Unauthorized' }));
+            return true;
+        }
+        const token = generateSSEPolicy(user.id);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            success: true,
+            token,
+            expiresAt: Date.now() + 5 * 60 * 1000,
+            endpoints: {
+                station: '/api/events/station/{stationId}',
+                nearby: '/api/events/nearby?lat={lat}&lng={lng}&radius={radius}'
+            }
+        }));
+        return true;
+    }
+
+    // POST /api/subscribe/station/:id - REST fallback for station subscription
+    if (pathname.match(/^\/api\/subscribe\/station\/\d+$/) && method === 'POST') {
+        const stationId = parseInt(pathname.split('/')[4]); // Index 4 because path starts with /
+        const station = services.find(s => s.id === stationId);
+        if (!station) {
+            res.writeHead(404, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Station not found' }));
+            return true;
+        }
+        // Return subscription info for client to connect via SSE
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            success: true,
+            subscription: {
+                type: 'sse',
+                endpoint: `/api/events/station/${stationId}`,
+                station: {
+                    id: station.id,
+                    name: station.name,
+                    status: station.status,
+                    price: station.price
+                }
+            }
+        }));
+        return true;
+    }
+
+    // ==================== END SSE ENDPOINTS ====================
+
     if (pathname === '/api/services' && method === 'GET') {
         const url = new URL(req.url, `http://localhost:${PORT}`);
         const type = url.searchParams.get('type');
@@ -300,6 +614,17 @@ function handleApi(req, res, pathname, method) {
                     });
 
                     console.log(`[REPORT] ${service.name} (${service.type}) updated: ${data.status}`);
+
+                    // Broadcast station update via SSE
+                    if (service.type === 'fuel_station') {
+                        broadcastStationUpdate(service.id, 'status_update', {
+                            stationId: service.id,
+                            name: service.name,
+                            status: service.status,
+                            price: service.price,
+                            lastUpdated: service.lastUpdated
+                        });
+                    }
 
                     res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ success: true, service }));

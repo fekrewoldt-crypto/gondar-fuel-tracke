@@ -1,0 +1,16 @@
+{
+  "development": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "gondar_fuel_dev",
+    "user": "postgres",
+    "password": "password"
+  },
+  "production": {
+    "host": "${DB_HOST}",
+    "port": 5432,
+    "database": "${DB_NAME}",
+    "user": "${DB_USER}",
+    "password": "${DB_PASSWORD}"
+  }
+}

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+================================================================================
+TELEBIR PAYMENT SIMULATION PAGE
+================================================================================
+This is a simulated TeleBir payment page for the Gondar Fuel Tracker app.
+
+TESTING INSTRUCTIONS:
+---------------------
+Open this file with URL parameters in your browser:
+
+Local development server:
+  http://localhost:3000/telebir.html?ref=TXN123456&amount=327.00&fuel=diesel&liters=6&callback=http://localhost:3000/&station=National%20Fuel
+
+Direct file (for testing without server):
+  telebir.html?ref=TXN123456&amount=327.00&fuel=diesel&liters=6&station=National%20Fuel
+
+Without parameters, it will show placeholder/demo data.
+================================================================================
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeleBir Payment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0d9f4c 0%, #0a7a3a 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(13, 159, 76, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0d9f4c;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header-subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* Merchant Section */
+        .merchant-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .merchant-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .merchant-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        /* Payment Details */
+        .payment-details {
+            padding: 25px 20px;
+        }
+
+        .amount-display {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .amount-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .amount-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0d9f4c;
+        }
+
+        .amount-currency {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .ref-display {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        /* Transaction Info */
+        .transaction-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 0.9rem;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            margin-bottom: 25px;
+        }
+
+        .method-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .method-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .method-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .method-option:hover {
+            border-color: #0d9f4c;
+        }
+
+        .method-option.selected {
+            border-color: #0d9f4c;
+            background: rgba(13, 159, 76, 0.05);
+        }
+
+        .method-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .method-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .method-option.selected .method-radio {
+            border-color: #0d9f4c;
+        }
+
+        .method-option.selected .method-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #0d9f4c;
+            border-radius: 50%;
+        }
+
+        .method-icon {
+            width: 32px;
+            height: 32px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+
+        .method-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .method-badge {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: #fffbeb;
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        /* Phone Input */
+        .phone-section {
+            margin-bottom: 20px;
+        }
+
+        .phone-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .phone-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .phone-prefix {
+            background: #f5f7fa;
+            padding: 12px;
+            border-right: 1px solid #e0e0e0;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .phone-input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .phone-input::placeholder {
+            color: #aaa;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #0d9f4c;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0a7a3a;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f7fa;
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .security-icon {
+            color: #0d9f4c;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top-color: #0d9f4c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Success State */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .success-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: #0d9f4c;
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .success-ref {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .success-ref-value {
+            font-weight: 600;
+            color: #0d9f4c;
+        }
+
+        .success-redirect {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">TB</div>
+            <span class="logo-text">TeleBir</span>
+        </div>
+        <p class="header-subtitle">Secure Payment Gateway</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="payment-card">
+            <!-- Merchant Info -->
+            <div class="merchant-section">
+                <div class="merchant-label">Payment To</div>
+                <div class="merchant-name" id="merchantName">Gondar Fuel Tracker</div>
+            </div>
+
+            <!-- Payment Details -->
+            <div class="payment-details">
+                <!-- Amount -->
+                <div class="amount-display">
+                    <div class="amount-label">Amount Due</div>
+                    <div class="amount-value">
+                        <span id="amountValue">0.00</span>
+                        <span class="amount-currency">ETB</span>
+                    </div>
+                </div>
+                <div class="ref-display">Ref: <span id="refValue">-</span></div>
+
+                <!-- Transaction Info -->
+                <div class="transaction-info">
+                    <div class="info-row">
+                        <span class="info-label">Station</span>
+                        <span class="info-value" id="stationValue">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Fuel Type</span>
+                        <span class="info-value" id="fuelValue">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Quantity</span>
+                        <span class="info-value" id="litersValue">-</span>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="payment-methods">
+                    <div class="method-label">Payment Method</div>
+                    <div class="method-options">
+                        <div class="method-option selected" data-method="telebirr">
+                            <div class="method-radio"></div>
+                            <div class="method-icon">TB</div>
+                            <div class="method-name">Telebirr</div>
+                            <div class="method-badge">Popular</div>
+                        </div>
+                        <div class="method-option" data-method="cbe">
+                            <div class="method-radio"></div>
+                            <div class="method-icon">C</div>
+                            <div class="method-name">CBE Birr</div>
+                        </div>
+                        <div class="method-option" data-method="commercial">
+                            <div class="method-radio"></div>
+                            <div class="method-icon">CB</div>
+                            <div class="method-name">Commercial Bank</div>
+                        </div>
+                        <div class="method-option disabled" data-method="cash">
+                            <div class="method-radio"></div>
+                            <div class="method-icon">$</div>
+                            <div class="method-name">Cash on Delivery</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone Input -->
+                <div class="phone-section">
+                    <label class="phone-label">Enter your phone number to receive payment request</label>
+                    <div class="phone-input-wrapper">
+                        <span class="phone-prefix">+251</span>
+                        <input type="tel" class="phone-input" id="phoneInput" placeholder="91 XXX XXXX" maxlength="15">
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button class="btn btn-primary" id="payBtn">Pay Now</button>
+                    <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                </div>
+
+                <!-- Security Badge -->
+                <div class="security-badge">
+                    <span class="security-icon">&#128274;</span>
+                    <span>Secured by TLS Encryption</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Processing payment...</div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <div class="success-title">Payment Successful!</div>
+        <div class="success-ref">Reference Number</div>
+        <div class="success-ref-value" id="successRef">-</div>
+        <div class="success-redirect">Redirecting...</div>
+    </div>
+
+    <script>
+        // ============================================
+        // TELEBIR PAYMENT SIMULATION
+        // ============================================
+
+        // Parse URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                ref: params.get('ref') || 'DEMO' + Date.now().toString().slice(-8),
+                amount: params.get('amount') || '0.00',
+                fuel: params.get('fuel') || 'diesel',
+                liters: params.get('liters') || '0',
+                callback: params.get('callback') || '',
+                station: params.get('station') || 'Gondar Fuel Station'
+            };
+        }
+
+        // Try to detect parent app callback
+        function getParentCallback() {
+            // Try to find parent window and detect if we're in an iframe
+            if (window.parent && window.parent !== window) {
+                try {
+                    // Check if parent has expected API
+                    if (window.parent.location) {
+                        return window.parent.location.href.split('?')[0] + '?telebir_status=success';
+                    }
+                } catch (e) {
+                    // Cross-origin, can't access parent
+                }
+            }
+            return null;
+        }
+
+        // Initialize page with URL parameters
+        function initPage() {
+            const params = getUrlParams();
+
+            // Set display values
+            document.getElementById('refValue').textContent = params.ref;
+            document.getElementById('amountValue').textContent = params.amount;
+            document.getElementById('stationValue').textContent = params.station;
+            document.getElementById('fuelValue').textContent = params.fuel.charAt(0).toUpperCase() + params.fuel.slice(1);
+            document.getElementById('litersValue').textContent = params.liters + ' liters';
+
+            // Update page title
+            document.title = 'Pay ' + params.amount + ' ETB - TeleBir';
+
+            return params;
+        }
+
+        // Payment method selection
+        function setupPaymentMethods() {
+            const methods = document.querySelectorAll('.method-option:not(.disabled)');
+            methods.forEach(method => {
+                method.addEventListener('click', () => {
+                    methods.forEach(m => m.classList.remove('selected'));
+                    method.classList.add('selected');
+                });
+            });
+        }
+
+        // Pay button handler
+        function setupPayButton(params) {
+            const payBtn = document.getElementById('payBtn');
+            const phoneInput = document.getElementById('phoneInput');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const successOverlay = document.getElementById('successOverlay');
+            const successRef = document.getElementById('successRef');
+
+            payBtn.addEventListener('click', () => {
+                // Validate phone number
+                const phone = phoneInput.value.replace(/\s/g, '');
+                if (phone.length < 9) {
+                    phoneInput.style.borderColor = '#dc3545';
+                    phoneInput.focus();
+                    return;
+                }
+                phoneInput.style.borderColor = '';
+
+                // Show loading
+                loadingOverlay.classList.add('active');
+
+                // Simulate payment processing (2 seconds)
+                setTimeout(() => {
+                    loadingOverlay.classList.remove('active');
+                    successRef.textContent = params.ref;
+                    successOverlay.classList.add('active');
+
+                    // Redirect after showing success
+                    setTimeout(() => {
+                        let redirectUrl = params.callback;
+
+                        if (!redirectUrl) {
+                            redirectUrl = getParentCallback();
+                        }
+
+                        if (redirectUrl) {
+                            const separator = redirectUrl.includes('?') ? '&' : '?';
+                            redirectUrl = redirectUrl + separator + 'status=success&ref=' + encodeURIComponent(params.ref);
+                            window.location.href = redirectUrl;
+                        } else {
+                            // No callback, just close/show message
+                            alert('Payment completed!\nReference: ' + params.ref + '\n\nYou can now close this page.');
+                        }
+                    }, 2000);
+                }, 2000);
+            });
+        }
+
+        // Cancel button handler
+        function setupCancelButton(params) {
+            const cancelBtn = document.getElementById('cancelBtn');
+
+            cancelBtn.addEventListener('click', () => {
+                let redirectUrl = params.callback;
+
+                if (!redirectUrl) {
+                    redirectUrl = getParentCallback();
+                }
+
+                if (redirectUrl) {
+                    const separator = redirectUrl.includes('?') ? '&' : '?';
+                    redirectUrl = redirectUrl + separator + 'status=cancelled';
+                    window.location.href = redirectUrl;
+                } else {
+                    // No callback, just go back
+                    window.history.back();
+                }
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = initPage();
+            setupPaymentMethods();
+            setupPayButton(params);
+            setupCancelButton(params);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{
+  "app": {
+    "name": "ጋንዳር ለነዳጅ አስተዳደር",
+    "tagline": "በጋንዳር የሚገኙ ለነዳጅ ጣቢያዎችን በጊዜያዊ ሁኔታ ይከታተሉ"
+  },
+  "nav": {
+    "map": "ካርታ",
+    "stations": "ጣቢያዎች",
+    "services": "አገልግሎቶች",
+    "profile": "መገለጫ",
+    "signIn": "ግባ",
+    "signOut": "ውጣ"
+  },
+  "auth": {
+    "phone": "ስልክ ቁጥር",
+    "phonePlaceholder": "+251 91 234 5678",
+    "sendOtp": "ኦቲፒ ላክ",
+    "verifyOtp": "ማረጋገጥ",
+    "otpSent": "ኦቲፒ ወደ ስልክዎ ተላከ",
+    "enterOtp": "6-አሃዝ ኮድ ያስገቡ",
+    "register": "ተመዝገብ",
+    "forgotPassword": "የሚሽር ቁልፍ ረስተሃለህ?"
+  },
+  "driver": {
+    "title": "አሽከርካሪ",
+    "myQuota": "የሊት ቅነሳ",
+    "diesel": "ዲዝል",
+    "petrol": "ፔትሮል",
+    "remaining": "ቀርቷል",
+    "purchase": "ለነዳጅ ግዢ",
+    "purchaseHistory": "የግዢ ታሪክ",
+    "dailyLimit": "ቀናዊ ገደብ"
+  },
+  "station": {
+    "available": "ይገኛል",
+    "low": "ቀርቷል",
+    "empty": "ባለቀ",
+    "hours": "የሥራ ሰዓታት",
+    "amenities": "ተጨማሪ አገልግሎቶች",
+    "reviews": "አስተያየቶች",
+    "call": "ይደውሉ",
+    "navigate": "ይሄዱ"
+  },
+  "purchase": {
+    "title": "ለነዳጅ ግዢ",
+    "fuelType": "የሊት አይነት",
+    "amount": "መጠን (ሊተር)",
+    "total": "ጠቅላላ",
+    "goToTelebir": "ለቲሌቢር ይሂዱ",
+    "confirmPayment": "ለግዢ ማረጋገጫ",
+    "quotaExceeded": "የቀን ገደብ ደርሷል",
+    "success": "ግዢው ተሳካ!"
+  },
+  "status": {
+    "loading": "በማስጀመር...",
+    "error": "ስህተት ተከስቷል",
+    "retry": "እንደገና ሞክር",
+    "noConnection": "ግንኙነት አልተገኘም",
+    "offline": "ከሽቃን ርቀት ላይ"
+  },
+  "common": {
+    "save": "አስቀምጥ",
+    "cancel": "ተሰርዝ",
+    "confirm": "ማረጋገጥ",
+    "close": "ገሠጽ",
+    "search": "ፈልግ",
+    "filter": "ማጣሪያ",
+    "refresh": "አድስ"
+  }
+}
